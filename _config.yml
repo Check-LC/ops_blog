@@ -13,7 +13,8 @@ timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://blog.github.io
+url: https://check-lc.github.io/ops_blog/
+root: /ops_blog
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -110,7 +111,7 @@ theme: hexo-theme-matery
 deploy:
   type: git
   repo: https://github.com/Check-LC/ops_blog/
-  branch: main
+  branch: gh-pages
 
 search:
   path: search.xml
