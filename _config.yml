@@ -110,7 +110,7 @@ theme: hexo-theme-matery
 deploy:
   type: git
   repo: https://github.com/Check-LC/ops_blog/
-  branch: gh-pages
+  branch: main
 
 search:
   path: search.xml
