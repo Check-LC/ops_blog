@@ -134,7 +134,7 @@
 - v1.2.0
   - Added online chat function of [DaoVoice](http://www.daovoice.io/) and [Tidio](https://www.tidio.com/);
   - Added the ability to have two levels of menus;
-  - Added a subtitle for typing effects;
+  - Added a Remember for typing effects;
   - Added the ability to preload web content;
   - Added the configuration function of the home banner whether to switch daily;
   - Added the ability to display ICP filing information, which is not enabled by default;
