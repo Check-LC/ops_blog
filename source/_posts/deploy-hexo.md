@@ -15,5 +15,7 @@ summary: 记录自己使用 hexo 和 借鉴他人主题并发布到 github 的�
 测试2，先push 然后deploy
 还要修改音乐模块
 同步之后修改不成功
-测试这次修改的流程，直接push
+测试这次修改的流程，直接push----main分支已经变化，但是gh-pages没有部署成功
+修改+ clean + deploy ----网页已经变化，gh-pages变化，main分支代码无变化
+修改+ clean + deploy + clean +push ---- 完整的正常流程
 ## 安装 node.js、npm
