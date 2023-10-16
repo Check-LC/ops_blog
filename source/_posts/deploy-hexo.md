@@ -15,4 +15,5 @@ summary: 记录自己使用 hexo 和 借鉴他人主题并发布到 github 的�
 测试2，先push 然后deploy
 还要修改音乐模块
 同步之后修改不成功
+测试这次修改的流程，直接push
 ## 安装 node.js、npm
