@@ -46,7 +46,7 @@ hexo server  # 测试运行本工具，发布在本服务器4000端口
 ## 7. 测试维护和书写流程
 - 新建一篇blog
 ```
-hexo
+hexo new "filename"
 ```
 
 测试过程：

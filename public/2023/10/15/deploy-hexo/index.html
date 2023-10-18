@@ -419,7 +419,7 @@
 </ul>
 <h2 id="6-访问"><a href="#6-访问" class="headerlink" title="6. 访问"></a>6. 访问</h2><p>去 action 查看url</p>
 <h2 id="7-测试维护和书写流程"><a href="#7-测试维护和书写流程" class="headerlink" title="7. 测试维护和书写流程"></a>7. 测试维护和书写流程</h2><ul>
-<li>新建一篇blog<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo</span><br></pre></td></tr></table></figure></li>
+<li>新建一篇blog<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &quot;filename&quot;</span><br></pre></td></tr></table></figure></li>
 </ul>
 <p>测试过程：<br>这是一篇测试用的帖子，学习使用 hexo、书写帖子、发布内容<br>目前出现的问题是没有内容<br>需要搞懂书写之后，应该怎么样推送或者命令发布<br>测试1，修改然后 clean &amp;&amp; deploy，然后push<br>测试2，先push 然后deploy<br>还要修改音乐模块<br>同步之后修改不成功<br>测试这次修改的流程，直接push—-main分支已经变化，但是gh-pages没有部署成功<br>修改+ clean + deploy —-网页已经变化，gh-pages变化，main分支代码无变化<br>修改+ clean + deploy  + push —- 完整的正常流程（源代码在main分支保存并修改，deploy将生成前端代码并发布到gh-pages）</p>
 

@@ -1,5 +1,5 @@
 hexo clean
 hexo deploy
 git add -A
-git commit -m "$1"
-git push github master -f
+git commit -m "$(date)"
+git push origin  -f
