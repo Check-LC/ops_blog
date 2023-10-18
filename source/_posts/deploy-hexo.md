@@ -6,6 +6,7 @@ tags:
   - blog
 categories:
   - hexo
+toc: true
 summary: 记录自己使用 hexo 建立这个博客网站的过程，主要内容来源网络。
 ---
 ## 1. 安装 node.js、npm
@@ -43,6 +44,11 @@ hexo server  # 测试运行本工具，发布在本服务器4000端口
 去 action 查看url
 
 ## 7. 测试维护和书写流程
+- 新建一篇blog
+```
+hexo
+```
+
 测试过程：
 这是一篇测试用的帖子，学习使用 hexo、书写帖子、发布内容
 目前出现的问题是没有内容
