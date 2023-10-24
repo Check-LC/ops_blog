@@ -22,8 +22,6 @@
             
             <tag> OpenLDAP </tag>
             
-            <tag> blog </tag>
-            
         </tags>
       
     </entry>
@@ -74,9 +72,9 @@
       
         <tags>
             
-            <tag> blog </tag>
-            
             <tag> hexo </tag>
+            
+            <tag> blog </tag>
             
         </tags>
       
