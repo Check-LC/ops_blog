@@ -60,3 +60,5 @@ hexo new "filename"
 测试这次修改的流程，直接push----main分支已经变化，但是gh-pages没有部署成功
 修改+ clean + deploy ----网页已经变化，gh-pages变化，main分支代码无变化
 修改+ clean + deploy  + push ---- 完整的正常流程（源代码在main分支保存并修改，deploy将生成前端代码并发布到gh-pages）
+
+！[测试图片](https://github.com/Check-LC/ops_notes/blob/main/Monitor/attachments/2023-07-21_17-27.png))
