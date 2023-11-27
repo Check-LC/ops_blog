@@ -1,6 +1,6 @@
 ---
-title: DIY homelab PC
-date: 2023-11-13 20:45:35
+title: homelab pc
+date: 2023-11-27 23:02:04
 tags: DIY
 categories: Hardware
 summary: Got a new way to write blog in english. Suppose to write the version 1 of this easy in chinese, then translating the recordes into English.
