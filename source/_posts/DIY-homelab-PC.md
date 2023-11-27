@@ -27,7 +27,6 @@ Hope one day I can know more professional words.
 - proxmox-ve_8.0-2.iso
 
 ### 2.1 Disable the subscription on web UI
-
 ```bash
 sed -i_orig "s/data.status === 'Active'/true/g" /usr/share/pve-manager/js/pvemanagerlib.js
 sed -i_orig "s/if (res === null || res === undefined || \!res || res/if(/g" /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
@@ -38,7 +37,6 @@ systemctl restart pveproxy
 ### 2.2 Network
 - [reference](https://www.bilibili.com/video/BV1xH4y1f7Ga/?spm_id_from=333.337.search-card.all.click&vd_source=154006e70f5c14d792db947270b63614)
 - pve host using a vitual NIC and bridging the network connection to a physical NIC
-
 ```shell
 cat /etc/network/interfaces
 auto lo
@@ -58,7 +56,6 @@ sudo systemctl restart networking
 ```
 
 ### 2.3 [ Changing into a homeland repository source](https://www.wunote.cn/article/10000)
-
 ```shell
 # modify the ubuntu software source
 wget https://mirrors.ustc.edu.cn/proxmox/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
@@ -79,13 +76,10 @@ sed -i 's/^/#/' /etc/apt/sources.list.d/pve-enterprise.list
 ```
 
 ## 3. Virtual machine On pve host
-
 ### 3.1 SYS
 - ubuntu 22.04.3 server
 - choose network bridging on vmbr0, it's convenient and fast. also because of my simple network architecture.
-
 ### 3.2 Repository Source
-
 ```
 deb https://mirrors.ustc.edu.cn/ubuntu/ jammy main restricted universe multiverse
 
@@ -96,14 +90,11 @@ deb https://mirrors.ustc.edu.cn/ubuntu/ jammy-updates main restricted universe m
 deb https://mirrors.ustc.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse
 ```
 ### 3.3 Install containerd、nerdctl & make this vm as a template
-
 ```shell
 apt install containerd
 containerd config default > /etc/containerd/config.toml  # generating a default configuration of containerd
 ```
-
 - Modify part of this file, like below example.
-
 ```toml
 sandbox_image = "registry.aliyuncs.com/google_containers/pause:3.8"
 SystemdCgroup = true
@@ -116,7 +107,6 @@ SystemdCgroup = true
 ```
 
 - Install the nerdctl by binary package
-
 ```shell
 wget https://download.fastgit.org/containerd/nerdctl/releases/download/v0.12.1/nerdctl-0.12.1-linux-amd64.tar.gz
 mkdir -p /usr/local/containerd/bin/ && tar -zxvf nerdctl-0.12.1-linux-amd64.tar.gz nerdctl && mv nerdctl /usr/local/containerd/bin/
@@ -153,7 +143,6 @@ vim /etc/fstab
 
 ## 4. Kubernetes
 ### 4.1 Install kubeadm kubelet kubectl
-
 ```bash
 echo deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list
 curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | \
@@ -163,7 +152,6 @@ apt-mark hold kubelet kubeadm kubectl
 ```
 
 ### 4.2 generate a default configuration file in workspace path to init the cluster
-
 ```
 kubeadm config print init-defaults --component-configs KubeletConfiguration > kubeadm.yaml
 ```
