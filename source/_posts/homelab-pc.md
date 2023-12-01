@@ -3,7 +3,7 @@ title: homelab pc
 date: 2023-11-27 23:02:04
 tags: DIY
 categories: Hardware
-summary: Got a new way to write blog in english. Suppose to write the version 1 of this easy in chinese, then translating the recordes into English.By the way, this one is about the  prepare of testing environments on my homelab PC.Hope one day I can know more professional words.
+summary: Got a new way to write blog in english. Write the version 1 of this easy in chinese, then translating the texts into English. this one is about the  prepare of testing environments on my homelab PC. By the way, hope one day I'll know more professional words.
 ---
 ## 1. Computer Parts
 |配件|规格|价格|
@@ -31,7 +31,7 @@ sed -i_orig "s/.data.status.toLowerCase() !== 'active'/false/g" /usr/share/javas
 systemctl restart pveproxy
 ```
 
-### 2.2 Network
+### 2.2 Network Settings
 - [reference](https://www.bilibili.com/video/BV1xH4y1f7Ga/?spm_id_from=333.337.search-card.all.click&vd_source=154006e70f5c14d792db947270b63614)
 - pve host using a vitual NIC and bridging the network connection to a physical NIC
 ```shell
@@ -52,7 +52,7 @@ iface vmbr0 inet static
 sudo systemctl restart networking 
 ```
 
-### 2.3 [ Changing into a homeland repository source](https://www.wunote.cn/article/10000)
+### 2.3 [ Using a homeland repository source](https://www.wunote.cn/article/10000)
 ```shell
 # modify the ubuntu software source
 wget https://mirrors.ustc.edu.cn/proxmox/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
@@ -72,7 +72,7 @@ sed -i 's|http://download.proxmox.com|https://mirrors.ustc.edu.cn/proxmox|g' /us
 sed -i 's/^/#/' /etc/apt/sources.list.d/pve-enterprise.list
 ```
 
-## 3. Virtual machine On pve host
+## 3. Virtual machine on pve host
 ### 3.1 SYS
 - ubuntu 22.04.3 server
 - choose network bridging on vmbr0, it's convenient and fast. also because of my simple network architecture.
@@ -92,6 +92,7 @@ apt install containerd
 containerd config default > /etc/containerd/config.toml  # generating a default configuration of containerd
 ```
 - Modify part of this file, like below example.
+
 ```toml
 sandbox_image = "registry.aliyuncs.com/google_containers/pause:3.8"
 SystemdCgroup = true
@@ -104,6 +105,7 @@ SystemdCgroup = true
 ```
 
 - Install the nerdctl by binary package
+
 ```shell
 wget https://download.fastgit.org/containerd/nerdctl/releases/download/v0.12.1/nerdctl-0.12.1-linux-amd64.tar.gz
 mkdir -p /usr/local/containerd/bin/ && tar -zxvf nerdctl-0.12.1-linux-amd64.tar.gz nerdctl && mv nerdctl /usr/local/containerd/bin/
@@ -140,6 +142,7 @@ vim /etc/fstab
 
 ## 4. Kubernetes
 ### 4.1 Install kubeadm kubelet kubectl
+
 ```bash
 echo deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list
 curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | \
@@ -147,12 +150,11 @@ curl https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg | \
 apt-get update && apt-get install -y kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 ```
-
 ### 4.2 generate a default configuration file in workspace path to init the cluster
+
 ```
 kubeadm config print init-defaults --component-configs KubeletConfiguration > kubeadm.yaml
 ```
-
 - modify part of configuration file
 
 ```yaml
@@ -188,7 +190,6 @@ apiVersion: kubeproxy.config.k8s.io/v1alpha1 # add
 kind: KubeProxyConfiguration
 mode: ipvs
 ```
-
 - init cluster
 
 ```
@@ -196,31 +197,33 @@ sudo kubeadm init --config kubeadm-config.yaml
 ``` 
 
 - work nodes joining the cluster
+
 ```
 kubeadm join 192.168.3.14:6443 --token n8orxj.f51riixygulit9yz \
         --discovery-token-ca-cert-hash sha256:c0af38d55001f6eaf09ca9248db5e048c492ee4b883f0534a54187eceb50a928
 ```
-
 - after all the work nodes joining the cluster, deploy the flannel
+
 ```bash
 wget https://raw.githubusercontent.com/flannel-io/flannel/v0.20.1/Documentation/kube-flannel.yml
 kubectl apply -f kube-flannel.yml
 ```
-
 - check status of cluster
+
 ```
 kubectl get nodes -A
 kubectl get pods -A
 ```
-
 ## 5. Fault
 ### 5.1 kubectl get nodes
 - descriobe
+
 ```shell
 couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
 The connection to the server localhost:8080 was refused - did you specify the right host or port?
 ```
-- solution: fogot to apply the config, it's printed by the kubeadm 
+- solution: fogot to apply the config, it's printed by the kubeadm init command
+
 ```
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -228,6 +231,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 ### 5.2 The kubelet is not running
 - describe
+
 ```shell
 [kubelet-check] Initial timeout of 40s passed.
 
@@ -238,20 +242,22 @@ This error is likely caused by:
         - The kubelet is not running
         - The kubelet is unhealthy due to a misconfiguration of the node in some way (required cgroups disabled)
 ```
+- solution: changing the wrong advertiseAddress, supoose to be mine master IP.
 
-- solution: changing the wrong advertiseAddress, supoose to mine master IP.
 ```shell
 # in some  conditions, this setting may help. It controls the cgroup driver of kubelet
 kind: KubeletConfiguration
 apiVersion: kubelet.config.k8s.io/v1beta1
 cgroupDriver: systemd
 ``` 
-### 5.3 coredns halting on creating status.
+### 5.3 coredns pod halting on creating status.
 - describe
+
 ```shell
 Warning  FailedCreatePodSandBox  42s   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to setup network for sandbox "03e2b9a1ceaf66beb681891dc276ea490d664822b43047f25d3b5d4a11e76eb0": plugin type="flannel" failed (add): open /run/flannel/subnet.env: no such file or directory
 ```
-- solutions: creating a file && reset the cluster and reinstall the kube-flannel. (also worked in this case: work not ready)
+- solutions: creating a file && reset the cluster and reinstall the kube-flannel. ( worked in this case, solution of `work not ready`)(the file below maybe useless,it's important to set `Podsubnet` in the init config file)
+
 ```shell
 cat  /run/flannel/subnet.env  #  manual creating
 

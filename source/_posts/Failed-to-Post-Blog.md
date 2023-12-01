@@ -6,5 +6,5 @@ categories: ops
 summary: Find the reason why cannot Post a new blog
 ---
 
-Just because of the wrong layout of words under the `summary`. 
+Just because of the wrong layout of lines under the `summary`. 
 The texts of a new line should be recognized.
