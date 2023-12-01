@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Failed to Post Blog</title>
+      <link href="/ops_blog/2023/12/01/failed-to-post-blog/"/>
+      <url>/ops_blog/2023/12/01/failed-to-post-blog/</url>
+      
+        <content type="html"><![CDATA[<p>Just because of the wrong layout of words under the <code>summary</code>.<br>The texts of a new line should be recognized.</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> ops </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> debug </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>homelab pc</title>
       <link href="/ops_blog/2023/11/27/homelab-pc/"/>
       <url>/ops_blog/2023/11/27/homelab-pc/</url>
