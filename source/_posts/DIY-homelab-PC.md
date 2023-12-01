@@ -7,6 +7,7 @@ summary: Got a new way to write blog in english. Suppose to write the version 1 
 By the way, this one is about the  prepare of testing environments on my homelab PC.
 Hope one day I can know more professional words.
 ---
+
 ## 1. Computer Parts
 |配件|规格|价格|
 |:---:|:---:|:---:|

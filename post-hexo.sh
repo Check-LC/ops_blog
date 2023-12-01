@@ -1,5 +1,5 @@
 hexo clean
-hexo g
+hexo generate
 hexo deploy
 git add -A
 git commit -m "$(date)"
