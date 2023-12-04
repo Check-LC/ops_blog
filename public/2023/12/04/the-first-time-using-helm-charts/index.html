@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Failed to Post Blog, BLOG">
-    <meta name="description" content="Find the reason why cannot Post a new blog">
+    <meta name="keywords" content="The First time using Helm Charts, BLOG">
+    <meta name="description" content="The first time using Helm Charts to install serices.(Self-service-password,ldap-account-management)">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Failed to Post Blog | BLOG</title>
+    <title>The First time using Helm Charts | BLOG</title>
     <link rel="icon" type="image/png" href="/ops_blog/favicon.png">
     
     <style>
@@ -311,12 +311,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/ops_blog/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/ops_blog/medias/featureimages/23.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Failed to Post Blog</h1>
+                    <h1 class="description center-align post-title">The First time using Helm Charts</h1>
                 </div>
             </div>
         </div>
@@ -340,8 +340,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/ops_blog/tags/debug/">
-                                <span class="chip bg-color">debug</span>
+                            <a href="/ops_blog/tags/helm/">
+                                <span class="chip bg-color">helm</span>
                             </a>
                         
                     </div>
@@ -352,8 +352,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/ops_blog/categories/ops/" class="post-category">
-                                ops
+                            <a href="/ops_blog/categories/Kubernetes/" class="post-category">
+                                Kubernetes
                             </a>
                         
                     </div>
@@ -365,14 +365,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-12-01
+                    2023-12-04
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-12-01
+                    2023-12-04
                 </div>
                 
 
@@ -396,7 +396,42 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Just because of the wrong layout of lines under the <code>summary</code>.<br>The texts of a new line should be recognized.</p>
+                <h2 id="一、ldap-account-manager"><a href="#一、ldap-account-manager" class="headerlink" title="一、ldap-account-manager"></a>一、ldap-account-manager</h2><h3 id="1-1-Repo-URL"><a href="#1-1-Repo-URL" class="headerlink" title="1.1 Repo URL"></a>1.1 Repo URL</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://gabibbo97.github.io/charts/">https://gabibbo97.github.io/charts/</a></li>
+</ul>
+<h3 id="1-2-Values-Modify—-values-yaml"><a href="#1-2-Values-Modify—-values-yaml" class="headerlink" title="1.2 Values Modify—-values.yaml"></a>1.2 Values Modify—-values.yaml</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">extraEnv:</span><br><span class="line">  LAM_SKIP_PRECONFIGURE: false</span><br><span class="line">  LDAP_DOMAIN: example.net;ibswufe.com</span><br><span class="line">  LDAP_BASE_DN: dc=example,dc=net;dc=ibswufe,dc=com</span><br><span class="line">  LDAP_SERVER: ldaps://ldap01.example.net</span><br><span class="line">  LDAP_USER: cn=administrator,dc=example,dc=net</span><br><span class="line">  LAM_LANG: zh_CN</span><br><span class="line">  LAM_PASSWORD: lam</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、-self-service-password"><a href="#二、-self-service-password" class="headerlink" title="二、 self-service-password"></a>二、 self-service-password</h2><h3 id="2-1-Repo-URL"><a href="#2-1-Repo-URL" class="headerlink" title="2.1 Repo URL"></a>2.1 Repo URL</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://ygqygq2.github.io/charts/">https://ygqygq2.github.io/charts/</a></li>
+<li>Set image tag:5.3.3 to pull the latest one</li>
+</ul>
+<h3 id="2-2-Charts-Using"><a href="#2-2-Charts-Using" class="headerlink" title="2.2 Charts Using"></a>2.2 Charts Using</h3><h4 id="2-2-1-ENV-Setting-ConfigMap"><a href="#2-2-1-ENV-Setting-ConfigMap" class="headerlink" title="2.2.1 ENV Setting ConfigMap"></a>2.2.1 ENV Setting ConfigMap</h4><ul>
+<li><p>So confused about why cannot make it effective when I  using  the ConfigMap settings In the values.yaml to  cover the default php configurations of this soft.</p>
+</li>
+<li><p>So that , Using a ConfigMap Data to  define the container environment variables of this chart.</p>
+</li>
+<li><p>env-config.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">self-service-password-env</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">    <span class="attr">USE_QUESTIONS:</span> <span class="string">&#x27;false&#x27;</span></span><br><span class="line">	<span class="attr">LDAP_BINDDN:</span> <span class="string">&quot;cn=exampleadmin,dc=example,dc=net&quot;</span></span><br><span class="line">	<span class="attr">SECRETEKEY:</span> <span class="string">&quot;example&quot;</span></span><br><span class="line">	<span class="attr">DEFAULT_ACTION:</span> <span class="string">&quot;sendtoken&quot;</span></span><br><span class="line">	<span class="attr">LANG:</span> <span class="string">&quot;cn,zh-CN&quot;</span></span><br><span class="line">	<span class="attr">IS_BEHIND_PROXY:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">SITE_URL:</span> <span class="string">&quot;https://ssp.example.net/index.php&quot;</span></span><br><span class="line">	<span class="attr">LDAP_SERVER:</span> <span class="string">&quot;ldap://10.13.3.107&quot;</span></span><br><span class="line">	<span class="attr">LDAP_BASE_SEARCH:</span> <span class="string">&quot;ou=example,dc=example,dc=net&quot;</span></span><br><span class="line">	<span class="attr">LDAP_LOGIN_ATTRIBUTE:</span> <span class="string">&quot;cn&quot;</span></span><br><span class="line">	<span class="attr">LOGO:</span> <span class="string">images/mnt/ltb-logo.png</span>                                  <span class="comment"># 共享存储，挂载在容器中的/www/ssp/images/mnt</span></span><br><span class="line">	<span class="attr">BACKGROUND_IMAGE:</span> <span class="string">images/mnt/background.jpg</span></span><br><span class="line">	<span class="attr">MAIL_FROM_NAME:</span> <span class="string">&quot;密码自主修改服务&quot;</span></span><br><span class="line">	<span class="attr">MAIL_SIGNATURE:</span> <span class="string">&quot;如有疑问,请联系运维同事,英博智云.&quot;</span></span><br><span class="line">	<span class="attr">MAIL_USE_LDAP:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">NOTIFY_ON_CHANGE:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">SMTP_AUTH_ON:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">SMTP_HOST:</span> <span class="string">&quot;smtphz.qiye.163.com&quot;</span></span><br><span class="line">	<span class="attr">MAIL_FROM:</span> <span class="string">&quot;chao.long@example.net&quot;</span></span><br><span class="line">	<span class="attr">SMTP_USER:</span> <span class="string">&quot;chao.long@example.net&quot;</span></span><br><span class="line">	<span class="attr">SMTP_SECURE_TYPE:</span> <span class="string">&#x27;ssl&#x27;</span></span><br><span class="line">	<span class="attr">SMTP_PORT:</span> <span class="string">&#x27;465&#x27;</span></span><br><span class="line">	<span class="attr">SMTP_AUTOTLS:</span> <span class="string">&#x27;false&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_DIFFERENT_LOGIN:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MAX_LENGTH:</span> <span class="string">&#x27;30&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MIN_LENGTH:</span> <span class="string">&#x27;8&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MIN_LOWERCASE:</span> <span class="string">&#x27;1&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MIN_SPECIAL:</span> <span class="string">&#x27;1&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MIN_UPPERCASE:</span> <span class="string">&#x27;1&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_COMPLEXITY:</span> <span class="string">&#x27;4&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_NO_REUSE:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">	<span class="attr">PASSWORD_SHOW_POLICY:</span> <span class="string">&quot;always&quot;</span></span><br><span class="line">	<span class="attr">PASSWORD_SPECIAL_CHARACTERS:</span> <span class="string">&quot;^a-zA-Z0-9&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>add a field <code>envFrom</code>  under the <code>env</code> in templates&#x2F;deployment-statefulset.yaml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">env:</span><br><span class="line">&#123;&#123; toYaml .Values.env | indent 12 &#125;&#125;</span><br><span class="line">envFrom:</span><br><span class="line">- configMapRef:</span><br><span class="line">    name: self-service-password-env</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-2-2-Secret"><a href="#2-2-2-Secret" class="headerlink" title="2.2.2 Secret"></a>2.2.2 Secret</h4><ul>
+<li>there are two variables need to been encrypted</li>
+<li>values.secret<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">secret:</span><br><span class="line">  enabled: true</span><br><span class="line">  mountPath: /etc/secret-volume</span><br><span class="line">  subPath: &quot;&quot;</span><br><span class="line">  readOnly: true</span><br><span class="line">  data:</span><br><span class="line">    ldap_bindpass: &quot;example@2020&quot;</span><br><span class="line">    smtp_pass: &quot;WaLxeu3pvsQaqd7X&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-2-3-values-env"><a href="#2-2-3-values-env" class="headerlink" title="2.2.3 values.env"></a>2.2.3 values.env</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">env:</span><br><span class="line">  - name: LDAP_BINDPASS</span><br><span class="line">    valueFrom:</span><br><span class="line">      secretKeyRef:</span><br><span class="line">        name: self-service-password</span><br><span class="line">        key: ldap_bindpass</span><br><span class="line">  - name: SMTP_PASS</span><br><span class="line">    valueFrom:</span><br><span class="line">      secretKeyRef:</span><br><span class="line">        name: self-service-password</span><br><span class="line">        key: smtp_pass</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-4-persistentVolume"><a href="#2-2-4-persistentVolume" class="headerlink" title="2.2.4 persistentVolume"></a>2.2.4 persistentVolume</h4><ul>
+<li><p>create  pv &amp; pvc resources under this namespace，mount the volume ，name: self-service-password</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">persistentVolume:   # 是否存储持久化</span><br><span class="line">  enabled: true</span><br><span class="line">  storageClass: &quot;-&quot;</span><br><span class="line">  accessMode: ReadWriteOnce</span><br><span class="line">  annotations: &#123;&#125;</span><br><span class="line">  size: 1Gi  # 大小</span><br><span class="line">  existingClaim: &#123;&#125;  # 使用已存在的pvc</span><br><span class="line">  mountPaths:</span><br><span class="line">   - name: data-storage</span><br><span class="line">     mountPath: /www/ssp/images/mnt  # 容器内路径，将新建 mnt</span><br><span class="line">     subPath: ssp-nfs                               # pv 中挂载点下的子目录</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>pv.yaml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: PersistentVolume</span><br><span class="line">metadata:</span><br><span class="line">  name: self-service-password</span><br><span class="line">spec:</span><br><span class="line">  capacity:</span><br><span class="line">    storage: 1Gi</span><br><span class="line">  accessModes:</span><br><span class="line">    - ReadWriteOnce</span><br><span class="line">  persistentVolumeReclaimPolicy: Retain</span><br><span class="line">  nfs:</span><br><span class="line">    path: /home/example/nfs # 指定nfs的挂载点</span><br><span class="line">    server: 10.13.3.108</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Post  test，reverse proxy by nginx using Nodeport。Setting the dns resolving，take a visit of this site。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">upstream ssp &#123;</span><br><span class="line">  server 10.13.3.109:32337;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name ssp.example.net;</span><br><span class="line">    return 301 https://$server_name$request_uri;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl ;</span><br><span class="line">    server_name ssp.example.net;</span><br><span class="line">    ssl_certificate tls/tls_ca.pem; </span><br><span class="line">    ssl_certificate_key tls/tls_key.pem;</span><br><span class="line">    location / &#123;</span><br><span class="line">      proxy_pass http://ssp;</span><br><span class="line">      proxy_set_header Host $host;</span><br><span class="line">      proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">      proxy_set_header X-Forwarded-Proto &quot;https&quot;;</span><br><span class="line">      proxy_read_timeout 1800s;</span><br><span class="line">      proxy_http_version 1.1;</span><br><span class="line">      proxy_set_header Upgrade $http_upgrade;</span><br><span class="line">      proxy_set_header Connection &quot;upgrade&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
 
                 
             </div>
@@ -423,7 +458,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://check-lc.github.io/ops_blog/ops_blog/2023/12/01/failed-to-post-blog/">https://check-lc.github.io/ops_blog/ops_blog/2023/12/01/failed-to-post-blog/</a>
+                    <a href="https://check-lc.github.io/ops_blog/ops_blog/2023/12/04/the-first-time-using-helm-charts/">https://check-lc.github.io/ops_blog/ops_blog/2023/12/04/the-first-time-using-helm-charts/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -461,8 +496,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/ops_blog/tags/debug/">
-                                    <span class="chip bg-color">debug</span>
+                                <a href="/ops_blog/tags/helm/">
+                                    <span class="chip bg-color">helm</span>
                                 </a>
                             
                         </div>
@@ -508,9 +543,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/ops_blog/2023/12/04/the-first-time-using-helm-charts/">
                     <div class="card-image">
@@ -528,9 +564,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-12-04
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-12-04
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -543,6 +579,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -561,31 +598,31 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/ops_blog/2023/11/27/homelab-pc/">
+                <a href="/ops_blog/2023/12/01/failed-to-post-blog/">
                     <div class="card-image">
                         
                         
-                        <img src="/ops_blog/medias/featureimages/21.jpg" class="responsive-img" alt="homelab pc">
+                        <img src="/ops_blog/medias/featureimages/0.jpg" class="responsive-img" alt="Failed to Post Blog">
                         
-                        <span class="card-title">homelab pc</span>
+                        <span class="card-title">Failed to Post Blog</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Got a new way to write blog in english. Write the version 1 of this easy in chinese, then translating the texts into English. this one is about the  prepare of testing environments on my homelab PC. By the way, hope one day I'll know more professional words.
+                            Find the reason why cannot Post a new blog
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-11-27
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-12-01
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/ops_blog/categories/Hardware/" class="post-category">
-                                    Hardware
+                            <a href="/ops_blog/categories/ops/" class="post-category">
+                                    ops
                                 </a>
                             
                             
@@ -595,8 +632,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/ops_blog/tags/DIY/">
-                        <span class="chip bg-color">DIY</span>
+                    <a href="/ops_blog/tags/debug/">
+                        <span class="chip bg-color">debug</span>
                     </a>
                     
                 </div>
