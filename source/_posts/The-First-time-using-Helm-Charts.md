@@ -1,8 +1,10 @@
 ---
 title: The First time using Helm Charts
 date: 2023-12-04 18:50:57
-tags: helm
-categories: Kubernetes
+tags:
+  - helm
+categories:
+  - Kubernetes
 summary: The first time using Helm Charts to install serices.(Self-service-password,ldap-account-management)
 ---
 ## 一、ldap-account-manager
