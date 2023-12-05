@@ -110,7 +110,8 @@ theme: hexo-theme-matery
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://github.com/Check-LC/ops_blog/
+  # repo: https://github.com/Check-LC/ops_blog/
+  repo: git@github.com:Check-LC/ops_blog.git
   branch: gh-pages
 
 search:

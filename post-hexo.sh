@@ -1,6 +1,6 @@
 hexo clean
 #hexo generate
-hexo deploy
+hexo deploy -g   # gernerate before deploy
 git add -A
 git commit -m "$(date)"
 git push origin  -f
