@@ -372,7 +372,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-12-04
+                    2023-12-05
                 </div>
                 
 
@@ -393,6 +393,11 @@
         
 
         
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
 
         <div class="card-content article-card-content">
             <div id="articleContent">
@@ -406,32 +411,37 @@
 <li>Set image tag:5.3.3 to pull the latest one</li>
 </ul>
 <h3 id="2-2-Charts-Using"><a href="#2-2-Charts-Using" class="headerlink" title="2.2 Charts Using"></a>2.2 Charts Using</h3><h4 id="2-2-1-ENV-Setting-ConfigMap"><a href="#2-2-1-ENV-Setting-ConfigMap" class="headerlink" title="2.2.1 ENV Setting ConfigMap"></a>2.2.1 ENV Setting ConfigMap</h4><ul>
-<li><p>So confused about why cannot make it effective when I  using  the ConfigMap settings In the values.yaml to  cover the default php configurations of this soft.</p>
-</li>
-<li><p>So that , Using a ConfigMap Data to  define the container environment variables of this chart.</p>
-</li>
-<li><p>env-config.yaml</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">self-service-password-env</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">    <span class="attr">USE_QUESTIONS:</span> <span class="string">&#x27;false&#x27;</span></span><br><span class="line">	<span class="attr">LDAP_BINDDN:</span> <span class="string">&quot;cn=exampleadmin,dc=example,dc=net&quot;</span></span><br><span class="line">	<span class="attr">SECRETEKEY:</span> <span class="string">&quot;example&quot;</span></span><br><span class="line">	<span class="attr">DEFAULT_ACTION:</span> <span class="string">&quot;sendtoken&quot;</span></span><br><span class="line">	<span class="attr">LANG:</span> <span class="string">&quot;cn,zh-CN&quot;</span></span><br><span class="line">	<span class="attr">IS_BEHIND_PROXY:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">SITE_URL:</span> <span class="string">&quot;https://ssp.example.net/index.php&quot;</span></span><br><span class="line">	<span class="attr">LDAP_SERVER:</span> <span class="string">&quot;ldap://10.13.3.107&quot;</span></span><br><span class="line">	<span class="attr">LDAP_BASE_SEARCH:</span> <span class="string">&quot;ou=example,dc=example,dc=net&quot;</span></span><br><span class="line">	<span class="attr">LDAP_LOGIN_ATTRIBUTE:</span> <span class="string">&quot;cn&quot;</span></span><br><span class="line">	<span class="attr">LOGO:</span> <span class="string">images/mnt/ltb-logo.png</span>                                  <span class="comment"># 共享存储，挂载在容器中的/www/ssp/images/mnt</span></span><br><span class="line">	<span class="attr">BACKGROUND_IMAGE:</span> <span class="string">images/mnt/background.jpg</span></span><br><span class="line">	<span class="attr">MAIL_FROM_NAME:</span> <span class="string">&quot;密码自主修改服务&quot;</span></span><br><span class="line">	<span class="attr">MAIL_SIGNATURE:</span> <span class="string">&quot;如有疑问,请联系运维同事,英博智云.&quot;</span></span><br><span class="line">	<span class="attr">MAIL_USE_LDAP:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">NOTIFY_ON_CHANGE:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">SMTP_AUTH_ON:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">SMTP_HOST:</span> <span class="string">&quot;smtphz.qiye.163.com&quot;</span></span><br><span class="line">	<span class="attr">MAIL_FROM:</span> <span class="string">&quot;chao.long@example.net&quot;</span></span><br><span class="line">	<span class="attr">SMTP_USER:</span> <span class="string">&quot;chao.long@example.net&quot;</span></span><br><span class="line">	<span class="attr">SMTP_SECURE_TYPE:</span> <span class="string">&#x27;ssl&#x27;</span></span><br><span class="line">	<span class="attr">SMTP_PORT:</span> <span class="string">&#x27;465&#x27;</span></span><br><span class="line">	<span class="attr">SMTP_AUTOTLS:</span> <span class="string">&#x27;false&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_DIFFERENT_LOGIN:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MAX_LENGTH:</span> <span class="string">&#x27;30&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MIN_LENGTH:</span> <span class="string">&#x27;8&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MIN_LOWERCASE:</span> <span class="string">&#x27;1&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MIN_SPECIAL:</span> <span class="string">&#x27;1&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MIN_UPPERCASE:</span> <span class="string">&#x27;1&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_COMPLEXITY:</span> <span class="string">&#x27;4&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_NO_REUSE:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">	<span class="attr">PASSWORD_SHOW_POLICY:</span> <span class="string">&quot;always&quot;</span></span><br><span class="line">	<span class="attr">PASSWORD_SPECIAL_CHARACTERS:</span> <span class="string">&quot;^a-zA-Z0-9&quot;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>add a field <code>envFrom</code>  under the <code>env</code> in templates&#x2F;deployment-statefulset.yaml</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">env:</span><br><span class="line">&#123;&#123; toYaml .Values.env | indent 12 &#125;&#125;</span><br><span class="line">envFrom:</span><br><span class="line">- configMapRef:</span><br><span class="line">    name: self-service-password-env</span><br></pre></td></tr></table></figure></li>
+<li>So confused about why cannot make it effective when I  using  the ConfigMap settings In the values.yaml to  cover the default php configurations of this soft.</li>
+<li>So that , Using a ConfigMap Data to  define the container environment variables of this chart.</li>
+<li>env-config.yaml</li>
 </ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">self-service-password-env</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">    <span class="attr">USE_QUESTIONS:</span> <span class="string">&#x27;false&#x27;</span></span><br><span class="line">	<span class="attr">LDAP_BINDDN:</span> <span class="string">&quot;cn=exampleadmin,dc=example,dc=net&quot;</span></span><br><span class="line">	<span class="attr">SECRETEKEY:</span> <span class="string">&quot;example&quot;</span></span><br><span class="line">	<span class="attr">DEFAULT_ACTION:</span> <span class="string">&quot;sendtoken&quot;</span></span><br><span class="line">	<span class="attr">LANG:</span> <span class="string">&quot;cn,zh-CN&quot;</span></span><br><span class="line">	<span class="attr">IS_BEHIND_PROXY:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">SITE_URL:</span> <span class="string">&quot;https://ssp.example.net/index.php&quot;</span></span><br><span class="line">	<span class="attr">LDAP_SERVER:</span> <span class="string">&quot;ldap://10.13.3.107&quot;</span></span><br><span class="line">	<span class="attr">LDAP_BASE_SEARCH:</span> <span class="string">&quot;ou=example,dc=example,dc=net&quot;</span></span><br><span class="line">	<span class="attr">LDAP_LOGIN_ATTRIBUTE:</span> <span class="string">&quot;cn&quot;</span></span><br><span class="line">	<span class="attr">LOGO:</span> <span class="string">images/mnt/ltb-logo.png</span>                                  <span class="comment"># 共享存储，挂载在容器中的/www/ssp/images/mnt</span></span><br><span class="line">	<span class="attr">BACKGROUND_IMAGE:</span> <span class="string">images/mnt/background.jpg</span></span><br><span class="line">	<span class="attr">MAIL_FROM_NAME:</span> <span class="string">&quot;密码自主修改服务&quot;</span></span><br><span class="line">	<span class="attr">MAIL_SIGNATURE:</span> <span class="string">&quot;如有疑问,请联系运维同事,英博智云.&quot;</span></span><br><span class="line">	<span class="attr">MAIL_USE_LDAP:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">NOTIFY_ON_CHANGE:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">SMTP_AUTH_ON:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">SMTP_HOST:</span> <span class="string">&quot;smtphz.qiye.163.com&quot;</span></span><br><span class="line">	<span class="attr">MAIL_FROM:</span> <span class="string">&quot;chao.long@example.net&quot;</span></span><br><span class="line">	<span class="attr">SMTP_USER:</span> <span class="string">&quot;chao.long@example.net&quot;</span></span><br><span class="line">	<span class="attr">SMTP_SECURE_TYPE:</span> <span class="string">&#x27;ssl&#x27;</span></span><br><span class="line">	<span class="attr">SMTP_PORT:</span> <span class="string">&#x27;465&#x27;</span></span><br><span class="line">	<span class="attr">SMTP_AUTOTLS:</span> <span class="string">&#x27;false&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_DIFFERENT_LOGIN:</span> <span class="string">&#x27;true&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MAX_LENGTH:</span> <span class="string">&#x27;30&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MIN_LENGTH:</span> <span class="string">&#x27;8&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MIN_LOWERCASE:</span> <span class="string">&#x27;1&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MIN_SPECIAL:</span> <span class="string">&#x27;1&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_MIN_UPPERCASE:</span> <span class="string">&#x27;1&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_COMPLEXITY:</span> <span class="string">&#x27;4&#x27;</span></span><br><span class="line">	<span class="attr">PASSWORD_NO_REUSE:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">	<span class="attr">PASSWORD_SHOW_POLICY:</span> <span class="string">&quot;always&quot;</span></span><br><span class="line">	<span class="attr">PASSWORD_SPECIAL_CHARACTERS:</span> <span class="string">&quot;^a-zA-Z0-9&quot;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>add a field <code>envFrom</code>  under the <code>env</code> in templates&#x2F;deployment-statefulset.yaml</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">env:</span><br><span class="line">&#123;&#123; toYaml .Values.env | indent 12 &#125;&#125;</span><br><span class="line">envFrom:</span><br><span class="line">- configMapRef:</span><br><span class="line">    name: self-service-password-env</span><br></pre></td></tr></table></figure>
 <h4 id="2-2-2-Secret"><a href="#2-2-2-Secret" class="headerlink" title="2.2.2 Secret"></a>2.2.2 Secret</h4><ul>
 <li>there are two variables need to been encrypted</li>
-<li>values.secret<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">secret:</span><br><span class="line">  enabled: true</span><br><span class="line">  mountPath: /etc/secret-volume</span><br><span class="line">  subPath: &quot;&quot;</span><br><span class="line">  readOnly: true</span><br><span class="line">  data:</span><br><span class="line">    ldap_bindpass: &quot;example@2020&quot;</span><br><span class="line">    smtp_pass: &quot;WaLxeu3pvsQaqd7X&quot;</span><br></pre></td></tr></table></figure></li>
+<li>values.secret</li>
 </ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">secret:</span><br><span class="line">  enabled: true</span><br><span class="line">  mountPath: /etc/secret-volume</span><br><span class="line">  subPath: &quot;&quot;</span><br><span class="line">  readOnly: true</span><br><span class="line">  data:</span><br><span class="line">    ldap_bindpass: &quot;example@2020&quot;</span><br><span class="line">    smtp_pass: &quot;WaLxeu3pvsQaqd7X&quot;</span><br></pre></td></tr></table></figure>
 <h4 id="2-2-3-values-env"><a href="#2-2-3-values-env" class="headerlink" title="2.2.3 values.env"></a>2.2.3 values.env</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">env:</span><br><span class="line">  - name: LDAP_BINDPASS</span><br><span class="line">    valueFrom:</span><br><span class="line">      secretKeyRef:</span><br><span class="line">        name: self-service-password</span><br><span class="line">        key: ldap_bindpass</span><br><span class="line">  - name: SMTP_PASS</span><br><span class="line">    valueFrom:</span><br><span class="line">      secretKeyRef:</span><br><span class="line">        name: self-service-password</span><br><span class="line">        key: smtp_pass</span><br></pre></td></tr></table></figure>
 
 <h4 id="2-2-4-persistentVolume"><a href="#2-2-4-persistentVolume" class="headerlink" title="2.2.4 persistentVolume"></a>2.2.4 persistentVolume</h4><ul>
-<li><p>create  pv &amp; pvc resources under this namespace，mount the volume ，name: self-service-password</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">persistentVolume:   # 是否存储持久化</span><br><span class="line">  enabled: true</span><br><span class="line">  storageClass: &quot;-&quot;</span><br><span class="line">  accessMode: ReadWriteOnce</span><br><span class="line">  annotations: &#123;&#125;</span><br><span class="line">  size: 1Gi  # 大小</span><br><span class="line">  existingClaim: &#123;&#125;  # 使用已存在的pvc</span><br><span class="line">  mountPaths:</span><br><span class="line">   - name: data-storage</span><br><span class="line">     mountPath: /www/ssp/images/mnt  # 容器内路径，将新建 mnt</span><br><span class="line">     subPath: ssp-nfs                               # pv 中挂载点下的子目录</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>pv.yaml</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: PersistentVolume</span><br><span class="line">metadata:</span><br><span class="line">  name: self-service-password</span><br><span class="line">spec:</span><br><span class="line">  capacity:</span><br><span class="line">    storage: 1Gi</span><br><span class="line">  accessModes:</span><br><span class="line">    - ReadWriteOnce</span><br><span class="line">  persistentVolumeReclaimPolicy: Retain</span><br><span class="line">  nfs:</span><br><span class="line">    path: /home/example/nfs # 指定nfs的挂载点</span><br><span class="line">    server: 10.13.3.108</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Post  test，reverse proxy by nginx using Nodeport。Setting the dns resolving，take a visit of this site。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">upstream ssp &#123;</span><br><span class="line">  server 10.13.3.109:32337;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name ssp.example.net;</span><br><span class="line">    return 301 https://$server_name$request_uri;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl ;</span><br><span class="line">    server_name ssp.example.net;</span><br><span class="line">    ssl_certificate tls/tls_ca.pem; </span><br><span class="line">    ssl_certificate_key tls/tls_key.pem;</span><br><span class="line">    location / &#123;</span><br><span class="line">      proxy_pass http://ssp;</span><br><span class="line">      proxy_set_header Host $host;</span><br><span class="line">      proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">      proxy_set_header X-Forwarded-Proto &quot;https&quot;;</span><br><span class="line">      proxy_read_timeout 1800s;</span><br><span class="line">      proxy_http_version 1.1;</span><br><span class="line">      proxy_set_header Upgrade $http_upgrade;</span><br><span class="line">      proxy_set_header Connection &quot;upgrade&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>create  pv &amp; pvc resources under this namespace，mount the volume ，name: self-service-password</li>
 </ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">persistentVolume:   # 是否存储持久化</span><br><span class="line">  enabled: true</span><br><span class="line">  storageClass: &quot;-&quot;</span><br><span class="line">  accessMode: ReadWriteOnce</span><br><span class="line">  annotations: &#123;&#125;</span><br><span class="line">  size: 1Gi  # 大小</span><br><span class="line">  existingClaim: &#123;&#125;  # 使用已存在的pvc</span><br><span class="line">  mountPaths:</span><br><span class="line">   - name: data-storage</span><br><span class="line">     mountPath: /www/ssp/images/mnt  # 容器内路径，将新建 mnt</span><br><span class="line">     subPath: ssp-nfs                               # pv 中挂载点下的子目录</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>pv.yaml</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: v1</span><br><span class="line">kind: PersistentVolume</span><br><span class="line">metadata:</span><br><span class="line">  name: self-service-password</span><br><span class="line">spec:</span><br><span class="line">  capacity:</span><br><span class="line">    storage: 1Gi</span><br><span class="line">  accessModes:</span><br><span class="line">    - ReadWriteOnce</span><br><span class="line">  persistentVolumeReclaimPolicy: Retain</span><br><span class="line">  nfs:</span><br><span class="line">    path: /home/example/nfs # 指定nfs的挂载点</span><br><span class="line">    server: 10.13.3.108</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Post  test，reverse proxy by nginx using Nodeport。Setting the dns resolving，take a visit of this site。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">upstream ssp &#123;</span><br><span class="line">  server 10.13.3.109:32337;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name ssp.example.net;</span><br><span class="line">    return 301 https://$server_name$request_uri;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl ;</span><br><span class="line">    server_name ssp.example.net;</span><br><span class="line">    ssl_certificate tls/tls_ca.pem; </span><br><span class="line">    ssl_certificate_key tls/tls_key.pem;</span><br><span class="line">    location / &#123;</span><br><span class="line">      proxy_pass http://ssp;</span><br><span class="line">      proxy_set_header Host $host;</span><br><span class="line">      proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</span><br><span class="line">      proxy_set_header X-Forwarded-Proto &quot;https&quot;;</span><br><span class="line">      proxy_read_timeout 1800s;</span><br><span class="line">      proxy_http_version 1.1;</span><br><span class="line">      proxy_set_header Upgrade $http_upgrade;</span><br><span class="line">      proxy_set_header Connection &quot;upgrade&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="三、To-Do-List"><a href="#三、To-Do-List" class="headerlink" title="三、To Do List"></a>三、To Do List</h3><p>Learn more about：</p>
 <ul>
 <li>storage</li>
@@ -845,7 +855,7 @@
                    order='random'
                    preload='auto'
                    volume='0.7'
-                   list-folded='true'
+                   list-folded='false'
         >
         </meting-js>
     </div>
@@ -857,7 +867,7 @@
     
 
     <div class="container row center-align"
-         style="margin-bottom: 0px !important;">
+         style="margin-bottom: 15px !important;">
         <div class="col s12 m8 l8 copy-right">
             Copyright&nbsp;&copy;
             
@@ -888,6 +898,60 @@
             <br>
 
             <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2023";
+                        var startMonth = "10";
+                        var startDate = "7";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'zh-CN';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
             
             <br>
             
@@ -1063,6 +1127,15 @@ $(function () {
     
     
     
+        
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="/ops_blog/libs/others/sakura.js"><\/script>');
+            }
+        </script>
+    
 
     <!-- 雪花特效 -->
     
@@ -1094,8 +1167,6 @@ $(function () {
     })();
 </script>
 
-    
-    <script src="/ops_blog/libs/others/clicklove.js" async="async"></script>
     
     
     <script async src="/ops_blog/libs/others/busuanzi.pure.mini.js"></script>
