@@ -11,6 +11,7 @@ summary: The first time using Helm Charts to install serices.(Self-service-passw
 ### 1.1 Repo URL
 - https://gabibbo97.github.io/charts/
 ### 1.2 Values Modify----values.yaml
+
 ```
 extraEnv:
   LAM_SKIP_PRECONFIGURE: false
@@ -31,6 +32,7 @@ extraEnv:
 - So confused about why cannot make it effective when I  using  the ConfigMap settings In the values.yaml to  cover the default php configurations of this soft.
 - So that , Using a ConfigMap Data to  define the container environment variables of this chart.
 - env-config.yaml
+
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -73,6 +75,7 @@ data:
 ```
 
 - add a field `envFrom`  under the `env` in templates/deployment-statefulset.yaml
+
 ```
 env:
 {{ toYaml .Values.env | indent 12 }}
@@ -83,6 +86,7 @@ envFrom:
 #### 2.2.2 Secret
 - there are two variables need to been encrypted
 - values.secret
+
 ```
 secret:
   enabled: true
@@ -94,6 +98,7 @@ secret:
     smtp_pass: "WaLxeu3pvsQaqd7X"
 ```
 #### 2.2.3 values.env
+
 ```
 env:
   - name: LDAP_BINDPASS
@@ -110,6 +115,7 @@ env:
 
 #### 2.2.4 persistentVolume 
 - create  pv & pvc resources under this namespace，mount the volume ，name: self-service-password
+
 ```
 persistentVolume:   # 是否存储持久化
   enabled: true
@@ -125,6 +131,7 @@ persistentVolume:   # 是否存储持久化
 ```
 
 - pv.yaml
+
 ```
 apiVersion: v1
 kind: PersistentVolume
@@ -142,6 +149,7 @@ spec:
 ```
 
 - Post  test，reverse proxy by nginx using Nodeport。Setting the dns resolving，take a visit of this site。
+
 ```
 upstream ssp {
   server 10.13.3.109:32337;
