@@ -10,6 +10,7 @@ summary: The first time using Helm Charts to install serices.(Self-service-passw
 ## 一、ldap-account-manager
 ### 1.1 Repo URL
 - https://gabibbo97.github.io/charts/
+- Set image tag:8.3 in the chart.yaml
 ### 1.2 Values Modify----values.yaml
 
 ```
@@ -39,7 +40,7 @@ kind: ConfigMap
 metadata:
 name: self-service-password-env
 data:
-    USE_QUESTIONS: 'false'
+  USE_QUESTIONS: 'false'
 	LDAP_BINDDN: "cn=exampleadmin,dc=example,dc=net"
 	SECRETEKEY: "example"
 	DEFAULT_ACTION: "sendtoken"
@@ -177,7 +178,11 @@ server {
     }
 }
 ```
+
+- charts correction
+`utcook.fullname`   change into--> `self-service-password.fullname`
+
 ### 三、To Do List
 Learn more about：
-- storage
-- traefik
+- storageclass
+- traefik ingress
