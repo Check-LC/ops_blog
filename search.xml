@@ -4,11 +4,30 @@
   
     
     <entry>
+      <title>instant box</title>
+      <link href="/ops_blog/2024/01/02/instant-box/"/>
+      <url>/ops_blog/2024/01/02/instant-box/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Instant-Box"><a href="#Instant-Box" class="headerlink" title="Instant Box"></a>Instant Box</h1><h2 id="1-Introduce"><a href="#1-Introduce" class="headerlink" title="1. Introduce"></a>1. Introduce</h2><p>A project spins up temporary Linux systems with instant webshell access from any browser.<br>It can currently supports various versions of Ubuntu, CentOS, Arch Linux, Debian, Fedora and Alpine.</p><h2 id="2-Deployment"><a href="#2-Deployment" class="headerlink" title="2. Deployment"></a>2. Deployment</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># docker-compose needed</span><br><span class="line">mkdir instantbox &amp;&amp; cd $_</span><br><span class="line">bash &lt;(curl -sSL https://raw.githubusercontent.com/instantbox/instantbox/master/init.sh)    # To create a  docker compose file，at the same time we can set ip &amp; port here</span><br><span class="line">docker-compose up -d  # deploy service</span><br></pre></td></tr></table></figure><h2 id="3-Operation"><a href="#3-Operation" class="headerlink" title="3.  Operation"></a>3.  Operation</h2><pre>Run 'docker-compose up -d' then go to http://ip:8888 on your browser.When creating a new OS, the Docker engine will create a new container in host machine.No persistent storage found.</pre><h3 id="3-1-ssh-into-container"><a href="#3-1-ssh-into-container" class="headerlink" title="3.1 ssh into container"></a>3.1 ssh into container</h3><ul><li>ubuntu<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">apt install -y openssh-server</span><br><span class="line">ssh-keygen -A    # 自动生成所有缺失的主机密钥文件</span><br><span class="line">vim ~/.ssh/authorized_keys   # 在目标机器需要登录的用户下，粘贴本机公钥（密码验证不成功）</span><br><span class="line">/usr/sbin/sshd     # 启动sshd</span><br><span class="line">宿主机 ssh 即可</span><br></pre></td></tr></table></figure></li></ul><h3 id="3-2-Launch-WEB-Cli"><a href="#3-2-Launch-WEB-Cli" class="headerlink" title="3.2 Launch WEB Cli"></a>3.2 Launch WEB Cli</h3><pre>The browser can only create one kind of system at the sametimeClean the cache of browser or create a new incognito window, goes to console, create a new system in box.then goes to eg URL: http://10.13.3.101:8888/console/container_ID(name)/</pre><h2 id="4-Shut-the-service-down"><a href="#4-Shut-the-service-down" class="headerlink" title="4. Shut the service down"></a>4. Shut the service down</h2><pre>We're supposed to delete or purge the OS created before first, then purge the service container.</pre>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> demo test </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>At the end of 2023</title>
       <link href="/ops_blog/2024/01/01/at-the-end-of-2023/"/>
       <url>/ops_blog/2024/01/01/at-the-end-of-2023/</url>
       
-        <content type="html"><![CDATA[<h1 id="2023-的结束"><a href="#2023-的结束" class="headerlink" title="2023 的结束"></a>2023 的结束</h1><ol><li>失：2023-10-2 和邹漂亮分开了，2018-1-13 我们在一起。很想念，很亏欠，很遗憾，自己不够优秀，落下太远了。她确实值得更优秀的人生。</li><li>得：一份工作和一个决定。 </li><li>之后的话就等到薪酬到手有1w再考虑下一段感情吧，换房之后再考虑结婚吧，存款在10w以上再考虑生小孩吧。</li></ol>]]></content>
+        <content type="html"><![CDATA[<h1 id="2023-的结束"><a href="#2023-的结束" class="headerlink" title="2023 的结束"></a>2023 的结束</h1><ol><li>失：2023-10-2 和邹漂亮分开了，2018-1-13 我们在一起。很想念，很亏欠，很遗憾，自己不够优秀，落下太远了。她确实值得更优秀的人生。</li><li>得：一份工作和一个决定。 </li><li>之后的话就等到薪酬到手有1w再考虑下一段感情吧，换房之后再考虑结婚吧，存款在10w以上再考虑生小孩吧。</li></ol><hr><p>|1月|结束k8s基础部分|<br>|2月|monitor|<br>|3月|cicd|<br>|4月|简历投递并约面试|<br>|5月|主要找工作|<br>|6月|找到工作！！！|<br>|1-6|如果辞职就一定要先拿到驾照|</p>]]></content>
       
       
       <categories>
