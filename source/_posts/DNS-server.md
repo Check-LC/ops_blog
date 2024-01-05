@@ -115,7 +115,8 @@ view "company" {
   };
 };
 ```
-<p>视图使用主要参考本章**智能视图使用**</p>
+
+视图使用主要参考本章[智能视图使用](##%203.3%20创建视图管理，智能DNS)
 
 - /etc/bind/example/example.db.zones  
 
@@ -389,8 +390,6 @@ test.example.net.         600     IN      RRSIG   A 8 3 600 20231216022642 20231
 - 问题：  
 - 配置后，每个客户端需要添加信任锚文件以作签名验证  
 - 这个签名后的zone可以被伪造，使用dig命令输出的文件修改伪造  
-
-![智能DNS](DNS%20Server.md#3.3%20创建视图管理，智能DNS)
 
 ## 3.3 创建视图管理，智能DNS  
 [参考1](https://www.cnblogs.com/anpengapple/p/5879350.html)  
