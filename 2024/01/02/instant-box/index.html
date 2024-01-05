@@ -398,8 +398,9 @@
 When creating a new OS, the Docker engine will create a new container in host machine.
 No persistent storage found.</pre>
 <h3 id="3-1-ssh-into-container"><a href="#3-1-ssh-into-container" class="headerlink" title="3.1 ssh into container"></a>3.1 ssh into container</h3><ul>
-<li>ubuntu<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">apt install -y openssh-server</span><br><span class="line">ssh-keygen -A    # 自动生成所有缺失的主机密钥文件</span><br><span class="line">vim ~/.ssh/authorized_keys   # 在目标机器需要登录的用户下，粘贴本机公钥（密码验证不成功）</span><br><span class="line">/usr/sbin/sshd     # 启动sshd</span><br><span class="line">宿主机 ssh 即可</span><br></pre></td></tr></table></figure></li>
+<li>ubuntu</li>
 </ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">apt install -y openssh-server</span><br><span class="line">ssh-keygen -A    # 自动生成所有缺失的主机密钥文件</span><br><span class="line">vim ~/.ssh/authorized_keys   # 在目标机器需要登录的用户下，粘贴本机公钥（密码验证不成功）</span><br><span class="line">/usr/sbin/sshd     # 启动sshd</span><br><span class="line">宿主机 ssh 即可</span><br></pre></td></tr></table></figure>
 <h3 id="3-2-Launch-WEB-Cli"><a href="#3-2-Launch-WEB-Cli" class="headerlink" title="3.2 Launch WEB Cli"></a>3.2 Launch WEB Cli</h3><pre>
 The browser can only create one kind of system at the sametime
 Clean the cache of browser or create a new incognito window, goes to console, create a new system in box.
