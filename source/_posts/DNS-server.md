@@ -51,11 +51,11 @@ sudo apt install -y  bind9 bind9-utils
 ```
 include "/etc/bind/named.conf.options";
 include "/etc/bind/named.conf.local";
-[[include]] "/etc/bind/named.conf.default-zones";       # 在视图使用时注释掉的
+# include "/etc/bind/named.conf.default-zones";       # 在视图使用时注释掉的
 include "/etc/bind/example/sec-trust-anchors.conf";     #  在 dnssec 功能中需要做的引入
 ```
-
 - /etc/bind/named.conf.options  
+
 ```bash
 tls doh {
    key-file "/etc/bind/example/cert/key.pem";
@@ -115,8 +115,10 @@ view "company" {
   };
 };
 ```
+<p>视图使用主要参考本章**智能视图使用**</p>
 
 - /etc/bind/example/example.db.zones  
+
 ```
 $TTL 10M
 @       IN      SOA     example.top. admin.example.top. (
@@ -388,19 +390,23 @@ test.example.net.         600     IN      RRSIG   A 8 3 600 20231216022642 20231
 - 配置后，每个客户端需要添加信任锚文件以作签名验证  
 - 这个签名后的zone可以被伪造，使用dig命令输出的文件修改伪造  
 
+![智能DNS](DNS%20Server.md#3.3%20创建视图管理，智能DNS)
+
 ## 3.3 创建视图管理，智能DNS  
 [参考1](https://www.cnblogs.com/anpengapple/p/5879350.html)  
 [参考2](https://www.cnblogs.com/etangyushan/p/4335521.html)  
 [参考3](http://www.hangdaowangluo.com/archives/1633)  
 [ubuntu案例](https://www.server-world.info/en/note?os=Ubuntu_20.04&p=dns&f=5)  
 - vim  /etc/bind/named.conf  
-```
+
+```bash
 include "/etc/bind/named.conf.options";
 include "/etc/bind/named.conf.local";
-[[include]] "/etc/bind/named.conf.default-zones";
+# include "/etc/bind/named.conf.default-zones";
 ```
 
 - cat  /etc/bind/named.conf.options  
+
 ```
 options {
         directory "/var/cache/bind";
@@ -431,18 +437,29 @@ acl "company" {
 # 此处制定目标ip可以访问的域名的解析区域
 view "example" {
   match-clients { example; };
-  zone "example.net" IN  {
-       type master;
-       file "/etc/bind/example/example.db.zones";
-  };
+  include "/etc/bind/example/example.views";
 };
 
 view "company" {
   match-clients { company; };
-  zone "company.com" IN  {
-       type master;
-       file "/etc/bind/example/company.db.zones";
-  };
+  include "/etc/bind/example/company.views";
+};
+```
+- views 文件中指定区域解析文件，eg：
+
+```bash
+zone "example.net" IN {                                          # 此处域名和 zones 文件中的域名一致
+      type master;
+      file "/etc/bind/example/example.net.zones";
+   };
+zone "3.13.10.in-addr.arpa." IN {                         # 此处格式固定，设计反向解析的ip的网络位，和zones文件中的主机位结合成为完整ip地址
+      type master;
+      file "/etc/bind/example/example.net.reverse.zones";
+};
+
+zone "example.top" IN {                              # 配置此 dns 向 10.13.3.101 这个转发器请求解析 example.top 的域名。在全局 options 配置转发没有成功，选择了此方案。
+      type forward;
+      forwarders {10.13.3.101;};
 };
 ```
 
@@ -680,3 +697,6 @@ server {
 # 五、bind9.18  nginx 反向代理  
 [反向代理参考](https://www.infvie.com/ops-notes/nginx-udp-dns.html)  
 
+
+
+[def]: DNS%20Server.md#3.3%20创建视图管理，智能DNS

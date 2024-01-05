@@ -22,6 +22,7 @@ When creating a new OS, the Docker engine will create a new container in host ma
 No persistent storage found.</pre>
 ### 3.1 ssh into container
 - ubuntu
+
 ```
 apt install -y openssh-server
 ssh-keygen -A    # 自动生成所有缺失的主机密钥文件
