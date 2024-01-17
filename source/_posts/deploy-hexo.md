@@ -60,3 +60,21 @@ hexo new "filename"
 测试这次修改的流程，直接push----main分支已经变化，但是gh-pages没有部署成功
 修改+ clean + deploy ----网页已经变化，gh-pages变化，main分支代码无变化
 修改+ clean + deploy  + push ---- 完整的正常流程（源代码在main分支保存并修改，deploy将生成前端代码并发布到gh-pages）
+## 8. 解决代码行号和复制功能的错乱。
+- previous: all commented
+- current as follows: if noneffective ,try `npm uninstall hexo-prism-plugin` first ; after changed the `_config.yml` , delete the `.deploy_git` category (using for gitpage) ; the repost all the article.
+
+```yaml
+highlight:
+  enable: false
+  line_number: true
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false
+prismjs:
+  enable: true
+  preprocess: true
+  line_number: true
+  tab_replace: ''
+```

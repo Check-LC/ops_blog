@@ -375,7 +375,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-11-13
+                    2024-01-17
                 </div>
                 
 
@@ -436,7 +436,22 @@ hexo server  # 测试运行本工具，发布在本服务器4000端口<span aria
 <li>新建一篇blog<pre class="line-numbers language-none"><code class="language-none">hexo new &quot;filename&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 </ul>
 <p>测试过程：<br>这是一篇测试用的帖子，学习使用 hexo、书写帖子、发布内容<br>目前出现的问题是没有内容<br>需要搞懂书写之后，应该怎么样推送或者命令发布<br>测试1，修改然后 clean &amp;&amp; deploy，然后push<br>测试2，先push 然后deploy<br>还要修改音乐模块<br>同步之后修改不成功<br>测试这次修改的流程，直接push—-main分支已经变化，但是gh-pages没有部署成功<br>修改+ clean + deploy —-网页已经变化，gh-pages变化，main分支代码无变化<br>修改+ clean + deploy  + push —- 完整的正常流程（源代码在main分支保存并修改，deploy将生成前端代码并发布到gh-pages）</p>
-
+<h2 id="8-解决代码行号和复制功能的错乱。"><a href="#8-解决代码行号和复制功能的错乱。" class="headerlink" title="8. 解决代码行号和复制功能的错乱。"></a>8. 解决代码行号和复制功能的错乱。</h2><ul>
+<li>previous: all commented</li>
+<li>current as follows: if noneffective ,try <code>npm uninstall hexo-prism-plugin</code> first ; after changed the <code>_config.yml</code> , delete the <code>.deploy_git</code> category (using for gitpage) ; the repost all the article.</li>
+</ul>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">highlight</span><span class="token punctuation">:</span>
+  <span class="token key atrule">enable</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+  <span class="token key atrule">line_number</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+  <span class="token key atrule">auto_detect</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+  <span class="token key atrule">tab_replace</span><span class="token punctuation">:</span> <span class="token string">''</span>
+  <span class="token key atrule">wrap</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+  <span class="token key atrule">hljs</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+<span class="token key atrule">prismjs</span><span class="token punctuation">:</span>
+  <span class="token key atrule">enable</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+  <span class="token key atrule">preprocess</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+  <span class="token key atrule">line_number</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+  <span class="token key atrule">tab_replace</span><span class="token punctuation">:</span> <span class="token string">''</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>
