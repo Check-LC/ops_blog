@@ -116,7 +116,7 @@ view "company" {
 };
 ```
 
-视图使用主要参考本章[智能视图使用](#33-创建视图管理智能dns)
+视图使用主要参考本章[智能视图使用](##)
 
 - /etc/bind/example/example.db.zones  
 
