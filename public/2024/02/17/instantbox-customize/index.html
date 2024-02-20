@@ -366,7 +366,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-02-17
+                    2024-02-20
                 </div>
                 
 
@@ -746,6 +746,53 @@ EOF</span>
 # 仓库中书写并添加内容
  git add test.txt&#x2F;1.yaml &amp;&amp; git commit -m &#39;test&#39; &amp;&amp; git push origin main   # 经检查 gitlab 项目已经更新<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <h2 id="5-Data-Version-Control"><a href="#5-Data-Version-Control" class="headerlink" title="5. Data Version Control"></a>5. Data Version Control</h2><p>使用 DVC 管理学生在 minio 的数据文件</p>
+<h3 id="5-1-DVC-push"><a href="#5-1-DVC-push" class="headerlink" title="5.1 DVC push"></a>5.1 DVC push</h3><pre class="line-numbers language-Bash" data-language="Bash"><code class="language-Bash">ls DVC&#x2F;
+    build  Dockerfile  LICENSE  nginx.conf  node_modules  package.json  package-lock.json  public  README.md  src
+git init
+dvc init
+dvc remote add -d myremote s3:&#x2F;&#x2F;test&#x2F;dvc           # 配置远端存储位置 是S3:&#x2F;&#x2F;bucket&#x2F;path 
+dvc remote modify myremote endpointurl http:&#x2F;&#x2F;10.8.0.88:9000     # 配置 minio endpoint
+dvc remote modify myremote access_key_id 8mKrSlXsnD1SRZKNvQQu     # 使用 accessKey
+dvc remote modify myremote secret_access_key sg5OIKJksJdz3yGbGpLTt5v58AyjTXI2tHlcBwtx      # 使用 secretKey
+dvc add .
+    ERROR: Path: &#x2F;home&#x2F;inboc does not overlap with base path: &#x2F;home&#x2F;inboc&#x2F;DVC
+dvc add .&#x2F;*
+    100% Adding...|██████████████████████████████████████████████████████████████████████████████████████|10&#x2F;10 [00:24,  2.49s&#x2F;file]
+    To track the changes with git, run:
+        git add src.dvc build.dvc README.md.dvc public.dvc LICENSE.dvc Dockerfile.dvc nginx.conf.dvc package-lock.json.dvc node_modules.dvc .gitignore package.json.dvc
+    To enable auto staging, run:
+        dvc config core.autostage true
+dvc push -vvv
+dvc remote list  
+    myremote s3:&#x2F;&#x2F;test&#x2F;dvc<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>.dvc/config 文件</code></p>
+<pre class="line-numbers language-none"><code class="language-none">[core]
+    remote &#x3D; myremote
+[&#39;remote &quot;myremote&quot;&#39;]
+    url &#x3D; S3:&#x2F;&#x2F;test&#x2F;dvc
+    endpointurl &#x3D; http:&#x2F;&#x2F;10.8.0.88:9000
+    access_key_id &#x3D; 8mKrSlXsnD1SRZKNvQQu
+    secret_access_key &#x3D; sg5OIKJksJdz3yGbGpLTt5v58AyjTXI2tHlcBwtx<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="5-2-DVC-pull"><a href="#5-2-DVC-pull" class="headerlink" title="5.2 DVC pull"></a>5.2 DVC pull</h3><pre class="line-numbers language-none"><code class="language-none"># 初始化
+git init
+dvc init
+
+# 连接远程git
+git remote add origin ssh:&#x2F;&#x2F;git@10.8.0.90:9922&#x2F;root&#x2F;dvc.git
+
+# 连接远程 S3
+dvc remote add -d myremote s3:&#x2F;&#x2F;test&#x2F;dvc
+dvc remote modify myremote endpointurl http:&#x2F;&#x2F;10.8.0.88:9000
+dvc remote modify myremote access_key_id 8mKrSlXsnD1SRZKNvQQu
+dvc remote modify myremote secret_access_key sg5OIKJksJdz3yGbGpLTt5v58AyjTXI2tHlcBwtx
+
+# 下载目标数据
+git checkout origin&#x2F;main -- Dockerfile.dvc
+dvc pull -vvv #根据当前的 *.dvc 文件下载目标数据
+dvc pull build.dvc   # 拉取指定的数据<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>[!Note]<br>理解：实际的版本控制功能应该是通过 git 管理了.dvc文件，DVC 通过此文件保证数据的状态同步<br>还需要研究 .gitignore, . Dvcignore 应该在其中书写什么（数据文件名+），被 git 管理的将不再被 dvc 管理<br>以及下文需要研究版本控制和 branch 合并</p>
+</blockquote>
 
                 
             </div>

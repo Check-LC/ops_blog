@@ -366,3 +366,59 @@ git clone git@gitlab.company.net:company-sys/inbox/ansible.git
 ```
 ## 5. Data Version Control
 使用 DVC 管理学生在 minio 的数据文件
+### 5.1 DVC push
+```Bash
+ls DVC/
+    build  Dockerfile  LICENSE  nginx.conf  node_modules  package.json  package-lock.json  public  README.md  src
+git init
+dvc init
+dvc remote add -d myremote s3://test/dvc           # 配置远端存储位置 是S3://bucket/path 
+dvc remote modify myremote endpointurl http://10.8.0.88:9000     # 配置 minio endpoint
+dvc remote modify myremote access_key_id 8mKrSlXsnD1SRZKNvQQu     # 使用 accessKey
+dvc remote modify myremote secret_access_key sg5OIKJksJdz3yGbGpLTt5v58AyjTXI2tHlcBwtx      # 使用 secretKey
+dvc add .
+    ERROR: Path: /home/inboc does not overlap with base path: /home/inboc/DVC
+dvc add ./*
+    100% Adding...|██████████████████████████████████████████████████████████████████████████████████████|10/10 [00:24,  2.49s/file]
+    To track the changes with git, run:
+        git add src.dvc build.dvc README.md.dvc public.dvc LICENSE.dvc Dockerfile.dvc nginx.conf.dvc package-lock.json.dvc node_modules.dvc .gitignore package.json.dvc
+    To enable auto staging, run:
+        dvc config core.autostage true
+dvc push -vvv
+dvc remote list  
+    myremote s3://test/dvc
+```
+`.dvc/config 文件`
+```
+[core]
+    remote = myremote
+['remote "myremote"']
+    url = S3://test/dvc
+    endpointurl = http://10.8.0.88:9000
+    access_key_id = 8mKrSlXsnD1SRZKNvQQu
+    secret_access_key = sg5OIKJksJdz3yGbGpLTt5v58AyjTXI2tHlcBwtx
+```
+### 5.2 DVC pull
+```
+# 初始化
+git init
+dvc init
+
+# 连接远程git
+git remote add origin ssh://git@10.8.0.90:9922/root/dvc.git
+
+# 连接远程 S3
+dvc remote add -d myremote s3://test/dvc
+dvc remote modify myremote endpointurl http://10.8.0.88:9000
+dvc remote modify myremote access_key_id 8mKrSlXsnD1SRZKNvQQu
+dvc remote modify myremote secret_access_key sg5OIKJksJdz3yGbGpLTt5v58AyjTXI2tHlcBwtx
+
+# 下载目标数据
+git checkout origin/main -- Dockerfile.dvc
+dvc pull -vvv #根据当前的 *.dvc 文件下载目标数据
+dvc pull build.dvc   # 拉取指定的数据
+```
+>[!Note]
+>理解：实际的版本控制功能应该是通过 git 管理了.dvc文件，DVC 通过此文件保证数据的状态同步
+>还需要研究 .gitignore, . Dvcignore 应该在其中书写什么（数据文件名+），被 git 管理的将不再被 dvc 管理
+>以及下文需要研究版本控制和 branch 合并
