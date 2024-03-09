@@ -14,10 +14,10 @@ marked:                  # 新增
 ```
 
 ## 2. 测试
-奇怪，只能渲染网络链接的图片，不能渲染资源文件夹中的文件
-![测试图片](../post-img/img.jpg)
+奇怪，只能渲染网络链接的图片，不能渲染资源文件夹中的文件；完全按照官方说明配置
+![测试图片](img.jpg)
 
-{% asset_img post-img/img.jpg This is a test image %}
+{% asset_img img.jpg This is a test image %}
 
 ![测试图床](https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg)
 
