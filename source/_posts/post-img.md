@@ -42,6 +42,10 @@ frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolu
 **调整效果**
 
 <div style="position: relative; width: 100%; height: 0; padding-bottom: 75%;">
-<iframe src="//player.bilibili.com/player.html?aid=552069936&bvid=BV1Hi4y117BB&cid=542945776&p=5" scrolling="yes" allowfullscreen="true">
+<iframe src="//player.bilibili.com/player.html?aid=552069936&bvid=BV1Hi4y117BB&cid=542945776&p=5" scrolling="yes" border="0" 
+frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;">
 </iframe>
 </div>
+
+
+<iframe src="//player.bilibili.com/player.html?aid=xxx&bvid=yyy&cid=zzz&page=1&high_quality=1&danmaku=0" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
