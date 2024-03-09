@@ -25,7 +25,7 @@ toc: true
 
 以上代码的显示效果如此
 
-{% markmap 400px %}
+{% markmap 800px %}
 - links
 - **inline** ~~text~~ *styles*
 - multiline
