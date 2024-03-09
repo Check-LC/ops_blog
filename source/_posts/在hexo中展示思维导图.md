@@ -10,7 +10,7 @@ toc: true
 
 效果展示
 
-{% markmap 400px %}
+{% markmap 600 100% %}
 - links
 - **inline** ~~text~~ *styles*
 - multiline
@@ -40,9 +40,3 @@ pip 不能install ，所以安装了miniconda，然后`conda install pysocks`；
 ### 5. 破解版 xmind 测试
 
 导出成功，但是格式不能在此成功渲染出来
-
-### 6. Nunjuck Error
-
-markmap 渲染失败 \
-报错： `{% endmarkmap %} unknown block tag` \
-解决：用{% raw %}{% endraw %}包裹其中内容
