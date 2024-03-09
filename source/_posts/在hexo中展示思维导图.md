@@ -6,24 +6,7 @@ toc: true
 summary: 在博文中插入思维导图
 ---
 ### 1. 项目来源[此处](https://github.com/maxchang3/hexo-markmap)
-### 2. .xmind 文件转换为 md 文件，放入 markmap 中
-
-<pre>
-{% markmap 600 100% %}
-- links
-- **inline** ~~text~~ *styles*
-- multiline
-  text
-- `inline code`
-- ```js
-  console.log('code block');
-  console.log('code block');
-  ```
-- KaTeX - $x = {-b \pm \sqrt{b^2-4ac} \over 2a}$
-{% endmarkmap %}
-</pre>
-
-效果展示
+### 2. 效果展示
 
 {% markmap 600 100% %}
 - links
