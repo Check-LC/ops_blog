@@ -8,7 +8,7 @@ toc: true
 ### 1. 项目来源[此处](https://github.com/maxchang3/hexo-markmap)
 ### 2. .xmind 文件转换为 md 文件，放入下方 markmap 中
 
-{% markmap 800px %}
+{ % markmap 800px % }
 - links
 - **inline** ~~text~~ *styles*
 - multiline
@@ -19,7 +19,7 @@ toc: true
   console.log('code block');
   ```
 - KaTeX - $x = {-b \pm \sqrt{b^2-4ac} \over 2a}$
-{% endmarkmap %}
+{ % endmarkmap % }
 
 ### 3. xmind2md
 [作者指路](https://github.com/EXKulo/xmind_markdown_converter)
