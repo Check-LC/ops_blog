@@ -22,6 +22,7 @@ marked:                  # 新增
 <!-- {% asset_img 'https://images.pexels.com/photos/20440051/pexels-photo-20440051.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' This is a test image %} -->
 
 ![测试图床](https://images.pexels.com/photos/20440051/pexels-photo-20440051.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)
+![ee074148edfc1f63b015446c40b02ef2.png](https://ice.frostsky.com/2024/03/09/ee074148edfc1f63b015446c40b02ef2.png)
 
 ## 3. reference
 [reference 1](https://blog.csdn.net/2301_77285173/article/details/130189857)
