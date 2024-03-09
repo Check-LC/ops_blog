@@ -14,14 +14,16 @@ marked:                  # 新增
 ```
 
 ## 2. 测试
-![测试图片](post-img/img.jpg)
+奇怪，只能渲染网络链接的图片，不能渲染资源文件夹中的文件
+![测试图片](../post-img/img.jpg)
 
 {% asset_img post-img/img.jpg This is a test image %}
 
 ![测试图床](https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg)
 
 ## 3. reference
-[reference](https://blog.csdn.net/2301_77285173/article/details/130189857)
+[reference 1](https://blog.csdn.net/2301_77285173/article/details/130189857)
+[reference 2](https://zhuanlan.zhihu.com/p/104996801)
 
 ## 4. 测试嵌入视频
 这是直接使用b站视频分享中的嵌入代码，显示不友好
