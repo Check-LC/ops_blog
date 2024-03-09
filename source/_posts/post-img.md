@@ -15,10 +15,10 @@ marked:                  # 新增
 
 ## 2. 测试
 奇怪，只能渲染网络链接的图片，不能渲染资源文件夹中的文件；完全按照官方说明配置
-![测试图片](img.jpg)
+![测试图片](post-img/img.jpg)
 
 
-{% asset_img img.jpg This is a test image %}
+{% asset_img post-img/img.jpg This is a test image %}
 
 ![测试图床](https://github.com/Check-LC/ops_blog/tree/main/source/_posts/post-img/img.jpg)
 
