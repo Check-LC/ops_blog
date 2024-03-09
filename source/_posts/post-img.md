@@ -14,7 +14,13 @@ marked:                  # 新增
 ```
 
 ## 2. 测试
-![测试图片](0.jpg)
+[测试图片](img.jpg)
+
+{% asset_img img.jpg This is a test image %}
 
 ## 3. reference
-(reference](https://blog.csdn.net/2301_77285173/article/details/130189857)
+[reference](https://blog.csdn.net/2301_77285173/article/details/130189857)
+
+## 4. 测试嵌入视频
+
+<iframe src="//player.bilibili.com/player.html?aid=552069936&bvid=BV1Hi4y117BB&cid=542945776&p=5" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
