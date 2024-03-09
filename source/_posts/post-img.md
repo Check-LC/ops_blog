@@ -14,9 +14,9 @@ marked:                  # 新增
 ```
 
 ## 2. 测试
-\![测试图片](img.jpg)
+![测试图片](post-img/img.jpg)
 
-{% asset_img img.jpg This is a test image %}
+{% asset_img post-img/img.jpg This is a test image %}
 
 ![测试图床](https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg)
 
@@ -47,5 +47,3 @@ frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolu
 </iframe>
 </div>
 
-
-<iframe src="//player.bilibili.com/player.html?aid=xxx&bvid=yyy&cid=zzz&page=1&high_quality=1&danmaku=0" allowfullscreen="allowfullscreen" width="100%" height="500" scrolling="no" frameborder="0" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts"></iframe>
