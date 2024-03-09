@@ -14,7 +14,7 @@ marked:                  # 新增
 ```
 
 ## 2. 测试
-[测试图片](img.jpg)
+\![测试图片](img.jpg)
 
 {% asset_img img.jpg This is a test image %}
 
