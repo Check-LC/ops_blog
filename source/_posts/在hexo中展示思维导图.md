@@ -8,7 +8,8 @@ toc: true
 ### 1. 项目来源[此处](https://github.com/maxchang3/hexo-markmap)
 ### 2. .xmind 文件转换为 md 文件，放入下方 markmap 中
 
-{ % markmap 800px % }
+```
+{% markmap 400px %}
 - links
 - **inline** ~~text~~ *styles*
 - multiline
@@ -19,8 +20,22 @@ toc: true
   console.log('code block');
   ```
 - KaTeX - $x = {-b \pm \sqrt{b^2-4ac} \over 2a}$
-{ % endmarkmap % }
-
+{% endmarkmap %}
+```
+{% raw %}
+{% markmap 800px %}
+- links
+- **inline** ~~text~~ *styles*
+- multiline
+  text
+- `inline code`
+- ```js
+  console.log('code block');
+  console.log('code block');
+  ```
+- KaTeX - $x = {-b \pm \sqrt{b^2-4ac} \over 2a}$
+{% endmarkmap %}
+{% endraw %}
 ### 3. xmind2md
 [作者指路](https://github.com/EXKulo/xmind_markdown_converter)
 使用此程序：`python xmind2md.py -source {xmind的文件路径} -output {markdown的输出路径}` \
@@ -33,3 +48,8 @@ pip 不能install ，所以安装了miniconda，然后`conda install pysocks`；
 
 ### 5. 破解版 xmind 测试
 导出成功，但是格式不能在此成功渲染出来
+
+### 6. Nunjuck Error
+markmap 渲染失败
+报错： `{% endmarkmap %} unknown tag`
+解决：用{% raw %}{% endraw %}包裹其中内容
