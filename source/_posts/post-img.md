@@ -15,13 +15,14 @@ marked:                  # 新增
 
 ## 2. 测试
 奇怪，只能渲染网络链接的图片，不能渲染资源文件夹中的文件；完全按照官方说明配置
-后续准备使用图床
+后续准备使用图床, 选择了这个平台[mjj.today](https://mjj.today/)
 <!-- ![测试图片](post-img/img.jpg) -->
 
 
 <!-- {% asset_img 'https://images.pexels.com/photos/20440051/pexels-photo-20440051.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' This is a test image %} -->
 
 ![测试图床](https://images.pexels.com/photos/20440051/pexels-photo-20440051.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)
+
 ![ee074148edfc1f63b015446c40b02ef2.png](https://ice.frostsky.com/2024/03/09/ee074148edfc1f63b015446c40b02ef2.png)
 
 ## 3. reference
