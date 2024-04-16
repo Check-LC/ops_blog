@@ -4,9 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="BLOG">
-    <meta name="description" content="条件：需要有一个公网中的主机，如果需要通过域名进行 http 类型的穿透，需要有域名。说明：没有 ssl 证书，所以都是基于 http 的尝试，后续补充 https。
-服务端配置frps .toml 基本如此，没有特殊需要将不会改githu">
+    <meta name="keywords" content="FRP 穿透并代理到ingressroute, BLOG">
+    <meta name="description" content="公网访问家中的试验虚拟机上的kube集群">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>BLOG</title>
+    <title>FRP 穿透并代理到ingressroute | BLOG</title>
     <link rel="icon" type="image/png" href="/ops_blog/favicon.png">
     
     <style>
@@ -311,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/ops_blog/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/ops_blog/medias/featureimages/1.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title"></h1>
+                    <h1 class="description center-align post-title">FRP 穿透并代理到ingressroute</h1>
                 </div>
             </div>
         </div>
@@ -338,12 +337,29 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/ops_blog/tags/FRP/">
+                                <span class="chip bg-color">FRP</span>
+                            </a>
+                        
+                            <a href="/ops_blog/tags/IngressRoute/">
+                                <span class="chip bg-color">IngressRoute</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/ops_blog/categories/ops/" class="post-category">
+                                ops
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -525,7 +541,7 @@ sudo systemctl enable --now frps<span aria-hidden="true" class="line-numbers-row
     server_name rancher.MyDomainname.cn;
 
     location &#x2F; &#123;
-        proxy_pass https:&#x2F;&#x2F;rancher.homelab.net;  # 原使用的是http，或许家中的集群配置了traefik 使用tls
+        proxy_pass https:&#x2F;&#x2F;rancher.homelab.net;  # 原使用的是http，或许家中的集群配置了traefik 使用tls，待验证
         proxy_set_header Host rancher.homelab.net; # 此项配置不影响
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -595,7 +611,15 @@ sudo systemctl enable --now frps<span aria-hidden="true" class="line-numbers-row
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/ops_blog/tags/FRP/">
+                                    <span class="chip bg-color">FRP</span>
+                                </a>
+                            
+                                <a href="/ops_blog/tags/IngressRoute/">
+                                    <span class="chip bg-color">IngressRoute</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -648,15 +672,15 @@ sudo systemctl enable --now frps<span aria-hidden="true" class="line-numbers-row
                     <div class="card-image">
                         
                         
-                        <img src="/ops_blog/medias/featureimages/0.jpg" class="responsive-img" alt="">
+                        <img src="/ops_blog/medias/featureimages/1.jpg" class="responsive-img" alt="FRP 穿透并代理到ingressroute">
                         
-                        <span class="card-title"></span>
+                        <span class="card-title">FRP 穿透并代理到ingressroute</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            公网访问家中的试验虚拟机上的kube集群
                         
                     </div>
                     <div class="publish-info">
@@ -665,13 +689,29 @@ sudo systemctl enable --now frps<span aria-hidden="true" class="line-numbers-row
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            LC
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/ops_blog/categories/ops/" class="post-category">
+                                    ops
+                                </a>
+                            
                             
                         </span>
                     </div>
                 </div>
 
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/ops_blog/tags/FRP/">
+                        <span class="chip bg-color">FRP</span>
+                    </a>
+                    
+                    <a href="/ops_blog/tags/IngressRoute/">
+                        <span class="chip bg-color">IngressRoute</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>

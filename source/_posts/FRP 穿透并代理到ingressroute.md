@@ -1,3 +1,11 @@
+---
+title: FRP 穿透并代理到ingressroute
+date: 2024-04-16 10:02:00
+tags: [FRP, IngressRoute]
+categories: ops
+summary: 公网访问家中的试验虚拟机上的kube集群
+---
+
 条件：需要有一个公网中的主机，如果需要通过域名进行 http 类型的穿透，需要有域名。
 说明：没有 ssl 证书，所以都是基于 http 的尝试，后续补充 https。
 ## 服务端配置
@@ -179,7 +187,7 @@ server {
     server_name rancher.MyDomainname.cn;
 
     location / {
-        proxy_pass https://rancher.homelab.net;  # 原使用的是http，或许家中的集群配置了traefik 使用tls
+        proxy_pass https://rancher.homelab.net;  # 原使用的是http，或许家中的集群配置了traefik 使用tls，待验证
         proxy_set_header Host rancher.homelab.net; # 此项配置不影响
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
