@@ -4,8 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="post img, BLOG">
-    <meta name="description" content="hexo 图片渲染展示">
+    <meta name="keywords" content="BLOG">
+    <meta name="description" content="条件：需要有一个公网中的主机，如果需要通过域名进行 http 类型的穿透，需要有域名。说明：没有 ssl 证书，所以都是基于 http 的尝试，后续补充 https。
+服务端配置frps .toml 基本如此，没有特殊需要将不会改githu">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>post img | BLOG</title>
+    <title>BLOG</title>
     <link rel="icon" type="image/png" href="/ops_blog/favicon.png">
     
     <style>
@@ -310,12 +311,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/ops_blog/medias/featureimages/11.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/ops_blog/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">post img</h1>
+                    <h1 class="description center-align post-title"></h1>
                 </div>
             </div>
         </div>
@@ -337,13 +338,9 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/ops_blog/tags/hexo/">
-                                <span class="chip bg-color">hexo</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -355,14 +352,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2024-03-09
+                    2024-04-16
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-03-09
+                    2024-04-16
                 </div>
                 
 
@@ -394,39 +391,147 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-配置修改"><a href="#1-配置修改" class="headerlink" title="1. 配置修改"></a>1. 配置修改</h2><p>修改项目中的<code>_config.yml</code>文件</p>
-<pre class="line-numbers language-none"><code class="language-none">post_asset_folder: true  # 配置为true
-marked:                  # 新增
-  prependRoot: true
-  postAsset: true<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+                <p>条件：需要有一个公网中的主机，如果需要通过域名进行 http 类型的穿透，需要有域名。<br>说明：没有 ssl 证书，所以都是基于 http 的尝试，后续补充 https。</p>
+<h2 id="服务端配置"><a href="#服务端配置" class="headerlink" title="服务端配置"></a>服务端配置</h2><h3 id="frps-toml-基本如此，没有特殊需要将不会改"><a href="#frps-toml-基本如此，没有特殊需要将不会改" class="headerlink" title="frps .toml 基本如此，没有特殊需要将不会改"></a>frps .toml 基本如此，没有特殊需要将不会改</h3><p>github 仓库中有一个目录是 conf，其中可以看到所有的配置和注解</p>
+<pre class="line-numbers language-toml" data-language="toml"><code class="language-toml"><span class="token key property">bindPort</span> <span class="token punctuation">=</span> <span class="token number">7000</span>
+<span class="token key property">bindAddr</span> <span class="token punctuation">=</span> <span class="token string">"my PublicIP"</span>
+<span class="token key property">vhostHTTPPort</span> <span class="token punctuation">=</span> <span class="token number">8080</span>  <span class="token comment"># 使用 Http 类型的代理穿透时需要增加此端口</span>
+<span class="token key property">auth.method</span> <span class="token punctuation">=</span> <span class="token string">"token"</span>
+<span class="token key property">auth.token</span> <span class="token punctuation">=</span> <span class="token string">"domainMyDomainname"</span> <span class="token comment"># 自定义即可</span>
 
-<h2 id="2-测试"><a href="#2-测试" class="headerlink" title="2. 测试"></a>2. 测试</h2><p>奇怪，只能渲染网络链接的图片，不能渲染资源文件夹中的文件；完全按照官方说明配置<br>后续准备使用图床, 选择了这个平台<a target="_blank" rel="noopener" href="https://mjj.today/">mjj.today</a></p>
-<!-- ![测试图片](post-img/img.jpg) -->
+<span class="token key property">subDomainHost</span> <span class="token punctuation">=</span> <span class="token string">"MyDomainname.cn"</span>  <span class="token comment"># 配合 client 端的 subdomain 使用。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="systemd-管理服务"><a href="#systemd-管理服务" class="headerlink" title="systemd 管理服务"></a>systemd 管理服务</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@oncloud html<span class="token punctuation">]</span><span class="token comment"># cat /usr/lib/systemd/system/frps.service</span>
+<span class="token punctuation">[</span>Unit<span class="token punctuation">]</span>
+<span class="token comment"># 服务名称，可自定义</span>
+Description <span class="token operator">=</span> frp server
+After <span class="token operator">=</span> network.target syslog.target
+Wants <span class="token operator">=</span> network.target
 
+<span class="token punctuation">[</span>Service<span class="token punctuation">]</span>
+Type <span class="token operator">=</span> simple
+<span class="token comment"># 启动frps的命令，需修改为您的frps的安装路径</span>
+ExecStart <span class="token operator">=</span> /usr/local/bin/frps <span class="token parameter variable">-c</span> /etc/frp/frps.toml
 
-<!--  -->
+<span class="token punctuation">[</span>Install<span class="token punctuation">]</span>
+WantedBy <span class="token operator">=</span> multi-user.target<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="https://images.pexels.com/photos/20440051/pexels-photo-20440051.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="测试图床"></p>
-<p><img src="https://ice.frostsky.com/2024/03/09/ee074148edfc1f63b015446c40b02ef2.png" alt="ee074148edfc1f63b015446c40b02ef2.png"></p>
-<h2 id="3-reference"><a href="#3-reference" class="headerlink" title="3. reference"></a>3. reference</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/2301_77285173/article/details/130189857">reference 1</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/104996801">reference 2</a></p>
-<h2 id="4-测试嵌入视频"><a href="#4-测试嵌入视频" class="headerlink" title="4. 测试嵌入视频"></a>4. 测试嵌入视频</h2><p>这是直接使用b站视频分享中的嵌入代码，显示不友好</p>
-<pre class="line-numbers language-none"><code class="language-none">&lt;iframe src&#x3D;&quot;&#x2F;&#x2F;player.bilibili.com&#x2F;player.html?aid&#x3D;552069936&amp;bvid&#x3D;BV1Hi4y117BB&amp;cid&#x3D;542945776&amp;p&#x3D;5&quot; scrolling&#x3D;&quot;no&quot; border&#x3D;&quot;0&quot; frameborder&#x3D;&quot;no&quot; framespacing&#x3D;&quot;0&quot; allowfullscreen&#x3D;&quot;true&quot;&gt; &lt;&#x2F;iframe&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p><strong>效果</strong></p>
-<iframe src="//player.bilibili.com/player.html?aid=552069936&bvid=BV1Hi4y117BB&cid=542945776&p=5" scrolling="yes" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+<pre class="line-numbers language-none"><code class="language-none">sudo systemctl daemon-reload
+sudo systemctl enable --now frps<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><strong>调整</strong></p>
-<pre class="line-numbers language-none"><code class="language-none">&lt;div style&#x3D;&quot;position: relative; width: 100%; height: 0; padding-bottom: 75%;&quot;&gt;
-&lt;iframe src&#x3D;&quot;&#x2F;&#x2F;player.bilibili.com&#x2F;player.html?aid&#x3D;552069936&amp;bvid&#x3D;BV1Hi4y117BB&amp;cid&#x3D;542945776&amp;p&#x3D;5&quot; scrolling&#x3D;&quot;yes&quot; border&#x3D;&quot;0&quot; 
-frameborder&#x3D;&quot;no&quot; framespacing&#x3D;&quot;0&quot; allowfullscreen&#x3D;&quot;true&quot; style&#x3D;&quot;position: absolute; width: 100%; height: 100%; left: 0; top: 0;&quot;&gt;
-&lt;&#x2F;iframe&gt;
-&lt;&#x2F;div&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p><strong>调整效果</strong></p>
-<div style="position: relative; width: 100%; height: 0; padding-bottom: 75%;">
-<iframe src="//player.bilibili.com/player.html?aid=552069936&bvid=BV1Hi4y117BB&cid=542945776&p=5" scrolling="yes" border="0" 
-frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;">
-</iframe>
-</div>
+<p>因为是使用 http 类型，还给公网的这个机器做了 nginx 代理</p>
+<h3 id="nginx-代理配置文件"><a href="#nginx-代理配置文件" class="headerlink" title="nginx 代理配置文件"></a>nginx 代理配置文件</h3><pre class="line-numbers language-nginx.conf" data-language="nginx.conf"><code class="language-nginx.conf">server &#123;
+        listen 80;
+        server_name rancher.MyDomainname.cn;
 
+        location &#x2F; &#123;
+            proxy_pass http:&#x2F;&#x2F;my PublicIP:8080;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="客户端使用"><a href="#客户端使用" class="headerlink" title="客户端使用"></a>客户端使用</h2><p>同样可以使用 systemd 管理 frpc 服务</p>
+<h3 id="案例-1：ssh-连接内网主机"><a href="#案例-1：ssh-连接内网主机" class="headerlink" title="案例 1：ssh 连接内网主机"></a>案例 1：ssh 连接内网主机</h3><h4 id="frpc-toml"><a href="#frpc-toml" class="headerlink" title="frpc .toml"></a>frpc .toml</h4><pre class="line-numbers language-toml" data-language="toml"><code class="language-toml"><span class="token key property">serverAddr</span> <span class="token punctuation">=</span> <span class="token string">"my PublicIP"</span>
+<span class="token key property">serverPort</span> <span class="token punctuation">=</span> <span class="token number">7000</span>
+<span class="token key property">auth.method</span> <span class="token punctuation">=</span> <span class="token string">"token"</span>
+<span class="token key property">auth.token</span> <span class="token punctuation">=</span> <span class="token string">"domainMyDomainname"</span>
+
+<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token table class-name">proxies</span><span class="token punctuation">]</span><span class="token punctuation">]</span>    <span class="token comment"># 固定</span>
+<span class="token key property">name</span> <span class="token punctuation">=</span> <span class="token string">"ssh"</span>   <span class="token comment"># 自定义，唯一，相当于这个配置块的名称</span>
+<span class="token key property">type</span> <span class="token punctuation">=</span> <span class="token string">"tcp"</span>
+<span class="token key property">localIP</span> <span class="token punctuation">=</span> <span class="token string">"127.0.0.1"</span>  <span class="token comment">#主要是需要监听到子网这个主机的ipv4地址</span>
+<span class="token key property">localPort</span> <span class="token punctuation">=</span> <span class="token number">22</span>         <span class="token comment"># 子网这个主机的 ssh 端口</span>
+<span class="token key property">remotePort</span> <span class="token punctuation">=</span> <span class="token number">6000</span>     <span class="token comment"># 配置后，公网主机将自行监听此端口</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p> <code>ssh -o Port=6000 子网机器 user 名@公网主机名</code>  <br> 效果：在 WLAN 主机执行后，6000–&gt;7000–&gt;subnet &#96;</p>
+<h3 id="案例-2：自定义域名访问内网服务"><a href="#案例-2：自定义域名访问内网服务" class="headerlink" title="案例 2：自定义域名访问内网服务"></a>案例 2：自定义域名访问内网服务</h3><h4 id="frpc-toml-1"><a href="#frpc-toml-1" class="headerlink" title="frpc .toml"></a>frpc .toml</h4><pre class="line-numbers language-toml" data-language="toml"><code class="language-toml"><span class="token key property">serverAddr</span> <span class="token punctuation">=</span> <span class="token string">"my PublicIP"</span>
+<span class="token key property">serverPort</span> <span class="token punctuation">=</span> <span class="token number">7000</span>
+<span class="token key property">auth.method</span> <span class="token punctuation">=</span> <span class="token string">"token"</span>
+<span class="token key property">auth.token</span> <span class="token punctuation">=</span> <span class="token string">"domainMyDomainname"</span>
+
+<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token table class-name">proxies</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+<span class="token key property">name</span> <span class="token punctuation">=</span> <span class="token string">"test1-web"</span>
+<span class="token key property">type</span> <span class="token punctuation">=</span> <span class="token string">"http"</span>
+<span class="token key property">localIP</span> <span class="token punctuation">=</span> <span class="token string">"192.168.3.20"</span>  <span class="token comment"># 内网Nginx</span>
+<span class="token key property">localPort</span> <span class="token punctuation">=</span> <span class="token number">80</span>            <span class="token comment"># ip + port，相当于将frpserver的流量定向到这个内网的地址，在此例中，这个地址是nginx，所以会再指向它代理的地址</span>
+<span class="token key property">subdomain</span> <span class="token punctuation">=</span> <span class="token string">"rancher"</span>  <span class="token comment"># 配合 server 端的配置，组成域名rancher.MyDomainname.cn；这时在公网中需要给自己域名增加的一个解析</span>
+<span class="token key property">hostHeaderRewrite</span> <span class="token punctuation">=</span> <span class="token string">"master.MyDomainname.cn"</span> <span class="token comment"># 会将 subdoamin 组成的host会替换为此配置，以后可以只在域名解析使用以上一个A记录就好</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>[!annotation]<br>基于上述配置，我在自己的内网中还有 dns 和 nginx 配合使用，子网主机都使用内网 DNS。</p>
+</blockquote>
+<p>DNS 中使用的域名是 testlab.net；解析记录主要是内网中的服务。<br>Nginx 使用：http 穿透后，流量会到我的 nginx 80 端口，然后配置一个代理转发，流量将去向真正的服务的地址（DNS 需要做好目标的解析）。</p>
+<h4 id="nginx-proxy-example"><a href="#nginx-proxy-example" class="headerlink" title="nginx proxy example"></a>nginx proxy example</h4><pre class="line-numbers language-nginx.conf" data-language="nginx.conf"><code class="language-nginx.conf">server &#123;
+    listen 80;
+    server_name master.MyDomainname.cn;
+
+    location &#x2F; &#123;
+        proxy_pass http:&#x2F;&#x2F;master.homelab.net;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>基于这个客户端配置，我在公网访问 rancher.MyDomainname.cn 就将能够访问子网中的，master.homelab.net 的服务（这是一个普通的web）<br>流量：</p>
+<pre class="line-numbers language-none"><code class="language-none">desktop--&gt; rancher.MyDomainname.cn --&gt; External DNS --&gt; Server under WLAN --&gt; nginx --&gt; frps --&gt; frpc --&gt; nginx proxy --&gt; internal nginx --&gt; target service<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="案例-3：内网中-nginx-代理-traefikingressrout（区别于普通web）"><a href="#案例-3：内网中-nginx-代理-traefikingressrout（区别于普通web）" class="headerlink" title="案例 3：内网中 nginx 代理 traefikingressrout（区别于普通web）"></a>案例 3：内网中 nginx 代理 traefikingressrout（区别于普通web）</h3><h4 id="frpc-toml-2"><a href="#frpc-toml-2" class="headerlink" title="frpc .toml"></a>frpc .toml</h4><pre class="line-numbers language-toml" data-language="toml"><code class="language-toml"><span class="token key property">serverAddr</span> <span class="token punctuation">=</span> <span class="token string">"my PublicIP"</span>
+<span class="token key property">serverPort</span> <span class="token punctuation">=</span> <span class="token number">7000</span>
+<span class="token key property">auth.method</span> <span class="token punctuation">=</span> <span class="token string">"token"</span>
+<span class="token key property">auth.token</span> <span class="token punctuation">=</span> <span class="token string">"domainMyDomainname"</span>
+
+<span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token table class-name">proxies</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+<span class="token key property">name</span> <span class="token punctuation">=</span> <span class="token string">"test2-web"</span>
+<span class="token key property">type</span> <span class="token punctuation">=</span> <span class="token string">"http"</span>
+<span class="token key property">localIP</span> <span class="token punctuation">=</span> <span class="token string">"192.168.3.20"</span>
+<span class="token key property">localPort</span> <span class="token punctuation">=</span> <span class="token number">80</span>
+<span class="token key property">subdomain</span> <span class="token punctuation">=</span> <span class="token string">"rancher"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="nginx-proxy-example-1"><a href="#nginx-proxy-example-1" class="headerlink" title="nginx proxy example"></a>nginx proxy example</h4><pre class="line-numbers language-nginx.conf" data-language="nginx.conf"><code class="language-nginx.conf">server &#123;
+    listen 80;
+    server_name rancher.MyDomainname.cn;
+
+    location &#x2F; &#123;
+        proxy_pass http:&#x2F;&#x2F;rancher.homelab.net;
+        proxy_set_header Host rancher.homelab.net;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>[! failure]<br>上述测试出现不能成功转发，甚至不是 404。而且直接在浏览器地址栏显示代理后的 rancher. Homelab. Net；无论是否配置 Host 变量，无论这个<br>Host 是使用$host 或者是静态的 <code>rancher.homelab.net</code></p>
+</blockquote>
+<h4 id="单独测试-nginx-代理-ingressroute"><a href="#单独测试-nginx-代理-ingressroute" class="headerlink" title="单独测试 nginx 代理 ingressroute"></a>单独测试 nginx 代理 ingressroute</h4><p>这个是在公司内网，仅测试 nginx 转发到 traefik ingressroute 的配置，成功访问。但是在家中的环境下仍然不能成功访问。</p>
+<pre class="line-numbers language-nginx.conf" data-language="nginx.conf"><code class="language-nginx.conf">server &#123;
+    listen 80;
+    server_name rancher.MyDomainname.cn;
+
+    location &#x2F; &#123;
+        proxy_pass http:&#x2F;&#x2F;monitorprom.testlab.net;
+        proxy_set_header Host monitorprom.testlab.net;   # 原以为此配置很重要，不然经 nginx 转发后的请求host header不正确（可测试发现配置与否都成功实现代理了）
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="测试效果"><a href="#测试效果" class="headerlink" title="测试效果"></a>测试效果</h4><p><img src="https://ice.frostsky.com/2024/04/16/c8572ce35380b5e78eb2895579f6573b.png" alt="nginx转发到traefik ingressroute 的效果"></p>
+<h4 id="成功穿透下的配置"><a href="#成功穿透下的配置" class="headerlink" title="成功穿透下的配置"></a>成功穿透下的配置</h4><p>frpc 没有变化，nginx 如下</p>
+<pre class="line-numbers language-nginx.conf" data-language="nginx.conf"><code class="language-nginx.conf">server &#123;
+    listen 80;
+    server_name rancher.MyDomainname.cn;
+
+    location &#x2F; &#123;
+        proxy_pass https:&#x2F;&#x2F;rancher.homelab.net;  # 原使用的是http，或许家中的集群配置了traefik 使用tls
+        proxy_set_header Host rancher.homelab.net; # 此项配置不影响
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
                 
             </div>
@@ -453,7 +558,7 @@ frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolu
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://check-lc.github.io/ops_blog/ops_blog/2024/03/09/post-img/">https://check-lc.github.io/ops_blog/ops_blog/2024/03/09/post-img/</a>
+                    <a href="https://check-lc.github.io/ops_blog/ops_blog/2024/04/16/frp-chuan-tou-bing-dai-li-dao-ingressroute/">https://check-lc.github.io/ops_blog/ops_blog/2024/04/16/frp-chuan-tou-bing-dai-li-dao-ingressroute/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -490,11 +595,7 @@ frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolu
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/ops_blog/tags/hexo/">
-                                    <span class="chip bg-color">hexo</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -538,9 +639,10 @@ frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolu
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/ops_blog/2024/04/16/frp-chuan-tou-bing-dai-li-dao-ingressroute/">
                     <div class="card-image">
@@ -558,9 +660,9 @@ frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolu
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-04-16
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-16
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -569,6 +671,7 @@ frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolu
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -579,19 +682,19 @@ frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolu
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/ops_blog/2024/03/09/zai-hexo-zhong-zhan-shi-si-wei-dao-tu/">
+                <a href="/ops_blog/2024/03/09/post-img/">
                     <div class="card-image">
                         
                         
-                        <img src="/ops_blog/medias/featureimages/17.jpg" class="responsive-img" alt="在hexo中展示思维导图">
+                        <img src="/ops_blog/medias/featureimages/11.jpg" class="responsive-img" alt="post img">
                         
-                        <span class="card-title">在hexo中展示思维导图</span>
+                        <span class="card-title">post img</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            在博文中插入思维导图
+                            hexo 图片渲染展示
                         
                     </div>
                     <div class="publish-info">
