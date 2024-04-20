@@ -500,6 +500,12 @@ hexo-site@0.0.0 &#x2F;root&#x2F;project&#x2F;ops_blog
 └── hexo-wordcount@6.0.1
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
+<p>** hexo deploy  出现错误 **</p>
+<pre class="line-numbers language-none"><code class="language-none">Error: Spawn failed
+    at ChildProcess.&lt;anonymous&gt; (&#x2F;home&#x2F;user&#x2F;project&#x2F;ops_blog&#x2F;node_modules&#x2F;hexo-util&#x2F;lib&#x2F;spawn.js:51:21)
+    at ChildProcess.emit (node:events:517:28)
+    at ChildProcess._handle.onexit (node:internal&#x2F;child_process:292:12)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>本次的解决办法是，将 .deploy_git 删除，重新 deploy 发布 post 即可。</p>
 
                 
             </div>

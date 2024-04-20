@@ -137,3 +137,11 @@ hexo-site@0.0.0 /root/project/ops_blog
 
 ```
 
+** hexo deploy  出现错误 **
+```
+Error: Spawn failed
+    at ChildProcess.<anonymous> (/home/user/project/ops_blog/node_modules/hexo-util/lib/spawn.js:51:21)
+    at ChildProcess.emit (node:events:517:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:292:12)
+```
+本次的解决办法是，将 .deploy_git 删除，重新 deploy 发布 post 即可。
