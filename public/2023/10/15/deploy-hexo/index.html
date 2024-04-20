@@ -375,7 +375,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-01-17
+                    2024-04-20
                 </div>
                 
 
@@ -452,6 +452,55 @@ hexo server  # 测试运行本工具，发布在本服务器4000端口<span aria
   <span class="token key atrule">preprocess</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
   <span class="token key atrule">line_number</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
   <span class="token key atrule">tab_replace</span><span class="token punctuation">:</span> <span class="token string">''</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><h3 id="迁移到新机器-ubuntu-2004-安装node-npm"><a href="#迁移到新机器-ubuntu-2004-安装node-npm" class="headerlink" title="迁移到新机器 ubuntu 2004 安装node npm"></a>迁移到新机器 ubuntu 2004 安装node npm</h3><h4 id="使用nvm"><a href="#使用nvm" class="headerlink" title="使用nvm"></a>使用nvm</h4><p>nvm 命令安装</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">curl</span> -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh <span class="token operator">|</span> <span class="token function">bash</span>
+
+<span class="token comment"># 申明一下变量，这是执行上述脚本之后在终端的输出提示</span>
+<span class="token builtin class-name">export</span> <span class="token assign-left variable">NVM_DIR</span><span class="token operator">=</span><span class="token string">"<span class="token environment constant">$HOME</span>/.nvm"</span>
+<span class="token punctuation">[</span> <span class="token parameter variable">-s</span> <span class="token string">"<span class="token variable">$NVM_DIR</span>/nvm.sh"</span> <span class="token punctuation">]</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">\</span>. <span class="token string">"<span class="token variable">$NVM_DIR</span>/nvm.sh"</span>  <span class="token comment"># This loads nvm</span>
+<span class="token punctuation">[</span> <span class="token parameter variable">-s</span> <span class="token string">"<span class="token variable">$NVM_DIR</span>/bash_completion"</span> <span class="token punctuation">]</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">\</span>. <span class="token string">"<span class="token variable">$NVM_DIR</span>/bash_completion"</span>
+nvm <span class="token parameter variable">--version</span> <span class="token comment"># 将输出安装版本</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>nvm 安装nodejs</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># download and install Node.js</span>
+nvm <span class="token function">install</span> <span class="token number">18</span>
+
+<span class="token comment"># verifies the right Node.js version is in the environment</span>
+<span class="token function">node</span> <span class="token parameter variable">-v</span> <span class="token comment"># should print `v18.20.2`</span>
+
+<span class="token comment"># verifies the right NPM version is in the environment</span>
+<span class="token function">npm</span> <span class="token parameter variable">-v</span> <span class="token comment"># should print `10.5.0`</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>提示 npm 需要升级<br><code>npm install -g npm@10.5.2</code></p>
+<p>安装 hexo 有关包：</p>
+<pre class="line-numbers language-none"><code class="language-none"> npm install hexo-cli -g
+[root@oncloud ops_blog]# npm ls -depth 0
+npm WARN npm npm does not support Node.js v16.18.1
+npm WARN npm You should probably upgrade to a newer version of node as we
+npm WARN npm can&#39;t make any promises that npm will work with this version.
+npm WARN npm Supported releases of Node.js are the latest release of 6, 8, 9, 10, 11, 12, 13.
+npm WARN npm You can find the latest version at https:&#x2F;&#x2F;nodejs.org&#x2F;
+hexo-site@0.0.0 &#x2F;root&#x2F;project&#x2F;ops_blog
+├── hexo@6.3.0
+├── hexo-deployer-git@4.0.0
+├── hexo-generator-archive@2.0.0
+├── hexo-generator-category@2.0.0
+├── hexo-generator-index@3.0.0
+├── hexo-generator-search@2.4.3
+├── hexo-generator-tag@2.0.0
+├── hexo-markmap@1.2.5
+├── hexo-permalink-pinyin@1.1.0
+├── hexo-renderer-ejs@2.0.0
+├── hexo-renderer-marked@6.1.1
+├── hexo-renderer-stylus@3.0.0
+├── hexo-server@3.0.0
+├── hexo-theme-landscape@1.0.0
+└── hexo-wordcount@6.0.1
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
                 
             </div>
             <hr/>
@@ -620,35 +669,52 @@ hexo server  # 测试运行本工具，发布在本服务器4000端口<span aria
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+                本篇&nbsp;<i class="far fa-dot-circle"></i>
             </div>
             <div class="card">
-                <a href="/ops_blog/2023/10/14/hello-world/">
+                <a href="/ops_blog/2023/10/15/deploy-hexo/">
                     <div class="card-image">
                         
                         
-                        <img src="/ops_blog/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/ops_blog/medias/featureimages/20.jpg" class="responsive-img" alt="deploy_hexo">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">deploy_hexo</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            记录自己使用 hexo 建立这个博客网站的过程，主要内容来源网络。
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-14
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-15
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            LC
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/ops_blog/categories/hexo/" class="post-category">
+                                    hexo
+                                </a>
+                            
                             
                         </span>
                     </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/ops_blog/tags/hexo/">
+                        <span class="chip bg-color">hexo</span>
+                    </a>
+                    
+                    <a href="/ops_blog/tags/blog/">
+                        <span class="chip bg-color">blog</span>
+                    </a>
+                    
                 </div>
                 
             </div>

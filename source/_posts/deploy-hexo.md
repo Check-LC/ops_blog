@@ -78,3 +78,62 @@ prismjs:
   line_number: true
   tab_replace: ''
 ```
+
+
+## 更新
+### 迁移到新机器 ubuntu 2004 安装node npm
+#### 使用nvm 
+nvm 命令安装
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+
+# 申明一下变量，这是执行上述脚本之后在终端的输出提示
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+nvm --version # 将输出安装版本
+```
+
+nvm 安装nodejs
+```bash
+# download and install Node.js
+nvm install 18
+
+# verifies the right Node.js version is in the environment
+node -v # should print `v18.20.2`
+
+# verifies the right NPM version is in the environment
+npm -v # should print `10.5.0`
+```
+
+提示 npm 需要升级
+`npm install -g npm@10.5.2`
+
+安装 hexo 有关包：
+```
+ npm install hexo-cli -g
+[root@oncloud ops_blog]# npm ls -depth 0
+npm WARN npm npm does not support Node.js v16.18.1
+npm WARN npm You should probably upgrade to a newer version of node as we
+npm WARN npm can't make any promises that npm will work with this version.
+npm WARN npm Supported releases of Node.js are the latest release of 6, 8, 9, 10, 11, 12, 13.
+npm WARN npm You can find the latest version at https://nodejs.org/
+hexo-site@0.0.0 /root/project/ops_blog
+├── hexo@6.3.0
+├── hexo-deployer-git@4.0.0
+├── hexo-generator-archive@2.0.0
+├── hexo-generator-category@2.0.0
+├── hexo-generator-index@3.0.0
+├── hexo-generator-search@2.4.3
+├── hexo-generator-tag@2.0.0
+├── hexo-markmap@1.2.5
+├── hexo-permalink-pinyin@1.1.0
+├── hexo-renderer-ejs@2.0.0
+├── hexo-renderer-marked@6.1.1
+├── hexo-renderer-stylus@3.0.0
+├── hexo-server@3.0.0
+├── hexo-theme-landscape@1.0.0
+└── hexo-wordcount@6.0.1
+
+```
+
