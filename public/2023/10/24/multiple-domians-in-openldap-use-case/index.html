@@ -605,7 +605,7 @@ Sep 15 14:19:14 example-sys-test-06 slapd[10052]: conn&#x3D;1098 fd&#x3D;12 clos
 </ul>
 <h2 id="三、-web管理器配置"><a href="#三、-web管理器配置" class="headerlink" title="三、 web管理器配置"></a>三、 web管理器配置</h2><h3 id="3-1-安装-LAM-（用于管理的Web-UI）"><a href="#3-1-安装-LAM-（用于管理的Web-UI）" class="headerlink" title="3.1 安装  LAM （用于管理的Web UI）"></a>3.1 安装  LAM （用于管理的Web UI）</h3><pre class="line-numbers language-none"><code class="language-none">apt-get install ldap-account-manager<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>访问 <a target="_blank" rel="noopener" href="http://ip/lam">http://ip/lam</a> ，lam的所有配置都可以在web端配置，不需要去服务器上修改一行代码</p>
-<h4 id="3-1-1-LAM-configuration-helm-安装的主要修改内容"><a href="#3-1-1-LAM-configuration-helm-安装的主要修改内容" class="headerlink" title="3.1.1 LAM configuration (helm 安装的主要修改内容)"></a>3.1.1 LAM configuration (<a href="https://check-lc.github.io/ops_blog/2023/12/04/the-first-time-using-helm-charts/">helm 安装的主要修改内容</a>)</h4><pre>
+<h4 id="3-1-1-LAM-configuration-helm-安装的主要修改内容"><a href="#3-1-1-LAM-configuration-helm-安装的主要修改内容" class="headerlink" title="3.1.1 LAM configuration (helm 安装的主要修改内容)"></a>3.1.1 LAM configuration (<a target="_blank" rel="noopener" href="https://check-lc.github.io/ops_blog/2023/12/04/the-first-time-using-helm-charts/">helm 安装的主要修改内容</a>)</h4><pre>
 主要内容：
   LDAP_DOMAIN: example.net;ibexample.com
   LDAP_BASE_DN: dc=example,dc=net;dc=ibexample,dc=com
@@ -1610,7 +1610,7 @@ olcAccess: &#123;2&#125;to dn.subtree&#x3D;&quot;dc&#x3D;ibexample,dc&#x3D;com&q
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://check-lc.github.io/ops_blog/ops_blog/2023/10/24/multiple-domians-in-openldap-use-case/">https://check-lc.github.io/ops_blog/ops_blog/2023/10/24/multiple-domians-in-openldap-use-case/</a>
+                    <a href="https://blog.chaoslong.cn/ops_blog/2023/10/24/multiple-domians-in-openldap-use-case/">https://blog.chaoslong.cn/ops_blog/2023/10/24/multiple-domians-in-openldap-use-case/</a>
                 </span>
             </div>
             <div class="reprint__notice">
