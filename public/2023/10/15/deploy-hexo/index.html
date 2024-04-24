@@ -375,7 +375,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-04-20
+                    2024-04-24
                 </div>
                 
 
@@ -506,6 +506,25 @@ hexo-site@0.0.0 &#x2F;root&#x2F;project&#x2F;ops_blog
     at ChildProcess.emit (node:events:517:28)
     at ChildProcess._handle.onexit (node:internal&#x2F;child_process:292:12)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>本次的解决办法是，将 .deploy_git 删除，重新 deploy 发布 post 即可。</p>
+<h2 id="更新二"><a href="#更新二" class="headerlink" title="更新二"></a>更新二</h2><h3 id="文章-front-matter-设置"><a href="#文章-front-matter-设置" class="headerlink" title="文章 front-matter 设置"></a>文章 front-matter 设置</h3><ul>
+<li>设置路径<code>/scaffolds/post.md</code>，文章元数据默认就不用再次修改了<pre class="line-numbers language-none"><code class="language-none">---
+title: typora-vue-theme主题介绍
+date: 2018-09-07 09:25:00
+author: 赵奇
+img: &#x2F;source&#x2F;images&#x2F;xxx.jpg
+top: true
+cover: true
+coverImg: &#x2F;images&#x2F;1.jpg
+password: 8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92
+toc: false
+mathjax: false
+summary: 这是你自定义的文章摘要内容，如果这个属性有值，文章卡片摘要就显示这段文字，否则程序会自动截取文章的部分内容作为摘要
+categories: Markdown
+tags:
+  - Typora
+  - Markdown
+---<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
 
                 
             </div>
