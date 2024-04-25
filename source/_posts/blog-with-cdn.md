@@ -17,3 +17,4 @@ test2 发布失败不知原因
 test3 change the url
 test4 republish
 test5 check-lc.github.io
+test6 bolg 页面失效
