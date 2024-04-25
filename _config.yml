@@ -116,7 +116,7 @@ theme: hexo-theme-matery
 deploy:
   type: git
   # repo: https://github.com/Check-LC/ops_blog/
-  repo: git@github.com:Check-LC/ops_blog.git
+  repo: git@github.com:Check-LC/check-lc.github.io.git
   branch: gh-pages
 
 search:
