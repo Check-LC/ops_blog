@@ -169,3 +169,19 @@ tags:
 ---
 ```
 
+## 更新三
+### 发布到 github pages 
+进入仓库的设置页面修改代码仓名，Settings→General→Repository name→Rename，修改为对应的*.github.io路径
+### 修改 hexo 发布配置 `_config.yml`
+```
+# 发布到 github 时希望得到的访问地址和路径
+url: https://check-lc.github.io
+root: /
+# 发布设置
+deploy:
+  type: git
+  repo: git@github.com:Check-LC/check-lc.github.io.git
+  branch: gh-pages
+```
+
+访问这个url `https://check-lc.github.io` 即是blog地址

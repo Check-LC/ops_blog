@@ -221,7 +221,7 @@
         
         <li><div class="divider"></div></li>
         <li>
-            <a href="https://github.com/Check-LC/ops_blog" class="waves-effect waves-light" target="_blank">
+            <a href="https://github.com/Check-LC/check-lc.github.io.git" class="waves-effect waves-light" target="_blank">
                 <i class="fab fa-github-square fa-fw"></i>Fork Me
             </a>
         </li>
@@ -278,7 +278,7 @@
     }
 </style>
 
-<a href="https://github.com/Check-LC/ops_blog" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+<a href="https://github.com/Check-LC/check-lc.github.io.git" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
    data-tooltip="Fork Me" data-position="left" data-delay="50">
     <svg viewBox="0 0 250 250" aria-hidden="true">
         <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
@@ -525,6 +525,17 @@ tags:
   - Markdown
 ---<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
 </ul>
+<h2 id="更新三"><a href="#更新三" class="headerlink" title="更新三"></a>更新三</h2><h3 id="发布到-github-pages"><a href="#发布到-github-pages" class="headerlink" title="发布到 github pages"></a>发布到 github pages</h3><p>进入仓库的设置页面修改代码仓名，Settings→General→Repository name→Rename，修改为对应的*.github.io路径</p>
+<h3 id="修改-hexo-发布配置-config-yml"><a href="#修改-hexo-发布配置-config-yml" class="headerlink" title="修改 hexo 发布配置 _config.yml"></a>修改 hexo 发布配置 <code>_config.yml</code></h3><pre class="line-numbers language-none"><code class="language-none"># 发布到 github 时希望得到的访问地址和路径
+url: https:&#x2F;&#x2F;check-lc.github.io
+root: &#x2F;
+# 发布设置
+deploy:
+  type: git
+  repo: git@github.com:Check-LC&#x2F;check-lc.github.io.git
+  branch: gh-pages<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>访问这个url <code>https://check-lc.github.io</code> 即是blog地址</p>
 
                 
             </div>
