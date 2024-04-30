@@ -39,9 +39,7 @@ certmanager_controller_sync_call_count{controller="ingress-shim"} 5
 
 ## 简单使用并验证指标数量
 ### 域名和阿里 dns 赋权用户
-[01_域名管理](domain-management.md) \
-{% post_link 'domain-management' %}
-
+域名迁移 {% post_link 'domain-management' %}
 
 #### RAM 用户权限
 
@@ -124,7 +122,7 @@ metadata:
 spec:
   acme:
     # Change to your letsencrypt email
-    email: chao.long@inboc.net
+    email: chao.long@keyword.net
     # 测试阶段可以用 staging （无限制）
     server: https://acme-staging-v02.api.letsencrypt.org/directory
     # 正式

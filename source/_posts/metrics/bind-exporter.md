@@ -7,7 +7,7 @@ img:
 top:
 cover:
 password:
-summary: 我的域名是来自较小的域名注册商，为了注册证书，将其迁移到 aliyun 管理，此处是来自阿里云的教程
+summary: bind9 DNS 指标导出
 categories: Opentelemetry
 tags: [metrics]
 ---

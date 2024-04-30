@@ -421,10 +421,7 @@ certmanager_clock_time_seconds_gauge 1.713170784e+09
 &gt;# TYPE certmanager_controller_sync_call_count counter
 certmanager_controller_sync_call_count&#123;controller&#x3D;&quot;ingress-shim&quot;&#125; 5<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </blockquote>
-<h2 id="简单使用并验证指标数量"><a href="#简单使用并验证指标数量" class="headerlink" title="简单使用并验证指标数量"></a>简单使用并验证指标数量</h2><h3 id="域名和阿里-dns-赋权用户"><a href="#域名和阿里-dns-赋权用户" class="headerlink" title="域名和阿里 dns 赋权用户"></a>域名和阿里 dns 赋权用户</h3><p><a href="domain-management.md">01_域名管理</a> \</p>
-<a href="/2024/04/30/domain-management/" title="domain-management">domain-management</a>
-
-
+<h2 id="简单使用并验证指标数量"><a href="#简单使用并验证指标数量" class="headerlink" title="简单使用并验证指标数量"></a>简单使用并验证指标数量</h2><h3 id="域名和阿里-dns-赋权用户"><a href="#域名和阿里-dns-赋权用户" class="headerlink" title="域名和阿里 dns 赋权用户"></a>域名和阿里 dns 赋权用户</h3><p>域名迁移 <a href="/2024/04/30/domain-management/" title="domain-management">domain-management</a></p>
 <h4 id="RAM-用户权限"><a href="#RAM-用户权限" class="headerlink" title="RAM 用户权限"></a>RAM 用户权限</h4><p>目的：在 cert-manager 中使用 lets encrypt 通过 alidns 的 webhook 来创建证书。 需要：创建一个子用户<br>在 RAM 访问控制台创建一个用户，给予 api 访问即可，创建后点击用户，编辑授权。</p>
 <p><img src="https://i.mji.rip/2024/04/30/28b2ee3eedfdf53267a55dd203fc3972.png" alt="28b2ee3eedfdf53267a55dd203fc3972.png"></p>
 <h3 id="alidns-webhook"><a href="#alidns-webhook" class="headerlink" title="alidns-webhook"></a>alidns-webhook</h3><blockquote>
@@ -494,7 +491,7 @@ kubectl create secret generic alidns<span class="token punctuation">-</span>secr
 <span class="token key atrule">spec</span><span class="token punctuation">:</span>
   <span class="token key atrule">acme</span><span class="token punctuation">:</span>
     <span class="token comment"># Change to your letsencrypt email</span>
-    <span class="token key atrule">email</span><span class="token punctuation">:</span> chao.long@inboc.net
+    <span class="token key atrule">email</span><span class="token punctuation">:</span> chao.long@keyword.net
     <span class="token comment"># 测试阶段可以用 staging （无限制）</span>
     <span class="token key atrule">server</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//acme<span class="token punctuation">-</span>staging<span class="token punctuation">-</span>v02.api.letsencrypt.org/directory
     <span class="token comment"># 正式</span>
@@ -717,32 +714,44 @@ spec:
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2024/04/24/blog-with-cdn/">
+                <a href="/2024/04/30/kube-prometheus-stack/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="blog-with-cdn">
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="kube-prometheus-stack">
                         
-                        <span class="card-title">blog-with-cdn</span>
+                        <span class="card-title">kube-prometheus-stack</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            测试发布在github pages 的博客自定义域名并且在cdn中分发
+                            kube-prometheus-stack是prometheus监控k8s集群的套件，可以通过helm一键安装，同时带有监控的模板。
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-24
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-30
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            LC
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/kubernetes/" class="post-category">
+                                    kubernetes
+                                </a>
+                            
                             
                         </span>
                     </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/prometheus/">
+                        <span class="chip bg-color">prometheus</span>
+                    </a>
+                    
                 </div>
                 
             </div>
