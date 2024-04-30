@@ -477,12 +477,12 @@ helm upgrade <span class="token parameter variable">-i</span> alidns-webhook cer
   <span class="token key atrule">namespace</span><span class="token punctuation">:</span> cert<span class="token punctuation">-</span>manager
 <span class="token key atrule">type</span><span class="token punctuation">:</span> Opaque
 <span class="token key atrule">data</span><span class="token punctuation">:</span>
-  <span class="token key atrule">accesskey-id</span><span class="token punctuation">:</span> xxxxxxxxxxxxxxxxVBFV0JG  <span class="token comment"># echo -n "shdhd" | base64 ; echo -n 参数没换行符输出</span>
-  <span class="token key atrule">accesskey-secret</span><span class="token punctuation">:</span> xxxxxxxxxxxx2tNYTNwU0liRWta
+  <span class="token key atrule">accesskey-id</span><span class="token punctuation">:</span> xxxxxxxxxxxxxxxx  <span class="token comment"># echo -n "shdhd" | base64 ; echo -n 参数没换行符输出</span>
+  <span class="token key atrule">accesskey-secret</span><span class="token punctuation">:</span> xxxxxxxxxxxx
 
 或者
 
-kubectl create secret generic alidns<span class="token punctuation">-</span>secrets <span class="token punctuation">-</span><span class="token punctuation">-</span>from<span class="token punctuation">-</span>literal="access<span class="token punctuation">-</span>token=xxxxxxx3PUPEWBF" <span class="token punctuation">-</span><span class="token punctuation">-</span>from<span class="token punctuation">-</span>literal="secret<span class="token punctuation">-</span>key=xxxxxxxNhEOxxJiewkxxxIbEkZ"<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+kubectl create secret generic alidns<span class="token punctuation">-</span>secrets <span class="token punctuation">-</span><span class="token punctuation">-</span>from<span class="token punctuation">-</span>literal="access<span class="token punctuation">-</span>token=xxxxxxx" <span class="token punctuation">-</span><span class="token punctuation">-</span>from<span class="token punctuation">-</span>literal="secret<span class="token punctuation">-</span>key=xxxxxxxxxx"<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h3 id="Create-Letsencrypt-clusterissuer"><a href="#Create-Letsencrypt-clusterissuer" class="headerlink" title="Create Letsencrypt clusterissuer"></a>Create Letsencrypt clusterissuer</h3><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> cert<span class="token punctuation">-</span>manager.io/v1
 <span class="token key atrule">kind</span><span class="token punctuation">:</span> ClusterIssuer
 <span class="token key atrule">metadata</span><span class="token punctuation">:</span>

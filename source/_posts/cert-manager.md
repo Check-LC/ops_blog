@@ -105,12 +105,12 @@ metadata:
   namespace: cert-manager
 type: Opaque
 data:
-  accesskey-id: xxxxxxxxxxxxxxxxVBFV0JG  # echo -n "shdhd" | base64 ; echo -n 参数没换行符输出
-  accesskey-secret: xxxxxxxxxxxx2tNYTNwU0liRWta
+  accesskey-id: xxxxxxxxxxxxxxxx  # echo -n "shdhd" | base64 ; echo -n 参数没换行符输出
+  accesskey-secret: xxxxxxxxxxxx
 
 或者
 
-kubectl create secret generic alidns-secrets --from-literal="access-token=xxxxxxx3PUPEWBF" --from-literal="secret-key=xxxxxxxNhEOxxJiewkxxxIbEkZ"
+kubectl create secret generic alidns-secrets --from-literal="access-token=xxxxxxx" --from-literal="secret-key=xxxxxxxxxx"
 ```
 ### Create Letsencrypt clusterissuer
 ```yaml
