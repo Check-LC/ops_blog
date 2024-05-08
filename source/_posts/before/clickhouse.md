@@ -47,7 +47,9 @@ tar -zxvf /opt/apache-zookeeper-3.8.3-bin.tar.gz -C /usr/local/zookeeper --strip
 echo 1 > /usr/local/zookeeper/datadir/myid
 vim zookeeper/conf/zoo.cfg
 ```
+
 **zoo.cfg 内容如下**
+
 ```
 tickTime=2000
 initLimit=10
@@ -64,15 +66,19 @@ server.3=server3:2288:3388                         [[服务器]] Follower 与集
 server.{{ loop.index }}={{hostvars[host].ansible_host}}:2288:3388
 {% endfor %}
 ```
+
 >三台机器都相同配置，需***自解析***，但是注意分别 echo 2/3 > datadir/myid
 >pwd
   /usr/local/zookeeper
+
 ```
 rsync -avz  zookeeper  root@10.13.3.107:/usr/local/zookeeper/zookeeper
 rsync -avz  /etc/hosts  root@10.13.3.107:/etc/
 source /etc/hosts
 ```
+
 **systemd 管理**
+
 ```
 tee /etc/systemd/system/zookeeper.service << EOF
 [Unit]  
@@ -91,17 +97,19 @@ EOF
 
 systemctl daemon-reload
 ```
+
 **启服务,查看状态**
-```
+
+```bash
 systemctl enable --now zookeeper
 systemctl status zookeeper
-```   
+```
 
 
 ## 二、 单节点安装，集群内各节点机器均需要安装clickhouse
 ---------------------
 
-```
+```bash
 sudo apt-get install apt-transport-https ca-certificates dirmngr
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 8919F6BD2B48D754
 
@@ -119,14 +127,16 @@ clickhouse-client # or "clickhouse-client --password"  # 启动客户端
 ------------------------
 
 **vim config.xml**
-```
+
+```xml
 <listen_host>0.0.0.0</listen_host>
 <remote_servers></remote_servers>                                 [[此标签内的local, test集群可以注释，不用留下，注释内不能包含注释]]<!--  -->  ( ansible 中 j2 模板会删除这些行的内容)
 <include_from>/etc/clickhouse-server/metrika.xml</include_from>   [[此句配置在metrika]].xml段落描述之后，文件为集群配置，但是打了引入标签仍然未识别成功metrika.xml文件路径，将其移动到config.d目录下，成功建立集群
 ```
 
 vim metrika.xml
-```
+
+```xml
 <yandex>                       <!--此为3分片2副本-->
     <remote_servers>           <!--集群标签-->
         <ck_cluster>           <!--集群名称-->
@@ -199,14 +209,14 @@ vim metrika.xml
         </case>
     </compression>
 </yandex>
-
 ```
 
 	根据以上配置文件，这个 ClickHouse 集群中的每个分片都有两个副本，在这个配置中并没有显式地设置 `parallel_replicas` 参数。因此，如果没有进行额外的配置，这个集群默认情况下在进行分布式查询时，每个分片的两个副本都可以参与查询处理，但是并行副本数量可能会受到其他因素的限制，如数据分片、查询复杂度等。 
 	如果需要进一步控制并行副本数量，可以在查询中使用 `SETTINGS max_parallel_replicas` 参数或者在配置文件中设置 `max_parallel_replicas` 参数，以限制每个查询中使用的最大并行副本数量。
 
 vim users.xml
-```
+
+```xml
 <users>
     <!-- If user name was not specified, 'default' user is used. -->
     <user_name>                                                     <!--用户名-->
@@ -236,15 +246,16 @@ vim users.xml
 </users>
 ```
 
-```
-SHA256生成密码，利用随机数生成密码，-c 表示需要生成的长度；
+```bash
+#SHA256生成密码，利用随机数生成密码，-c 表示需要生成的长度；
 
 PASSWORD=$(base64 < /dev/urandom | head -c14); echo "$PASSWORD"; echo -n "$PASSWORD" | sha256sum | tr -d '-'
-生成的第一行为明文密码，用于自己使用；第二行为 sha256 加密字符串，需要配置到下面标签中：
+#生成的第一行为明文密码，用于自己使用；第二行为 sha256 加密字符串，需要配置到下面标签中：
 ```
 
 各节点重启，并检查
-```
+
+```bash
 systemctl restart clickhouse-server
 clickhouse-client -m
 	select * from system.clusters;
@@ -253,6 +264,7 @@ clickhouse-client -m
 
 
 检查连接：8123、9000端口
+
 ```
 1. echo 'show databases' | curl -H 'X-ClickHouse-User: default' -H 'X-ClickHouse-Key: Inboc@2020' 'http://10.13.3.101:8123/' -d @-
 2. clickhouse-client 登录 使用local:9000,
@@ -266,7 +278,8 @@ Python连接8123端口不成功,users.xml 配置错误，删除后可以使用�
 --------------------
 
 以下是metrika.xml.j2循环和自动获取
-```
+
+```j2
 <ck_cluster>  
 {% for shard_host in groups['inboc-dev-clickhouse-group'] %}  
   
@@ -289,7 +302,7 @@ Python连接8123端口不成功,users.xml 配置错误，删除后可以使用�
 </ck_cluster>
 ```
 
-```
+```j2
 <zookeeper>  
 {% for host in groups['inboc-dev-clickhouse-group'] %}  
   
@@ -305,8 +318,10 @@ Python连接8123端口不成功,users.xml 配置错误，删除后可以使用�
 ## 四、维护使用
 ----------------
 #### 1. 配置解析
- **config.xml**
-```
+
+**config.xml**
+
+```xml
     <logger>                                                    <!--日志设置-->
         <console>true</console>                                 <!--是否将日志输出到控制台-->
         <level>trace</level>                                    <!--日志级别，可以是debug/info/warning/error;trace是输出所有、建议设置为info/warning-->
@@ -373,6 +388,7 @@ Python连接8123端口不成功,users.xml 配置错误，删除后可以使用�
 #### 4. 系统表
 1. 存储于 `system` 数据库，提供信息包括：服务器的状态、进程、环境、服务器的内部进程
 2. system.cluster
+
 |字段|信息|
 |:---:|:---:|
 |cluster|集群名|
@@ -386,7 +402,9 @@ Python连接8123端口不成功,users.xml 配置错误，删除后可以使用�
 |errors_count| 此主机无法访问副本的次数|
 |slowdowns_count|与对冲请求建立连接时导致更改副本的减速次数|
 |estimated_recovery_time|剩下的秒数，直到副本错误计数归零并被视为恢复正常|
+
 3. system.metrics
+
 |metric|value|description|信息|
 |:---:|:---:|:---:|:---:|
 |Query|1|Number of executing queries|执行查询的数量|
@@ -400,7 +418,8 @@ Python连接8123端口不成功,users.xml 配置错误，删除后可以使用�
 |BackgroundCommonPoolTask |0|Number of active tasks in an associated background pool|正在执行的任务数|
 |BackgroundMovePoolTask | 0 |Number of active tasks in BackgroundProcessingPool for moves|正在执行的数据迁移任务的数量|
 
- -----------
+-----------
+
 #### 5. 运维常见问题排查和参考。（参考链接）
 1. [博客园--clickhouse常见问题排查](https://www.cnblogs.com/qiu-hua/p/15113806.html)涉及副本节点不一致、副本节点全量恢复......
 2. [本地备份](https://www.kubesre.com/archives/clickhousebei-fen-yu-hui-fu)
