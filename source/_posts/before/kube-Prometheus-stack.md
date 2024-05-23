@@ -19,7 +19,7 @@ prometheus 对象的 yaml 部分内容
     any: true
   serviceMonitorSelector:
     matchLabels:
-      release: kube-prometheus-stack   # 说明：servicemonitor的资源需要有这个标签，才能被控制器控制使用
+      release: kube-prometheus-stack   # note：当 servicemonitor 没有正常生效时，检查其资源中是否有这样的标签，如此才能被prometheus对象所选择 ，而后生效
 ```
 
 书写一个 servicemonitor。
