@@ -1,0 +1,2268 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Multiple Domians in OpenLdap Use Case, BLOG">
+    <meta name="description" content="记录自己 OpenLDAP 在多域中的使用，以及集成应用且跨域实现用户登录的测试，内容来源网络和实践。">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>Multiple Domians in OpenLdap Use Case | BLOG</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <style>
+        body{
+            background-image: url(medias/images/03.jpg);
+            background-repeat:no-repeat;
+            background-size: 100% 100%;
+            background-attachment:fixed;
+        }
+    </style>
+
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">BLOG</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">BLOG</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/Check-LC/check-lc.github.io.git" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/Check-LC/check-lc.github.io.git" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Multiple Domians in OpenLdap Use Case</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/OpenLDAP/">
+                                <span class="chip bg-color">OpenLDAP</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/ops/" class="post-category">
+                                ops
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2023-10-24
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2024-04-20
+                </div>
+                
+
+                
+
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="OpenLDAP"><a href="#OpenLDAP" class="headerlink" title="OpenLDAP"></a>OpenLDAP</h1><h2 id="一、-概念"><a href="#一、-概念" class="headerlink" title="一、 概念"></a>一、 概念</h2><p><a target="_blank" rel="noopener" href="https://www.openldap.org/doc/admin26/guide.html">官方手册</a></p>
+<h3 id="1-1-常用属性"><a href="#1-1-常用属性" class="headerlink" title="1.1 常用属性"></a>1.1 常用属性</h3><ul>
+<li>DN：Distinguished Name，LDAP记录项的标识，有唯一性，例如：dc:”cn&#x3D;admin,ou&#x3D;developer,dc&#x3D;163,dc&#x3D;com”  </li>
+<li>dc&#x3D; DomainComponent 为域组件，域名的一部分</li>
+<li>cn&#x3D;CommonName 为记录名，表示一个实体，最长到80个字符，可以为中文；</li>
+<li>ou&#x3D;OrganizationUnit 为组织单位，用于分类，最多四级，每级最长32字符，可以为中文；</li>
+<li>uid&#x3D;User id 为用户的唯一标识</li>
+<li>c&#x3D;Country 为国家名，可选，为2个字符长</li>
+<li>o&#x3D;Organization 为组织名，可选，可以3—64个字符长</li>
+</ul>
+<h2 id="二、-手动安装和配置-LDAP"><a href="#二、-手动安装和配置-LDAP" class="headerlink" title="二、 手动安装和配置 LDAP"></a>二、 手动安装和配置 LDAP</h2><h3 id="2-1-安装-slapd-独立的-LDAP-守护进程，同时便于管理服务"><a href="#2-1-安装-slapd-独立的-LDAP-守护进程，同时便于管理服务" class="headerlink" title="2.1 安装 slapd (独立的 LDAP 守护进程，同时便于管理服务)"></a>2.1 安装 slapd (独立的 LDAP 守护进程，同时便于管理服务)</h3><pre class="line-numbers language-none"><code class="language-none">sudo apt install  -y slapd ldap-utils<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="2-2-重新配置-OpenLDAP，创建-base-dn"><a href="#2-2-重新配置-OpenLDAP，创建-base-dn" class="headerlink" title="2.2  重新配置 OpenLDAP，创建 base dn"></a>2.2  重新配置 OpenLDAP，创建 base dn</h3><pre class="line-numbers language-none"><code class="language-none">sudo dpkg-reconfigure slapd   # 主要配置密码 (密码在下一步重置，便于配置连接)，DNS domain name(即 LDAP 服务中的 base dn)
+
+	 说明：
+	第一步回答 No
+	第二步填写域名，比如 mycompany.com
+	第三步填写组织名，比如 Company
+	第四步填写管理员密码，比如 secret；第五步确认管理员密码
+	第六步选择使用的数据库后端，比如 MDB
+	第七步选择在清除 slapd 时是否移除数据库，比如 Yes
+	第八步选择是否移除旧数据库，比如 Yes<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-3-生成密码，用于控制台登录的admin帐号，需要保存此密文密码"><a href="#2-3-生成密码，用于控制台登录的admin帐号，需要保存此密文密码" class="headerlink" title="2.3 生成密码，用于控制台登录的admin帐号，需要保存此密文密码"></a>2.3 生成密码，用于控制台登录的admin帐号，需要保存此密文密码</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">slappasswd
+	<span class="token punctuation">&#123;</span>SSHA<span class="token punctuation">&#125;</span>UiIUaWLBYOo+2O88GNxFAdzp5M9cmlWi<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<ul>
+<li>通过数据库修改admin用户的ldif文件<pre class="line-numbers language-ldif" data-language="ldif"><code class="language-ldif">&#x2F;etc&#x2F;ldap&#x2F;slapd.d&#x2F;cn\&#x3D;config&#x2F;olcDatabase\&#x3D;\&#123;1\&#125;mdb.ldif
+	olcDatabase: &#123;1&#125;mdb
+	olcSuffix: dc&#x3D;example,dc&#x3D;top
+	olcRootDN: cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top
+	olcRootPW: &#123;SSHA&#125;UiIUaWLBYOo+2O88GNxFAdzp5M9cmlWi<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>olcDatabase: 定义使用的后端数据存储格式,遵循默认</li>
+<li>olcSuffix: 设置 LDAP 服务的根</li>
+<li>olcRootDN: 设置管理员用户的 dn</li>
+<li>olcRootPW: 管理员用户的密码</li>
+<li>修改后重启服务<pre class="line-numbers language-none"><code class="language-none">sudo slaptest -u   # 检查配置文件
+sudo systemctl enable slapd  --now
+
+sudo slapcat        # 输出看到当前数据库内容<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h3 id="2-4-正确的修改olcRootPW-管理员用户的密码"><a href="#2-4-正确的修改olcRootPW-管理员用户的密码" class="headerlink" title="2.4 正确的修改olcRootPW: 管理员用户的密码"></a>2.4 正确的修改olcRootPW: 管理员用户的密码</h3><pre class="line-numbers language-none"><code class="language-none">dn: olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config
+changetype: modify
+replace: olcRootPW
+olcRootPW: example2020  # 保存在数据库文件中的时候将会被加密<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">ldapmodify -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f passmodify.ldif<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">同时进入web ui，修改admin账户的密码，如果不修改两个密码都能管理域，二者修改一致之后，才是新的管理密码生效<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="2-5-简单结构展示"><a href="#2-5-简单结构展示" class="headerlink" title="2.5 简单结构展示"></a>2.5 简单结构展示</h3><p>略</p>
+<h3 id="2-6-创建base-dn"><a href="#2-6-创建base-dn" class="headerlink" title="2.6 创建base dn"></a>2.6 创建base dn</h3><h4 id="2-6-1-查看LDAP服务器的根目录信息"><a href="#2-6-1-查看LDAP服务器的根目录信息" class="headerlink" title="2.6.1 查看LDAP服务器的根目录信息"></a>2.6.1 查看LDAP服务器的根目录信息</h4><pre class="line-numbers language-none"><code class="language-none">sudo ldapsearch -x -LLL -b &#39;&#39; -s base &#39;(objectclass&#x3D;*)&#39;
+	dn:
+	objectClass: top
+	objectClass: OpenLDAProotDSE<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="2-6-2-基于-ldif-文件直接创建，不使用图形化交互。创建之后，对这个-base-dn-设置管理员的密码"><a href="#2-6-2-基于-ldif-文件直接创建，不使用图形化交互。创建之后，对这个-base-dn-设置管理员的密码" class="headerlink" title="2.6.2 基于 ldif 文件直接创建，不使用图形化交互。创建之后，对这个 base dn 设置管理员的密码"></a>2.6.2 基于 ldif 文件直接创建，不使用图形化交互。创建之后，对这个 base dn 设置管理员的密码</h4><pre class="line-numbers language-none"><code class="language-none">-
+dn: dc&#x3D;example,dc&#x3D;top
+changetype: add
+objectClass: top
+objectClass: domain
+
+
+-
+dn: o&#x3D;example,dc&#x3D;example,dc&#x3D;top
+changetype: add
+objectClass: organization
+o: example<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">ldapmodify -x -D &quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; -w example@2020  -f organization.ldif<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="2-7-创建多个-DIT-base-dn-（可以考虑尝试后端用-mysql-做数据库）"><a href="#2-7-创建多个-DIT-base-dn-（可以考虑尝试后端用-mysql-做数据库）" class="headerlink" title="2.7 创建多个 DIT + base dn （可以考虑尝试后端用 mysql 做数据库）"></a>2.7 创建多个 DIT + base dn （可以考虑尝试后端用 <code>mysql</code> 做数据库）</h3><h4 id="2-7-1-为新的库，准备存储路径，并通过apparmor做权限限制"><a href="#2-7-1-为新的库，准备存储路径，并通过apparmor做权限限制" class="headerlink" title="2.7.1 为新的库，准备存储路径，并通过apparmor做权限限制"></a>2.7.1 为新的库，准备存储路径，并通过<code>apparmor</code>做权限限制</h4><pre class="line-numbers language-none"><code class="language-none">mkdir  &#x2F;var&#x2F;lib&#x2F;ldap2
+chown openldap:openldap  &#x2F;var&#x2F;lib&#x2F;ldap2
+vim &#x2F;etc&#x2F;apparmor.d&#x2F;usr.sbin.slapd
+		# the databases and logs
+		&#x2F;var&#x2F;lib&#x2F;ldap2&#x2F; r,
+		&#x2F;var&#x2F;lib&#x2F;ldap2&#x2F;** rwk,
+		
+		# lock file
+		&#x2F;var&#x2F;lib&#x2F;ldap2&#x2F;alock kw,
+
+sudo systemctl  reload  apparmor <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="2-7-2-准备-ldif-文件，创建新的-DIT（可以自定义路径）"><a href="#2-7-2-准备-ldif-文件，创建新的-DIT（可以自定义路径）" class="headerlink" title="2.7.2 准备 ldif 文件，创建新的 DIT（可以自定义路径）"></a>2.7.2 准备 ldif 文件，创建新的 DIT（可以自定义路径）</h4><pre class="line-numbers language-none"><code class="language-none">dn: olcDatabase&#x3D;&#123;2&#125;mdb,cn&#x3D;config
+changetype: add
+objectClass: olcDatabaseConfig
+objectClass: olcMdbConfig
+olcDbDirectory: &#x2F;var&#x2F;lib&#x2F;ldap2&#x2F;
+olcDatabase: &#123;2&#125;Mdb
+olcDbIndex: objectClass eq
+olcDbIndex: cn,uid eq
+olcDbIndex: uidNumber,gidNumber eq
+olcDbIndex: member,memberUid eq
+olcLastMod: TRUE
+olcMonitoring: TRUE
+olcDBNoSync: TRUE
+olcAccess: &#123;0&#125;to attrs&#x3D;userPassword by self write by anonymous auth by * non
+ e
+olcAccess: &#123;1&#125;to attrs&#x3D;shadowLastChange by self write by * read
+olcSuffix: dc&#x3D;example,dc&#x3D;tech
+olcRootDN: cn&#x3D;admin,dc&#x3D;example,dc&#x3D;tech
+olcRootPW: &#123;SSHA&#125;UiIUaWLBYOo+2O88GNxFAdzp5M9cmlWi<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">sudo  ldapmodify -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f domian2.ldif<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="2-7-3-新增并设置管理员"><a href="#2-7-3-新增并设置管理员" class="headerlink" title="2.7.3 新增并设置管理员"></a>2.7.3 新增并设置管理员</h4><pre class="line-numbers language-none"><code class="language-none">-
+dn: cn&#x3D;admin,dc&#x3D;example,dc&#x3D;tech
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: admin
+userPassword: &#123;SSHA&#125;UiIUaWLBYOo+2O88GNxFAdzp5M9cmlWi
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+# 以下是playbook中模板文件
+-
+dn: cn&#x3D;admin,&#123;&#123; item.base_dn &#125;&#125;  
+changetype: add  
+objectClass: simpleSecurityObject  
+objectClass: organizationalRole  
+cn: admin  
+userPassword: &#123;SSHA&#125;UiIUaWLBYOo+2O88GNxFAdzp5M9cmlWi<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">sudo ldapadd -x -D &quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;tech&quot; -w example@2020 -f basedn2.ldif<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="2-7-4-多-DIT-跨域-ACL"><a href="#2-7-4-多-DIT-跨域-ACL" class="headerlink" title="2.7.4 多 DIT 跨域 ACL"></a>2.7.4 多 DIT 跨域 ACL</h4><ul>
+<li><p>查询服务器的域</p>
+<pre class="line-numbers language-none"><code class="language-none">ldapsearch -x -H ldap:&#x2F;&#x2F;10.13.3.107 -b &quot;&quot; -s base namingContexts<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>设置一个全权限的 acl ，跨域访问，相应的用户需已经提前创建</p>
+</li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">让这个dn 用户: cn&#x3D;user.tech,dc&#x3D;example,dc&#x3D;tech ;  可以阅读这个base dn : dc&#x3D;example,dc&#x3D;top 下的所有条目.
+对应关系：数据库----&#123;1&#125;mdb  存储的数据是来自 dn: dc&#x3D;example,dc&#x3D;top 。即，对谁的访问则将 acl 添加在谁的库下  
+
+dn: olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config
+changetype: modify
+add: olcAccess
+olcAccess: &#123;2&#125;to dn.subtree&#x3D;&quot;dc&#x3D;example,dc&#x3D;top&quot; by dn.base&#x3D;&quot;cn&#x3D;user.tech,dc&#x3D;example,dc&#x3D;tech&quot; read<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">ldapmodify   -Y   EXTERNAL   -H   ldapi:&#x2F;&#x2F;&#x2F;   -f  xxx<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h4 id="2-7-5-测试"><a href="#2-7-5-测试" class="headerlink" title="2.7.5 测试"></a>2.7.5 测试</h4><pre class="line-numbers language-none"><code class="language-none">root@example-sys-test-06:&#x2F;etc&#x2F;ldap&#x2F;example# ldapsearch -x -b &quot;dc&#x3D;example,dc&#x3D;top&quot; -D &quot;cn&#x3D;user.tech,dc&#x3D;example,dc&#x3D;tech&quot; -w example@2020
+		# extended LDIF
+		#
+		# LDAPv3
+		# base &lt;dc&#x3D;example,dc&#x3D;top&gt; with scope subtree
+		# filter: (objectclass&#x3D;*)
+		# requesting: ALL
+		#
+		
+		# example.top
+		dn: dc&#x3D;example,dc&#x3D;top
+		objectClass: top
+		objectClass: domain
+		dc: example
+		
+		# admin, example.top
+		dn: cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top
+		objectClass: simpleSecurityObject
+		objectClass: organizationalRole
+		cn: admin
+		
+		# search result
+		search: 2
+		result: 0 Success
+		
+		# numResponses: 3
+		# numEntries: 2
+root@example-sys-test-06:&#x2F;etc&#x2F;ldap&#x2F;example# ldapsearch -x -b &quot;dc&#x3D;example,dc&#x3D;tech&quot; -D &quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; -w example@2020
+		# extended LDIF
+		#
+		# LDAPv3
+		# base &lt;dc&#x3D;example,dc&#x3D;tech&gt; with scope subtree
+		# filter: (objectclass&#x3D;*)
+		# requesting: ALL
+		#
+		
+		# search result
+		search: 2
+		result: 32 No such object
+		
+		# numResponses: 1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>测试的日志<pre class="line-numbers language-none"><code class="language-none">Sep 15 14:18:54 example-sys-test-06 slapd[10052]: conn&#x3D;1097 fd&#x3D;12 ACCEPT from IP&#x3D;127.0.0.1:59834 (IP&#x3D;0.0.0.0:389)
+Sep 15 14:18:54 example-sys-test-06 slapd[10052]: conn&#x3D;1097 op&#x3D;0 BIND dn&#x3D;&quot;cn&#x3D;user.tech,dc&#x3D;example,dc&#x3D;tech&quot; method&#x3D;128
+Sep 15 14:18:54 example-sys-test-06 slapd[10052]: conn&#x3D;1097 op&#x3D;0 BIND dn&#x3D;&quot;cn&#x3D;user.tech,dc&#x3D;example,dc&#x3D;tech&quot; mech&#x3D;SIMPLE ssf&#x3D;0
+Sep 15 14:18:54 example-sys-test-06 slapd[10052]: conn&#x3D;1097 op&#x3D;0 RESULT tag&#x3D;97 err&#x3D;0 text&#x3D;
+Sep 15 14:18:54 example-sys-test-06 slapd[10052]: conn&#x3D;1097 op&#x3D;1 SRCH base&#x3D;&quot;dc&#x3D;example,dc&#x3D;top&quot; scope&#x3D;2 deref&#x3D;0 filter&#x3D;&quot;(objectClass&#x3D;*)&quot;
+Sep 15 14:18:54 example-sys-test-06 slapd[10052]: conn&#x3D;1097 op&#x3D;1 SEARCH RESULT tag&#x3D;101 err&#x3D;0 nentries&#x3D;2 text&#x3D;
+Sep 15 14:18:54 example-sys-test-06 slapd[10052]: conn&#x3D;1097 op&#x3D;2 UNBIND
+Sep 15 14:18:54 example-sys-test-06 slapd[10052]: conn&#x3D;1097 fd&#x3D;12 closed
+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+Sep 15 14:19:14 example-sys-test-06 slapd[10052]: conn&#x3D;1098 fd&#x3D;12 ACCEPT from IP&#x3D;127.0.0.1:34916 (IP&#x3D;0.0.0.0:389)
+Sep 15 14:19:14 example-sys-test-06 slapd[10052]: conn&#x3D;1098 op&#x3D;0 BIND dn&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; method&#x3D;128
+Sep 15 14:19:14 example-sys-test-06 slapd[10052]: conn&#x3D;1098 op&#x3D;0 BIND dn&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; mech&#x3D;SIMPLE ssf&#x3D;0
+Sep 15 14:19:14 example-sys-test-06 slapd[10052]: conn&#x3D;1098 op&#x3D;0 RESULT tag&#x3D;97 err&#x3D;0 text&#x3D;
+Sep 15 14:19:14 example-sys-test-06 slapd[10052]: conn&#x3D;1098 op&#x3D;1 SRCH base&#x3D;&quot;dc&#x3D;example,dc&#x3D;tech&quot; scope&#x3D;2 deref&#x3D;0 filter&#x3D;&quot;(objectClass&#x3D;*)&quot;
+Sep 15 14:19:14 example-sys-test-06 slapd[10052]: conn&#x3D;1098 op&#x3D;1 SEARCH RESULT tag&#x3D;101 err&#x3D;32 nentries&#x3D;0 text&#x3D;
+Sep 15 14:19:14 example-sys-test-06 slapd[10052]: conn&#x3D;1098 op&#x3D;2 UNBIND
+Sep 15 14:19:14 example-sys-test-06 slapd[10052]: conn&#x3D;1098 fd&#x3D;12 closed<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h2 id="三、-web管理器配置"><a href="#三、-web管理器配置" class="headerlink" title="三、 web管理器配置"></a>三、 web管理器配置</h2><h3 id="3-1-安装-LAM-（用于管理的Web-UI）"><a href="#3-1-安装-LAM-（用于管理的Web-UI）" class="headerlink" title="3.1 安装  LAM （用于管理的Web UI）"></a>3.1 安装  LAM （用于管理的Web UI）</h3><pre class="line-numbers language-none"><code class="language-none">apt-get install ldap-account-manager<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>访问 <a target="_blank" rel="noopener" href="http://ip/lam">http://ip/lam</a> ，lam的所有配置都可以在web端配置，不需要去服务器上修改一行代码</p>
+<h4 id="3-1-1-LAM-configuration-helm-安装的主要修改内容"><a href="#3-1-1-LAM-configuration-helm-安装的主要修改内容" class="headerlink" title="3.1.1 LAM configuration (helm 安装的主要修改内容)"></a>3.1.1 LAM configuration (<a target="_blank" rel="noopener" href="https://check-lc.github.io/ops_blog/2023/12/04/the-first-time-using-helm-charts/">helm 安装的主要修改内容</a>)</h4><pre>
+主要内容：
+  LDAP_DOMAIN: example.net;ibexample.com
+  LDAP_BASE_DN: dc=example,dc=net;dc=ibexample,dc=com
+  LDAP_SERVER: ldaps://ldap01.example.net
+  LDAP_USER: cn=administrator,dc=example,dc=net
+  LAM_LANG: zh_CN
+  LAM_PASSWORD: lam
+</pre>
+
+<ul>
+<li><p>tree view编辑更高效</p>
+</li>
+<li><p>如果选择 docker 安装镜像：ghcr.io&#x2F;ldapaccountmanager&#x2F;lam:8.4@sha256:283726bd23510f1c3bfbdcbfe861e6599e070616543aed02e9756075c97a9938</p>
+</li>
+</ul>
+<h4 id="3-1-3-Nginx反向代理-LAM-Web-UI"><a href="#3-1-3-Nginx反向代理-LAM-Web-UI" class="headerlink" title="3.1.3 Nginx反向代理 LAM Web UI"></a>3.1.3 Nginx反向代理 LAM Web UI</h4><pre class="line-numbers language-none"><code class="language-none">upstream lam &#123;
+  server 10.13.3.108:8001;
+&#125;
+
+server &#123;
+  listen 80;
+  server_name lam.example.net;
+  return 301 https:&#x2F;&#x2F;$server_name$request_uri;
+&#125;
+
+server &#123;
+  server_name lam.example.net;
+  listen 443 ssl;
+  ssl_certificate webmin&#x2F;tls_ca.pem;
+  ssl_certificate_key webmin&#x2F;tls_key.pem;
+
+  location &#x2F; &#123;
+     proxy_pass http:&#x2F;&#x2F;lam&#x2F;;
+     proxy_set_header Host $host;
+     proxy_set_header X-Real-IP $remote_addr;
+     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#     proxy_set_header X-Forwarded-Proto &quot;https&quot;;
+     proxy_read_timeout 1800s;
+     proxy_http_version 1.1;
+     proxy_set_header Upgrade $http_upgrade;
+     proxy_set_header Connection &quot;upgrade&quot;;
+    &#125;
+  &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="3-2-测试-phpldapadmin"><a href="#3-2-测试-phpldapadmin" class="headerlink" title="3.2 测试 phpldapadmin"></a>3.2 测试 phpldapadmin</h3><pre class="line-numbers language-none"><code class="language-none">Setting up php8.1 (8.1.2-1ubuntu2.14)                       # 版本信息，配置文件完整，存在证书认证并可以指定路径
+Setting up php (2:8.1+92ubuntu1) 
+Setting up phpldapadmin (1.2.6.3-0.2)                                       <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h4 id="3-2-1-安装"><a href="#3-2-1-安装" class="headerlink" title="3.2.1 安装"></a>3.2.1 安装</h4><pre class="line-numbers language-none"><code class="language-none">apt-get install phpldapadmin -y
+nano &#x2F;etc&#x2F;phpldapadmin&#x2F;config.php
+	$servers-&gt;setValue(&#39;server&#39;,&#39;name&#39;,&#39;My LDAP Server&#39;);                      # 辨识，区分的作用
+	$servers-&gt;setValue(&#39;server&#39;,&#39;host&#39;,&#39;69.87.216.102&#39;);                              #  修改ip为服务器 ip
+	$servers-&gt;;setValue(&#39;server&#39;,&#39;base&#39;,array(&#39;dc&#x3D;example,dc&#x3D;com&#39;));                    # 修改 array 内容为需求的根
+	$servers-&gt;setValue(&#39;login&#39;,&#39;auth_type&#39;,&#39;session&#39;);                                              
+	$servers-&gt;setValue(&#39;login&#39;,&#39;bind_id&#39;,&#39;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;com&#39;);           #   绑定登录帐号admin，相应修改 dn 号即可
+	$servers-&gt;setValue(&#39;auto_number&#39;,&#39;min&#39;,array(&#39;uidNumber&#39;&#x3D;&gt;10000,&#39;gidNumber&#39;&#x3D;&gt;10000));   # 规定 uid，gid 数字表示的起始范围<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="3-2-2-为-phpLDAPadmin-配置-Apache"><a href="#3-2-2-为-phpLDAPadmin-配置-Apache" class="headerlink" title="3.2.2 为 phpLDAPadmin 配置 Apache"></a>3.2.2 为 phpLDAPadmin 配置 Apache</h4><pre class="line-numbers language-none"><code class="language-none">a2dissite 000-default.conf        # 禁用默认的 Apache 虚拟主机配置文件
+systemctl restart apache2          <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="四、-主从架构-弃用，此配置需要在从服务器拉取-refresh"><a href="#四、-主从架构-弃用，此配置需要在从服务器拉取-refresh" class="headerlink" title="四、 主从架构(弃用，此配置需要在从服务器拉取 refresh)"></a>四、 主从架构(弃用，此配置需要在从服务器拉取 refresh)</h2><p><a target="_blank" rel="noopener" href="https://darkdark.top/ch5-replication.html">模式介绍</a></p>
+<h3 id="4-1-master-加载同步模块"><a href="#4-1-master-加载同步模块" class="headerlink" title="4.1 master 加载同步模块"></a>4.1 master 加载同步模块</h3><pre class="line-numbers language-none"><code class="language-none">cat &#x2F;etc&#x2F;ldap&#x2F;mod_syncprov.ldif
+		dn: cn&#x3D;module,cn&#x3D;config
+		objectClass: olcModuleList
+		cn: module
+		olcModulePath: &#x2F;usr&#x2F;lib&#x2F;ldap
+		olcModuleLoad: syncprov.la          # 此配置和上一句配置，实际是在请求这个路径的文件，&#x2F;usr&#x2F;lib&#x2F;ldap&#x2F;syncprov.la，不确定的可以用 find 查找
+
+ldapadd -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f .&#x2F;mod_syncprov.ldif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="4-2-同步设置"><a href="#4-2-同步设置" class="headerlink" title="4.2 同步设置"></a>4.2 同步设置</h3><pre class="line-numbers language-none"><code class="language-none">root@example-sys-test-06:&#x2F;etc&#x2F;ldap# cat syncprov.ldif 
+		dn: olcOverlay&#x3D;syncprov,olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config       # 此处需要确认自己的数据库是什么样的，&#123;2&#125;hdb--旧版本默认 &#x2F; &#123;1&#125;mdb--新版本默认
+		objectClass: olcOverlayConfig
+		objectClass: olcSyncProvConfig
+		olcOverlay: syncprov
+		olcSpCheckpoint: 100 10
+		olcSpSessionLog: 100
+
+ldapadd -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f .&#x2F;syncprov.ldif                             # 修改并应用条目到 LDAP 服务  -Y EXTERNAL    将使用服务器配置的外部身份验证方法进行身份验证，而不是使用用户名和密码; -H 指定服务器连接; -f 指定文件<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="4-3-从服务器配置"><a href="#4-3-从服务器配置" class="headerlink" title="4.3 从服务器配置"></a>4.3 从服务器配置</h3><pre class="line-numbers language-none"><code class="language-none">root@example-sys-test-07:&#x2F;etc&#x2F;ldap# cat syncrepl.ldif
+		dn: olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config
+		changetype: modify
+		add: olcSyncRepl
+		olcSyncRepl: rid&#x3D;002
+		  provider&#x3D;ldap:&#x2F;&#x2F;10.13.3.106:389&#x2F;        # 此处开始与上一行有缩进
+		  bindmethod&#x3D;simple
+		  binddn&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot;
+		  credentials&#x3D;example@2020      
+		  searchbase&#x3D;&quot;dc&#x3D;example,dc&#x3D;top&quot;
+		  scope&#x3D;sub
+		  schemachecking&#x3D;on
+		  type&#x3D;refreshAndPersist
+		  retry&#x3D;&quot;5 5 300 +&quot;
+		  attrs&#x3D;&quot;*,+&quot;
+		  interval&#x3D;00:00:00:3
+
+ldapadd -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f &#x2F;etc&#x2F;ldap&#x2F;syncrepl.ldif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>运行中，修改主服务器内数据后，对从服务器u做刷新，可以看到是否同步</li>
+</ul>
+<p>参数说明：</p>
+<ul>
+<li>provider 为ldap master&#x2F;slave的地址 ;</li>
+<li>binddn：为域的基本信息，注这里一定要用管理员进行登录，否则同步不到用户的密码。</li>
+<li>credentials: ldap管理员的密码</li>
+<li>searchbase：选择要同步的独立域，根节点</li>
+<li>scope：设置所有的条目匹配</li>
+<li>schemachecking：设置同步更新时间检测</li>
+<li>type：同步模式为refreshAndPersist， refreshOnly 模式下后续操作由客户端轮询完成</li>
+<li>retry:同步更新重试次数和时间刚开始的5秒重试5次，以后每300秒重试一次</li>
+<li>attrs:复制全部属性</li>
+<li>interval 这里设置更新时间，这里为3秒一次，倒数第二个是分钟 以此类推。</li>
+</ul>
+<h2 id="四、-镜像复制（互为主从）"><a href="#四、-镜像复制（互为主从）" class="headerlink" title="四、 镜像复制（互为主从）"></a>四、 镜像复制（互为主从）</h2><p><a target="_blank" rel="noopener" href="https://darkdark.top/ch5-replication.html">模式介绍</a></p>
+<h3 id="4-1-为某域编辑-mirrorsync-ldif"><a href="#4-1-为某域编辑-mirrorsync-ldif" class="headerlink" title="4.1 为某域编辑 mirrorsync.ldif"></a>4.1 为某域编辑 mirrorsync.ldif</h3><pre class="line-numbers language-none"><code class="language-none">dn: cn&#x3D;module,cn&#x3D;config         # 此段配置加载s ync 模块
+objectClass: olcModuleList
+cn: module
+olcModulePath: &#x2F;usr&#x2F;lib&#x2F;ldap
+olcModuleLoad: syncprov.la     # 此配置和上一句，实际是在请求这个路径的文件，&#x2F;usr&#x2F;lib&#x2F;ldap&#x2F;syncprov.la，不确定的可 find 查找
+
+-
+dn: olcOverlay&#x3D;syncprov,olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config        
+	 # 此处需确认自己的数据库，&#123;2&#125;hdb--为旧版本默认 &#x2F; &#123;1&#125;mdb--为新版本默认。路径 &#x2F;etc&#x2F;ldap&#x2F;slapd.d&#x2F;cn\&#x3D;config&#x2F;olcDatabase\&#x3D;\&#123;1\&#125;mdb.ldif
+objectClass: olcOverlayConfig
+objectClass: olcSyncProvConfig
+olcOverlay: syncprov
+olcSpSessionLog: 100
+
+-
+dn: cn&#x3D;config
+changetype: modify
+replace: olcServerID
+olcServerID: 0                                        # 用于标识本机的 server id
+
+dn: olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config      # 以下配置用于开启复制，指定主服务器
+changetype: modify
+add: olcSyncRepl
+olcSyncRepl: rid&#x3D;000                             # 标识唯一的 replica id
+  provider&#x3D;ldaps:&#x2F;&#x2F;ldap01.example.top       # 看上述记录介绍参数
+  bindmethod&#x3D;simple
+  binddn&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot;
+  credentials&#x3D;example@2020
+  searchbase&#x3D;&quot;dc&#x3D;example,dc&#x3D;top&quot;
+  tls_reqcert&#x3D;allow
+  scope&#x3D;sub
+  schemachecking&#x3D;on
+  type&#x3D;refreshAndPersist
+  retry&#x3D;&quot;30 5 300 3&quot;
+  interval&#x3D;00:00:05:00
+-
+add: olcMirrorMode                        # 开启 mirror mode
+olcMirrorMode: TRUE
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="4-2-ldap01-example-top下编辑-mirrorsync-ldif"><a href="#4-2-ldap01-example-top下编辑-mirrorsync-ldif" class="headerlink" title="4.2 ldap01.example.top下编辑 mirrorsync.ldif"></a>4.2 ldap01.example.top下编辑 mirrorsync.ldif</h3><pre class="line-numbers language-none"><code class="language-none">dn: cn&#x3D;module,cn&#x3D;config
+objectClass: olcModuleList
+cn: module
+olcModulePath: &#x2F;usr&#x2F;lib&#x2F;ldap
+olcModuleLoad: syncprov.la
+
+-
+dn: olcOverlay&#x3D;syncprov,olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config
+objectClass: olcOverlayConfig
+objectClass: olcSyncProvConfig
+olcOverlay: syncprov
+olcSpSessionLog: 100
+
+-
+dn: cn&#x3D;config
+changetype: modify
+replace: olcServerID
+olcServerID: 1
+
+dn: olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config
+changetype: modify
+add: olcSyncRepl
+olcSyncRepl: rid&#x3D;001
+  provider&#x3D;ldaps:&#x2F;&#x2F;ldap.example.top
+  bindmethod&#x3D;simple
+  binddn&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot;
+  credentials&#x3D;example@2020
+  searchbase&#x3D;&quot;dc&#x3D;example,dc&#x3D;top&quot;
+  tls_reqcert&#x3D;allow
+  scope&#x3D;sub
+  schemachecking&#x3D;on
+  type&#x3D;refreshAndPersist
+  retry&#x3D;&quot;30 5 300 3&quot;
+  interval&#x3D;00:00:05:00
+-
+add: olcMirrorMode
+olcMirrorMode: TRUE
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="4-2-1-加载配置"><a href="#4-2-1-加载配置" class="headerlink" title="4.2.1 加载配置"></a>4.2.1 加载配置</h4><pre class="line-numbers language-none"><code class="language-none">ldapadd -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f mirrorsync.ldif<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="五、-TLS加密（自签名-权威证书）"><a href="#五、-TLS加密（自签名-权威证书）" class="headerlink" title="五、 TLS加密（自签名&#x2F;权威证书）"></a>五、 TLS加密（自签名&#x2F;权威证书）</h2><p>（自签名证书加密连接 nextcloud 失败，使用不便，采用 权威证书（多域合一）或stunnel）</p>
+<h3 id="5-1-CA中心创建证书"><a href="#5-1-CA中心创建证书" class="headerlink" title="5.1 CA中心创建证书"></a>5.1 CA中心创建证书</h3><pre><code>此时使用LDAP 主服务器 作为 CA 中心，自签名
+</code></pre>
+<ul>
+<li><p>安装 gnutls-bin 和 ssl-cert 包</p>
+<pre class="line-numbers language-none"><code class="language-none">sudo apt install gnutls-bin ssl-cert<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li><p>为证书授权中心创建私钥</p>
+<pre class="line-numbers language-none"><code class="language-none">sudo certtool --generate-privkey --bits 4096 --outfile &#x2F;etc&#x2F;ssl&#x2F;private&#x2F;mycakey.pem<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li><p>创建模板文件来定义CA</p>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;ssl&#x2F;ca.info
+	 cn &#x3D; example (example company)  
+	 ca
+	 cert_signing_key
+	 expiration_days &#x3D; 3650<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>创建自签名 CA (根)证书</p>
+<pre class="line-numbers language-none"><code class="language-none">sudo certtool --generate-self-signed \
+--load-privkey &#x2F;etc&#x2F;ssl&#x2F;private&#x2F;mycakey.pem \
+--template &#x2F;etc&#x2F;ssl&#x2F;ca.info \
+--outfile &#x2F;usr&#x2F;local&#x2F;share&#x2F;ca-certificates&#x2F;mycacert.crt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>Note：<br>  <code>--outfile</code>路径是正确的，将CA证书写入<code>/usr/local/share/ca-certificates</code>。<br>  <strong>update-ca-certificates</strong> 将从这里获取受信任的本地CA。如果要从<code>/usr/share/ca-certificates</code>获取CA，需要调用<code>dpkg-reconfigure ca-certificates</code></p>
+</li>
+<li><p>将新的 CA 根证书添加到受信任 CA 列表</p>
+<pre class="line-numbers language-none"><code class="language-none">sudo update-ca-certificates     # 会创建一个&#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;mycacert.pem符号链接，指向&#x2F;usr&#x2F;local&#x2F;share&#x2F;ca-certificates中的真实文件<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
+<h3 id="5-2-创建-LDAP-服务的服务器私钥与证书"><a href="#5-2-创建-LDAP-服务的服务器私钥与证书" class="headerlink" title="5.2 创建 LDAP 服务的服务器私钥与证书"></a>5.2 创建 LDAP 服务的服务器私钥与证书</h3><ul>
+<li><p>创建私钥</p>
+<pre class="line-numbers language-none"><code class="language-none">sudo certtool --generate-privkey \
+--bits 2048 \
+--outfile &#x2F;etc&#x2F;ldap&#x2F;ldap01_slapd_key.pem<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+<li><p>服务器信息文件</p>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;ssl&#x2F;ldap01.info
+	organization &#x3D; example
+	cn &#x3D; ldap01.example.top                     # 服务器证书的DN必须使用CN属性来命名服务器，并且CN必须携带服务器的完全限定域名，dns 需要有 A 记录解析
+	tls_www_server
+	encryption_key
+	signing_key
+	expiration_days &#x3D; 365
+证书有效期为1年，仅对_&#96;ldap01&#96;_主机名有效<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>创建LDAP服务器的证书</p>
+<pre class="line-numbers language-none"><code class="language-none">sudo certtool --generate-certificate \
+--load-privkey &#x2F;etc&#x2F;ldap&#x2F;ldap01_slapd_key.pem \
+--load-ca-certificate &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;mycacert.pem \
+--load-ca-privkey &#x2F;etc&#x2F;ssl&#x2F;private&#x2F;mycakey.pem \
+--template &#x2F;etc&#x2F;ssl&#x2F;ldap01.info \
+--outfile &#x2F;etc&#x2F;ldap&#x2F;ldap01_slapd_cert.pem<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>调整权限</p>
+<pre class="line-numbers language-none"><code class="language-none">sudo chgrp openldap &#x2F;etc&#x2F;ldap&#x2F;ldap01_slapd_key.pem
+sudo chmod 0640 &#x2F;etc&#x2F;ldap&#x2F;ldap01_slapd_key.pem<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+<li><p>ca根证书加入到受信列表</p>
+<pre class="line-numbers language-none"><code class="language-none">sudo cp   cacertificatefile  &#x2F;usr&#x2F;local&#x2F;share&#x2F;ca-certificates&#x2F;mycacert.crt
+sudo update-ca-certificates<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>对LDAP服务配置证书</p>
+<pre class="line-numbers language-none"><code class="language-none">dn: cn&#x3D;config
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;mycacert.pem
+-
+add: olcTLSCertificateFile
+olcTLSCertificateFile: &#x2F;etc&#x2F;ldap&#x2F;ldap01_slapd_cert.pem
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: &#x2F;etc&#x2F;ldap&#x2F;ldap01_slapd_key.pem<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>配置slapd-config数据库：</p>
+<pre class="line-numbers language-none"><code class="language-none">sudo ldapmodify -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f certinfo.ldif <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li><p>报错调整，更改<code>certinfo.ldif</code>，将<code>add</code>改成了<code>replace</code>，可以解决以下问题。修改后再次执行<code>ldapmodify</code></p>
+<pre class="line-numbers language-none"><code class="language-none">ldapmodify -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f certinfo.ldif 
+	SASL&#x2F;EXTERNAL authentication started SASL username: gidNumber&#x3D;0+uidNumber&#x3D;0,cn&#x3D;peercred,cn&#x3D;external,cn&#x3D;auth 
+	SASL SSF: 0 
+	modifying entry &quot;cn&#x3D;config&quot; ldap_modify: Inappropriate matching (18) 
+	additional info: modify&#x2F;add: olcTLSCACertificateFile: no equality matching rule<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>ldap-client增添配置文件</p>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;ldap&#x2F;ldap.conf
+	# LDAP Defaults
+	# See ldap.conf(5) for details
+	# This file should be world readable but not world writable.	
+	BASE       dc&#x3D;example,dc&#x3D;top                                                      # LDAP服务的基础DN
+	URI ldap:&#x2F;&#x2F;localhost:389 ldaps:&#x2F;&#x2F;localhost:636                        # 指定LDAP服务器的连接地址，似乎不起作用
+	[[SIZELIMIT]]  12                                                                      # 搜索结果的数量限制
+	[[TIMELIMIT]]  15                                                                     # 最长搜索时间
+	[[DEREF]]              never                                                            # 指定对别名的处理方式
+	# TLS certificates (needed for GnuTLS)
+	TLS_CACERT  &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;ca-certificates.crt                      # TLS连接时使用的CA证书文件的路径
+	TLS_REQCERT demand                                                        # &quot;demand&quot;，表示需要验证服务器的证书<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>需要访问 LDAPS（LDAP over SSL），需要编辑配置，并重启 slapd</p>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;default&#x2F;slapd
+	SLAPD_SERVICES&#x3D;&quot;ldap:&#x2F;&#x2F;&#x2F; ldapi:&#x2F;&#x2F;&#x2F; ldaps:&#x2F;&#x2F;&#x2F;&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+<li><p>测试启动 TLS</p>
+<pre class="line-numbers language-none"><code class="language-none">ldapwhoami -x -ZZ -H ldap:&#x2F;&#x2F;ldap01.example.com
+anonymous<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+<li><p>测试连接</p>
+<pre class="line-numbers language-none"><code class="language-none">ldapwhoami -x -H ldaps:&#x2F;&#x2F;ldap01.example.com
+anonymous<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<h3 id="5-3-LDAP-从服务器的-TLS-在主服务器创建后，拷贝证书到从服务器"><a href="#5-3-LDAP-从服务器的-TLS-在主服务器创建后，拷贝证书到从服务器" class="headerlink" title="5.3 LDAP 从服务器的 TLS, 在主服务器创建后，拷贝证书到从服务器"></a>5.3 LDAP 从服务器的 TLS, 在主服务器创建后，拷贝证书到从服务器</h3><ul>
+<li>指定目录保存<pre class="line-numbers language-none"><code class="language-none">mkdir ldap02-ssl
+cd ldap02-ssl
+certtool --generate-privkey \
+--bits 2048 \
+--outfile ldap02_slapd_key.pem<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>编辑信息文件ldap02.info<pre class="line-numbers language-none"><code class="language-none">organization &#x3D; example
+cn &#x3D; ldap02.example.top                      
+tls_www_server
+encryption_key
+signing_key
+expiration_days &#x3D; 365<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>创建证书<pre class="line-numbers language-none"><code class="language-none">sudo certtool --generate-certificate \
+--load-privkey ldap02_slapd_key.pem \
+--load-ca-certificate &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;mycacert.pem \
+--load-ca-privkey &#x2F;etc&#x2F;ssl&#x2F;private&#x2F;mycakey.pem \
+--template ldap02.info \
+--outfile ldap02_slapd_cert.pem<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">cp &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;mycacert.pem .
+scp -r ldap02-ssl user@ldap02_ip:<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<ul>
+<li>从服务器中安装证书<pre class="line-numbers language-none"><code class="language-none">sudo cp ldap02_slapd_cert.pem ldap02_slapd_key.pem &#x2F;etc&#x2F;ldap
+sudo chgrp openldap &#x2F;etc&#x2F;ldap&#x2F;ldap02_slapd_key.pem
+sudo chmod 0640 &#x2F;etc&#x2F;ldap&#x2F;ldap02_slapd_key.pem
+sudo cp mycacert.pem &#x2F;usr&#x2F;local&#x2F;share&#x2F;ca-certificates&#x2F;mycacert.crt
+sudo update-ca-certificates<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>对LDAP服务配置证书 <code>./certinfo.ldif </code><pre class="line-numbers language-none"><code class="language-none">dn: cn&#x3D;config
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;mycacert.pem
+-
+add: olcTLSCertificateFile
+olcTLSCertificateFile: &#x2F;etc&#x2F;ldap&#x2F;ldap02_slapd_cert.pem
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: &#x2F;etc&#x2F;ldap&#x2F;ldap02_slapd_key.pem<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>配置slapd-config数据库：<pre class="line-numbers language-none"><code class="language-none">sudo ldapmodify -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f certinfo.ldif <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>增添配置文件<pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;ldap&#x2F;ldap.conf
+	BASE       dc&#x3D;example,dc&#x3D;top                                                      # LDAP服务的基础DN
+	URI ldap:&#x2F;&#x2F;localhost:389 ldaps:&#x2F;&#x2F;localhost:636                        # 指定LDAP服务器的连接地址，似乎不起作用
+	[[SIZELIMIT]]  12                                                                      # 搜索结果的数量限制
+	[[TIMELIMIT]]  15                                                                     # 最长搜索时间
+	[[DEREF]]              never                                                            # 指定对别名的处理方式
+	# TLS certificates (needed for GnuTLS)
+	TLS_CACERT  &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;ca-certificates.crt                      # TLS连接时使用的CA证书文件的路径
+	TLS_REQCERT demand                                                        # &quot;demand&quot;，表示需要验证服务器的证书<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>需要访问 LDAPS（LDAP over SSL），需要编辑配置，并重启 slapd<pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;default&#x2F;slapd
+	SLAPD_SERVICES&#x3D;&quot;ldap:&#x2F;&#x2F;&#x2F; ldapi:&#x2F;&#x2F;&#x2F; ldaps:&#x2F;&#x2F;&#x2F;&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+<li>测试启动 TLS<pre class="line-numbers language-none"><code class="language-none">ldapwhoami -x -ZZ -H ldap:&#x2F;&#x2F;ldap02.example.top
+anonymous<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+<li>测试连接<pre class="line-numbers language-none"><code class="language-none">ldapwhoami -x -H ldaps:&#x2F;&#x2F;ldap02.example.top
+anonymous<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<h3 id="5-4-使用合法证书"><a href="#5-4-使用合法证书" class="headerlink" title="5.4 使用合法证书"></a>5.4 使用合法证书</h3><ul>
+<li><p>将新的 CA 根证书添加到受信任 CA 列表（客户端操作，权威证书按理不需要拷贝，未测试）</p>
+<pre class="line-numbers language-none"><code class="language-none">sudo   cp   _.example.top-chain.pem   &#x2F;usr&#x2F;local&#x2F;share&#x2F;ca-certificates&#x2F;mycacert.crt
+sudo update-ca-certificates<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>准备服务器证书和私钥（服务端）</p>
+<pre class="line-numbers language-none"><code class="language-none"> ls &#x2F;etc&#x2F;ldap
+	certinfo.ldif   _.example.top-crt.pem   _.example.top-key.pem
+sudo chgrp openldap &#x2F;etc&#x2F;ldap&#x2F;_.example.top-key.pem
+sudo chmod 0640 &#x2F;etc&#x2F;ldap&#x2F;_.example.top-key.pem<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>certinfo.ldif</p>
+<pre class="line-numbers language-none"><code class="language-none">dn: cn&#x3D;config
+changetype: modify
+replace: olcTLSCACertificateFile
+olcTLSCACertificateFile: &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;mycacert.pem
+-
+replace: olcTLSCertificateFile
+olcTLSCertificateFile: &#x2F;etc&#x2F;ldap&#x2F;_.example.top-crt.pem
+-
+replace: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: &#x2F;etc&#x2F;ldap&#x2F;_.example.top-key.pem
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">sudo ldapadd  -Y   EXTERNAL  -H  ldapi:&#x2F;&#x2F;&#x2F;   -f    certinfo.ldif<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+
+<ul>
+<li>增添配置文件，这是客户端需要连接 ldap 服务器使用的配置。可以忽略。<pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;ldap&#x2F;ldap.conf
+	BASE       dc&#x3D;example,dc&#x3D;top                                                      # LDAP服务的基础DN
+	[[URI]] ldap:&#x2F;&#x2F;localhost:389 ldaps:&#x2F;&#x2F;localhost:636                        # 指定LDAP服务器的连接地址，似乎不起作用
+	[[SIZELIMIT]]  12                                                                      # 搜索结果的数量限制
+	[[TIMELIMIT]]  15                                                                     # 最长搜索时间
+	[[DEREF]]              never                                                            # 指定对别名的处理方式
+	# TLS certificates (needed for GnuTLS)
+	TLS_CACERT  &#x2F;etc&#x2F;ssl&#x2F;certs&#x2F;ca-certificates.crt                      # TLS连接时使用的CA证书文件的路径，必需
+	TLS_REQCERT allow                                                      # &quot;demand&quot;，表示需要验证服务器的证书<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>启用 ldaps，重启 slapd<pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;default&#x2F;slapd
+	SLAPD_SERVICES&#x3D;&quot;ldap:&#x2F;&#x2F;&#x2F; ldapi:&#x2F;&#x2F;&#x2F; ldaps:&#x2F;&#x2F;&#x2F;&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<h3 id="5-5-使用-nextcloud-测试加密连接"><a href="#5-5-使用-nextcloud-测试加密连接" class="headerlink" title="5.5 使用 nextcloud 测试加密连接"></a>5.5 使用 nextcloud 测试加密连接</h3><ul>
+<li><p>docker 安装 nexcloud，登录 UI ，右上角点击账户，选择应用</p>
+</li>
+<li><p>应用捆绑包，启用 LDAP user and group backend</p>
+</li>
+<li><p>设置连接</p>
+</li>
+<li><p>ldaps连接(严格一致才是tls加密，nextcloud应该只信任权威证书)</p>
+</li>
+<li><p>明文传输</p>
+</li>
+</ul>
+<h3 id="5-6-stunnel-加密传输两个应用的数据-例：phpldapadmin"><a href="#5-6-stunnel-加密传输两个应用的数据-例：phpldapadmin" class="headerlink" title="5.6 stunnel 加密传输两个应用的数据(例：phpldapadmin)"></a>5.6 stunnel 加密传输两个应用的数据(例：phpldapadmin)</h3><p>链路： ldap user ui  —- stunnel client  accept  —-  stunnel client connect  —- stunnel server accept  —- stunnel server connect —-ldap server port</p>
+<pre class="line-numbers language-none"><code class="language-none">apt install -y stunnel4
+vim &#x2F;etc&#x2F;default&#x2F;stunnel4
+	ENABLED&#x3D;1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none"># stunnel 服务端
+	cert &#x3D; &#x2F;etc&#x2F;stunnel&#x2F;stunnel.pem
+	key &#x3D; &#x2F;etc&#x2F;stunnel&#x2F;stunnel-key.pem
+	verify &#x3D; 3
+	client &#x3D; no
+	debug &#x3D; 6
+	pid &#x3D; &#x2F;var&#x2F;run&#x2F;stunnel4&#x2F;stunnel4.pid
+	
+	[ldap]
+	accept &#x3D; 10.13.3.106:6360                # 监听 stunnel 服务的流量，客户端（是指stunnel 客户端）将连接此目标并发送流量到这里
+	connect &#x3D; 10.13.3.106:389                # 转发到 stunnel 加密连接的服务的端口
+	CAfile &#x3D; &#x2F;etc&#x2F;stunnel&#x2F;stunnel.pem
+
+# stunnel 客户端
+	cert &#x3D; &#x2F;etc&#x2F;stunnel&#x2F;stunnel.pem
+	key &#x3D; &#x2F;etc&#x2F;stunnel&#x2F;stunnel-key.pem
+	verify &#x3D; 3
+	client &#x3D; yes
+	debug &#x3D; 6
+	setuid &#x3D; stunnel4
+	setgid &#x3D; stunnel4
+	pid &#x3D; &#x2F;var&#x2F;run&#x2F;stunnel4&#x2F;stunnel4.pid
+	
+	[ldap]
+	accept &#x3D; 10.13.3.107:389                # 监听 stunnel 服务的流量，客户端（是指ldap的客户端）将连接此目标并发送流量到这里
+	connect &#x3D; 10.13.3.106:6360              # 加密连接并转发到 stunnel 的服务端
+	CAfile &#x3D; &#x2F;etc&#x2F;stunnel&#x2F;stunnel.pem<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;phpldapadmin&#x2F;config.php
+	$servers-&gt;setValue(&#39;server&#39;,&#39;host&#39;,&#39;69.87.216.102&#39;);  # 指向 stunnel 客户端，和他本地监听的端口
+	$servers-&gt;setValue(&#39;server&#39;,&#39;port&#39;,389);	<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h2 id="六、-其他模块"><a href="#六、-其他模块" class="headerlink" title="六、 其他模块"></a>六、 其他模块</h2><h3 id="6-1-日志模块"><a href="#6-1-日志模块" class="headerlink" title="6.1 日志模块"></a>6.1 日志模块</h3><pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;ldap&#x2F;loglevel.ldif
+	dn: cn&#x3D;config
+	changetype: modify
+	replace: olcLogLevel
+	olcLogLevel: stats
+
+ldapmodify  -Y  EXTERNAL  -H  ldapi:&#x2F;&#x2F;&#x2F;  -f  loglevel.ldif               # 日志在&#x2F;var&#x2F;log&#x2F;syslog | grep slapd , 比默认的级别详细<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="6-2-memberOf-开启"><a href="#6-2-memberOf-开启" class="headerlink" title="6.2 memberOf 开启"></a>6.2 memberOf 开启</h3><pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;ldap&#x2F;refint.ldif
+	# enable_refint.ldif
+	dn: cn&#x3D;module&#123;0&#125;,cn&#x3D;config
+	changetype: modify
+	add: olcModuleLoad
+	olcModuleLoad: refint.la
+	-
+	dn: olcOverlay&#x3D;refint,olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config
+	changetype: add
+	objectClass: olcOverlayConfig
+	objectClass: olcRefintConfig
+	olcOverlay: refint
+
+ldapadd -Q -Y EXTERNAL -H ldapi:&#x2F;&#x2F; -f refint.ldif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;ldap&#x2F;memberof.ldif
+	dn: cn&#x3D;module,cn&#x3D;config
+	changetype: add
+	cn: module
+	objectClass: olcModuleList
+	olcModulePath: &#x2F;usr&#x2F;lib&#x2F;ldap
+	
+	dn: cn&#x3D;module&#123;0&#125;,cn&#x3D;config
+	changetype: modify
+	add: olcModuleLoad
+	olcModuleLoad: memberof.la
+	
+	dn: olcOverlay&#x3D;memberof,olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config
+	changetype: add
+	objectClass: olcConfig
+	objectClass: olcMemberOf
+	objectClass: olcOverlayConfig
+	objectClass: top
+	olcOverlay: memberof
+	olcMemberOfDangling: ignore
+	olcMemberOfRefInt: TRUE
+	olcMemberOfGroupOC: groupOfNames
+	olcMemberOfMemberAD: member
+	olcMemberOfMemberOfAD: memberOf
+
+ldapmodify -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f memberof.ldif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>为条目添加此属性：LDIF文件中先创建用户的dn，然后创建目标组的dn，在创建组的时候将关联的用户写在member属性中</li>
+</ul>
+<h3 id="6-3-Self-Service-Password-自助密码管理"><a href="#6-3-Self-Service-Password-自助密码管理" class="headerlink" title="6.3 Self Service Password 自助密码管理"></a>6.3 Self Service Password 自助密码管理</h3><ul>
+<li>容器部署，解决 php 依赖准备繁琐</li>
+<li>镜像 ltbproject&#x2F;self-service-password:1.5.3</li>
+<li>为 admin 用户设置修改密码的权限<pre class="line-numbers language-none"><code class="language-none">下列权限可以使得 &quot;admin,example,net&quot; 对这个域 &quot;dc&#x3D;example,dc&#x3D;tech&quot; 做用户添加、属性修改
+olcAccess: &#123;0&#125;to attrs&#x3D;userPassword,shadowLastChange by dn&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;net&quot; write by anonymous auth by self write by * none
+olcAccess: &#123;1&#125;to dn.subtree&#x3D;&quot;dc&#x3D;example,dc&#x3D;tech&quot; by dn.base&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;net&quot; write<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+<li>需要对企业邮箱帐号开启设置-帐号与安全-客户端设置-客户端授权密码</li>
+<li>ssp.conf.php  成功配置版本，并映射到容器： &#x2F;home&#x2F;example&#x2F;sspasswd&#x2F;conf.php:&#x2F;var&#x2F;www&#x2F;conf&#x2F;config.inc.local.php<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token variable">$debug</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>
+<span class="token variable">$keyphrase</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"example"</span><span class="token punctuation">;</span>
+<span class="token variable">$use_sms</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>
+<span class="token variable">$use_questions</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>
+<span class="token variable">$lang</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"cn,zh-CN"</span><span class="token punctuation">;</span>
+<span class="token variable">$use_change</span> <span class="token operator">=</span> <span class="token constant boolean">true</span><span class="token punctuation">;</span>
+<span class="token comment">#$reset_url = $_SERVER['HTTP_X_FORWARDED_PROTO'] . "://" . $_SERVER['HTTP_X_FORWARDED_HOST'] . $_SERVER['SCRIPT_NAME'];</span>
+<span class="token variable">$reset_url</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"https://ssp.example.net"</span> <span class="token operator">.</span> <span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'HTTP_X_FORWARDED_HOST'</span><span class="token punctuation">]</span> <span class="token operator">.</span> <span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'SCRIPT_NAME'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token variable">$show_menu</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>
+<span class="token variable">$logo</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"images/logo.png"</span><span class="token punctuation">;</span>                <span class="token comment"># 这两项在配置前，需要确保图片映射路径在容器内部的 /var/www/html/images 下</span>
+<span class="token variable">$background_image</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"images/back.png"</span><span class="token punctuation">;</span>
+<span class="token variable">$default_action</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"sendtoken"</span><span class="token punctuation">;</span>        <span class="token comment"># 默认展示在首页的修改密码的方式</span>
+<span class="token variable">$show_menu</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>              <span class="token comment"># 关闭顶部的修改方式选择菜单</span>
+
+<span class="token comment"># LDAP</span>
+
+<span class="token variable">$ldap_url</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"ldap://10.13.3.107/"</span><span class="token punctuation">;</span>
+<span class="token variable">$ldap_starttls</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>
+<span class="token variable">$ldap_binddn</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"cn=admin,dc=example,dc=net"</span><span class="token punctuation">;</span>
+<span class="token variable">$ldap_bindpw</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'example@2020'</span><span class="token punctuation">;</span>
+<span class="token comment">#$ldap_bindpw = "&#123;SSHA&#125;UiIUaWLBYOo+2O88GNxFAdzp5M9cmlWi";</span>
+<span class="token variable">$ldap_base</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"dc=example,dc=net"</span><span class="token punctuation">;</span>
+<span class="token comment">#$ldap_base = "dc=example,dc=tech";    # 在这里同时书写两个，只会生效后一个域, 使用两个实例连接 ldap 服务</span>
+<span class="token variable">$ldap_fullname_attribute</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"cn"</span><span class="token punctuation">;</span>
+<span class="token variable">$ldap_filter</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"(&amp;(objectClass=inetOrgPerson)(<span class="token interpolation"><span class="token variable">$ldap_fullname_attribute</span></span>=&#123;login&#125;))"</span><span class="token punctuation">;</span>
+<span class="token variable">$ldap_use_exop_passwd</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>
+<span class="token variable">$ldap_use_ppolicy_control</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>
+<span class="token variable">$TLS_REQCERT</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"allow"</span><span class="token punctuation">;</span>
+
+<span class="token comment"># email</span>
+<span class="token variable">$mail_attributes</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"mail"</span><span class="token punctuation">,</span> <span class="token string double-quoted-string">"gosaMailAlternateAddress"</span><span class="token punctuation">,</span> <span class="token string double-quoted-string">"proxyAddresses"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_address_use_ldap</span> <span class="token operator">=</span> <span class="token constant boolean">true</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_from</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"user5@example.net"</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_from_name</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"密码自主修改服务"</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_signature</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"如有疑问,请联系运维同事,英博智云."</span><span class="token punctuation">;</span>
+<span class="token variable">$notify_on_change</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_protocol</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'smtp'</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_smtp_host</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'smtphz.qiye.163.com'</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_smtp_auth</span> <span class="token operator">=</span> <span class="token constant boolean">true</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_smtp_user</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"user5@example.net"</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_smtp_pass</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'TdhYDdgvN7Hpky5a'</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_smtp_port</span> <span class="token operator">=</span> <span class="token number">465</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_smtp_timeout</span> <span class="token operator">=</span> <span class="token number">30</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_smtp_keepalive</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_smtp_secure</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'ssl'</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_smtp_autotls</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_smtp_options</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_contenttype</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'text/plain'</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_wordwrap</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_charset</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'utf-8'</span><span class="token punctuation">;</span>
+<span class="token variable">$mail_priority</span> <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+
+<span class="token comment"># password policy</span>
+<span class="token variable">$hash</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"SSHA"</span><span class="token punctuation">;</span> <span class="token comment"># 修改的用户密码传递过程中会采取这里指定的加密</span>
+<span class="token variable">$pwd_min_length</span> <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">;</span>
+<span class="token variable">$pwd_max_length</span> <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">;</span>
+<span class="token variable">$pwd_min_lower</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token variable">$pwd_min_upper</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token variable">$pwd_min_digit</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token variable">$pwd_min_special</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token variable">$pwd_special_chars</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"^a-zA-Z0-9"</span><span class="token punctuation">;</span>
+<span class="token variable">$pwd_complexity</span> <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
+<span class="token variable">$pwd_no_reuse</span> <span class="token operator">=</span> <span class="token constant boolean">true</span><span class="token punctuation">;</span>
+<span class="token variable">$pwd_forbidden_words</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"example"</span><span class="token punctuation">,</span> <span class="token string double-quoted-string">"example"</span><span class="token punctuation">,</span> <span class="token string double-quoted-string">"example"</span><span class="token punctuation">,</span> <span class="token string double-quoted-string">"password"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$pwd_show_policy_pos</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"above"</span><span class="token punctuation">;</span>
+<span class="token variable">$pwd_show_policy</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"onerror"</span><span class="token punctuation">;</span>
+<span class="token delimiter important">?></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">docker run -p 8000:80 \
+&gt; --restart&#x3D;always \
+&gt; --name sspass \
+&gt; -v &#x2F;home&#x2F;example&#x2F;sspasswd&#x2F;conf.php:&#x2F;var&#x2F;www&#x2F;conf&#x2F;config.inc.local.php \
+&gt; -itd docker.io&#x2F;ltbproject&#x2F;self-service-password<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="6-3-1-不能进入修改链接-Token-is-not-valid"><a href="#6-3-1-不能进入修改链接-Token-is-not-valid" class="headerlink" title="6.3.1 不能进入修改链接 Token is not valid"></a>6.3.1 不能进入修改链接 Token is not valid</h4><pre class="line-numbers language-none"><code class="language-none">注释了这两项
+#$use_tokens &#x3D; true;
+#$crypt_tokens &#x3D; true;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="6-3-2-反向代理-Self-Service-Password"><a href="#6-3-2-反向代理-Self-Service-Password" class="headerlink" title="6.3.2 反向代理 Self Service Password"></a>6.3.2 反向代理 Self Service Password</h4><pre class="line-numbers language-none"><code class="language-none">upstream ssp &#123;
+  server 10.13.3.108:8000;
+&#125;
+
+server &#123;
+    listen 80;
+    server_name ssp.example.net;
+    return 301 https:&#x2F;&#x2F;$server_name$request_uri;
+&#125;
+server &#123;
+    listen 443 ssl ;
+    server_name ssp.example.net;
+    ssl_certificate webmin&#x2F;tls_ca.pem;
+    ssl_certificate_key webmin&#x2F;tls_key.pem;
+
+    location &#x2F; &#123;
+      proxy_pass http:&#x2F;&#x2F;ssp;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto &quot;https&quot;;
+      proxy_read_timeout 1800s;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection &quot;upgrade&quot;;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="6-4-LDAP-对目录信息的数据做备份还原和迁移"><a href="#6-4-LDAP-对目录信息的数据做备份还原和迁移" class="headerlink" title="6.4 LDAP 对目录信息的数据做备份还原和迁移"></a>6.4 LDAP 对目录信息的数据做备份还原和迁移</h3><h4 id="6-4-1-备份"><a href="#6-4-1-备份" class="headerlink" title="6.4.1 备份"></a>6.4.1 备份</h4><pre class="line-numbers language-none"><code class="language-none">sudo slapcat -n 3 -l .&#x2F;back3.ldif           # -n 指定数据库编号，数字对应各个dit的数据库编号( 配置数据库----olcDatabase&#x3D;&#123;0&#125;config.ldif; 目录信息数据库----olcDatabase&#x3D;&#123;1&#125;mdb.ldif )<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="6-4-2-恢复"><a href="#6-4-2-恢复" class="headerlink" title="6.4.2 恢复"></a>6.4.2 恢复</h4><p>原服务器上恢复，服务需要暂停</p>
+<pre class="line-numbers language-none"><code class="language-none">sudo systemctl stop slapd<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>配置目录一般位于 <code>/etc/openldap/slapd.d</code>，将原有配置删除，然后使用 <code>slapadd</code> 导入新的配置</p>
+<pre class="line-numbers language-none"><code class="language-none">$ rm -rf &#x2F;etc&#x2F;ldap&#x2F;slapd.d&#x2F;*
+$ slapadd  -n  0  -F  &#x2F;etc&#x2F;ldap&#x2F;slapd.d  -l  .&#x2F;config.2021-09-18.ldif
+$ chown -R openldap:openldap &#x2F;etc&#x2F;ldap&#x2F;slapd.d<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>数据目录一般位于 <code>/var/lib/ldap-*</code>，模拟时，将原有数据删除，然后使用 <code>slapadd</code> 导入新的数据：</p>
+<pre class="line-numbers language-none"><code class="language-none">$ rm  -rf  &#x2F;var&#x2F;lib&#x2F;ldap-example&#x2F;*         # 定制了不同的$default_action &#x3D; &quot;sendtoken&quot;;
+$show_menu &#x3D; false;dit有不同的目录分别存储不同domain的内容，注意，导入前目录必需首先存在，且权属 openldap:openldap。
+$ slapadd -n 1 -F &#x2F;etc&#x2F;openldap&#x2F;slapd.d -l .&#x2F;data.2021-09-18.ldif
+$ chown -R openldap:openldap  &#x2F;var&#x2F;lib&#x2F;ldap-example
+$ systemctl start slapd<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="6-4-3-openldap的迁移"><a href="#6-4-3-openldap的迁移" class="headerlink" title="6.4.3 openldap的迁移"></a>6.4.3 openldap的迁移</h4><p>playbook 新建的服务器，执行恢复</p>
+<pre class="line-numbers language-none"><code class="language-none">slapadd -n 1 -F &#x2F;etc&#x2F;openldap&#x2F;slapd.d -l .&#x2F;data.2021-09-18.ldif
+
+[[如果导入失败，或者数据已存在，删除rm]] -rf &#x2F;var&#x2F;lib&#x2F;ldap&#x2F;*  重新导入<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+
+<h2 id="七、-命令资料"><a href="#七、-命令资料" class="headerlink" title="七、 命令资料"></a>七、 命令资料</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jenyzhang/article/details/56487627">来自此处</a><br>ldap<br>    |-slapd             目录服务的主要程序<br>    |-slurpd           目录服务进行复制的程序<br>    |-slapadd           向目录中添加数据<br>    |-slapcat           把目录中的条目导出成ldif文件<br>    |-slapindex         重建目录的索引<br>    |-ldapcompare       对目录的条目的属性进行比较<br>    |-ldapadd           向目录服务中添加条目<br>    |-ldapdelete        删除目录中的条目<br>    |-ldapmodify        更新目录中条目的值<br>    |-ldapmodrdn        更改条目的DN<br>    |-ldappasswd        更改条目的密码<br>    |-ldapsearch        对目录进行查询</p>
+</blockquote>
+<blockquote>
+<p>ldapadd<br>      -x   进行简单认证<br>      -D   用来绑定服务器的DN<br>      -h   目录服务的地址<br>      -w   绑定DN的密码<br>      -f   使用ldif文件进行条目添加的文件  
+      </p>
+</blockquote>
+<ul>
+<li>例子<br>       ldapadd -x -D “cn&#x3D;root,dc&#x3D;starxing,dc&#x3D;com” -w secret -f &#x2F;root&#x2F;test.ldif<br>       ldapadd -x -D “cn&#x3D;root,dc&#x3D;starxing,dc&#x3D;com” -w secret (这样写就是在命令行添加条目)</li>
+</ul>
+<p>       </p>
+<blockquote>
+<p>ldapsearch<br>      -x   进行简单认证<br>      -D   用来绑定服务器的DN<br>      -w   绑定DN的密码<br>      -b   指定要查询的根节点<br>      -H   制定要查询的服务器<br>      -s   指定搜索范围的类型
+     </p>
+</blockquote>
+<ul>
+<li>例子<br>   ldapsearch -x -D “cn&#x3D;root,dc&#x3D;starxing,dc&#x3D;com” -w secret -b “dc&#x3D;starxing,dc&#x3D;com”<br>       使用简单认证，用 “cn&#x3D;root,dc&#x3D;starxing,dc&#x3D;com” 进行绑定，<br>       要查询的根是 “dc&#x3D;starxing,dc&#x3D;com”。这样会把绑定的用户能访问”dc&#x3D;starxing,dc&#x3D;com”下的所有数据显示出来。<br> ldapsearch -x -W -D “cn&#x3D;administrator,cn&#x3D;users,dc&#x3D;osdn,dc&#x3D;zzti,dc&#x3D;edu,dc&#x3D;cn” -b “cn&#x3D;administrator,cn&#x3D;users,dc&#x3D;osdn,dc&#x3D;zzti,dc&#x3D;edu,dc&#x3D;cn” -h troy.osdn.zzti.edu.cn<br>   ldapsearch -b “dc&#x3D;canon-is,dc&#x3D;jp” -H ldaps:&#x2F;&#x2F;192.168.0.92:636<br> (需要修改openldap客户端的配置文件ldap.conf,参考：<a target="_blank" rel="noopener" href="http://ms.ntcb.edu.tw/~steven/l-penguin.s/article/ldap-5.htm">http://ms.ntcb.edu.tw/~steven/l-penguin.s/article/ldap-5.htm</a>)</li>
+</ul>
+<blockquote>
+<p>ldapdelete <br>      ldapdelete -x -D “cn&#x3D;Manager,dc&#x3D;test,dc&#x3D;com” -w secret “uid&#x3D;test1,ou&#x3D;People,dc&#x3D;test,dc&#x3D;com”<br>      ldapdelete -x -D ‘cn&#x3D;root,dc&#x3D;it,dc&#x3D;com’ -w secert ‘uid&#x3D;zyx,dc&#x3D;it,dc&#x3D;com’<br>      这样就可以删除’uid&#x3D;zyx,dc&#x3D;it,dc&#x3D;com’记录了，应该注意一点，其下有子条目的不能删除  </p>
+</blockquote>
+<ul>
+<li><p>例子1  递归删除所有：<br>ldapdelete -x -D ‘cn&#x3D;administrator,dc&#x3D;example,dc&#x3D;net’ -w example@2020 -r “ou&#x3D;example,dc&#x3D;example,dc&#x3D;net”</p>
+</li>
+<li><p>例子2  删除一个acl策略。acl-dele.ldif<br> dn: olcDatabase&#x3D;{3}mdb,cn&#x3D;config<br> delete: olcAccess<br> olcAccess: {2}<br> olcAccess: {3}<br> olcAccess: {4}<br> ldapmodify -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f acl-dele.ldif</p>
+</li>
+</ul>
+<blockquote>
+<p>ldappasswd<br>    -x   进行简单认证<br>    -D   用来绑定服务器的DN<br>    -w   绑定DN的密码<br>    -S   提示的输入密码<br>    -s pass 把密码设置为pass<br>    -a pass 设置old passwd为pass<br>    -A   提示的设置old passwd<br>    -H   是指要绑定的服务器<br>    -I   使用sasl会话方式  
+    </p>
+</blockquote>
+<ul>
+<li>例子<br>    ldappasswd -x -D ‘cm&#x3D;root,dc&#x3D;it,dc&#x3D;com’ -w secret ‘uid&#x3D;zyx,dc&#x3D;it,dc&#x3D;com’ -S<br>       New password:<br>       Re-enter new password:<br>       就可以更改密码了，如果原来记录中没有密码，将会自动生成一个userPassword。</li>
+</ul>
+<p>    </p>
+<blockquote>
+<p>ldapmodify<br>     -a 添加新的条目.缺省的是修改存在的条目.<br>     -C 自动追踪引用.<br>     -c 出错后继续执行程序并不中止.缺省情况下出错的立即停止.比如如果你的ldif 文件内的某个条目在<a target="_blank" rel="noopener" href="http://lib.csdn.net/base/mysql" title="MySQL知识库">数据库</a>内并不存在,缺省情况下程序立即退出,但如果使用了该参数,程序忽略该错误继续执行.<br>     -n 用于调试到服务器的通讯.但并不实际执行搜索.服务器关闭时,返回错误；服务器<br>       打开时,常和-v 参数一起<a target="_blank" rel="noopener" href="http://lib.csdn.net/base/softwaretest" title="软件测试知识库">测试</a>到服务器是否是一条通路.<br>     -v 运行在详细模块.在标准输出中打出一些比较详细的信息.比如:连接到服务器的<br>       ip 地址和端口号等.<br>     -M  打开 manage DSA IT 控制. -MM 把该控制设置为重要的.<br>     -f file 从文件内读取条目的修改信息而不是从标准输入读取.<br>    -x 使用简单认证.<br>    -D binddn 指定搜索的用户名(一般为一dn 值).<br>    -W 指定了该参数,系统将弹出一提示入用户的密码.它和-w 参数相对使用.<br>    -w bindpasswd 直接指定用户的密码. 它和-W 参数相对使用.<br>    -H ldapuri 指定连接到服务器uri(ip 地址和端口号,常见格式为 ldap:&#x2F;&#x2F;hostname:port ).如果使用了-H 就不能使用-h 和-p 参数.<br>    -h ldaphost 指定要连接的主机的名称&#x2F;ip 地址.它和-p 一起使用<br>    -p ldapport 指定要连接目录服务器的端口号.它和-h 一起使用，如果使用了-h 和-p 参数就不能使用-H 参数.<br>    -Z 使用StartTLS 扩展操作.如果使用-ZZ,命令强制使用StartTLS 握手成功.<br>    -V 启用证书认证功能,目录服务器使用客户端证书进行身份验证,必须与-ZZ 强制启用<br>       TLS 方式配合使用,并且匿名绑定到目录服务器.<br>    -e 设置客户端证书文件,例: -e cert&#x2F;client.crt<br>    -E 设置客户端证书私钥文件,例: -E cert&#x2F;client.key  </p>
+</blockquote>
+<ul>
+<li>例子<br>ldapmodify -x -D “cn&#x3D;root,dc&#x3D;it,dc&#x3D;com” -W -f modify.ldif    #   将modify.ldif中的记录更新原有的记录。</li>
+</ul>
+<h2 id="八、-参考链接"><a href="#八、-参考链接" class="headerlink" title="八、 参考链接"></a>八、 参考链接</h2><p><a target="_blank" rel="noopener" href="https://github.com/jt6562/LDAP-read-notes/blob/master/ldap-guide/OpenLDAP%E7%AE%A1%E7%90%86%E5%91%98%E6%89%8B%E5%86%8C.md">指南</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/kevingrace/p/5773974.html">知识总结</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/js1314/p/12887893.html">参考1</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1932586">参考2</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011607971/article/details/121126289?spm=1001.2014.3001.5501#t3">参考3</a><br><a target="_blank" rel="noopener" href="https://ubuntu.com/server/docs/service-ldap-with-tls">Ubuntu wiki</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/shu-sheng/p/14450815.html">tls参考1</a><br><a target="_blank" rel="noopener" href="https://hmli.ustc.edu.cn/doc/linux/ubuntu-ldap/ubuntu-ldap.html#id14">tls参考2</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/643010354">tls参考3</a></p>
+<h2 id="九、问题："><a href="#九、问题：" class="headerlink" title="九、问题："></a>九、问题：</h2><h3 id="9-1-从服务器同步不及时，必须手动刷新，网络和ubuntu配置同样结果"><a href="#9-1-从服务器同步不及时，必须手动刷新，网络和ubuntu配置同样结果" class="headerlink" title="9.1 从服务器同步不及时，必须手动刷新，网络和ubuntu配置同样结果"></a>9.1 从服务器同步不及时，必须手动刷新，网络和ubuntu配置同样结果</h3><h3 id="9-2-日志功能开启失败"><a href="#9-2-日志功能开启失败" class="headerlink" title="9.2 日志功能开启失败"></a>9.2 日志功能开启失败</h3><pre><code>已经调整日志级别，在系统日志中查看并grep
+</code></pre>
+<h3 id="9-3-证书缺失-只能使用ldap01-这个信息查询）"><a href="#9-3-证书缺失-只能使用ldap01-这个信息查询）" class="headerlink" title="9.3 证书缺失(只能使用ldap01,这个信息查询）"></a>9.3 证书缺失(只能使用ldap01,这个信息查询）</h3><pre><code>采取使用权威证书
+</code></pre>
+<h3 id="9-4-重启slap报错-tls-init-failed"><a href="#9-4-重启slap报错-tls-init-failed" class="headerlink" title="9.4 重启slap报错 tls init   failed"></a>9.4 重启slap报错 tls init   failed</h3><pre><code>解决办法：重新生成证书
+</code></pre>
+<h3 id="9-5-报错-ldap-start-tls-Connect-error-11-n-additional-info-unknown-error-code"><a href="#9-5-报错-ldap-start-tls-Connect-error-11-n-additional-info-unknown-error-code" class="headerlink" title="9.5 报错 ldap_start_tls: Connect error (-11)    \n    additional info: (unknown error code)"></a>9.5 报错 ldap_start_tls: Connect error (-11)    \n    additional info: (unknown error code)</h3><pre><code>可能是由于服务器证书的通用名（Common Name）字段是否与主机名不一致，请检查主机名和服务器证书
+</code></pre>
+<h3 id="9-6-连接问题"><a href="#9-6-连接问题" class="headerlink" title="9.6 连接问题"></a>9.6 连接问题</h3><pre class="line-numbers language-none"><code class="language-none">ldapsearch -H ldaps:&#x2F;&#x2F;ldap.example.top  -D &quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; -W            # 在服务器本机执行此查询的报错。但是在另一个机器可以成功查询
+	ldap_sasl_bind(SIMPLE): Can&#39;t contact LDAP server (-1)                                 # 配置 ldap.conf 之后成功解决并有输出 tls&#x3D;demand&#x2F;allow----作用是证书检查<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h3 id="9-7-在多域的使用中，不能正常添加子条目，出现“shadow-context-no-update-referral”"><a href="#9-7-在多域的使用中，不能正常添加子条目，出现“shadow-context-no-update-referral”" class="headerlink" title="9.7 在多域的使用中，不能正常添加子条目，出现“shadow context; no update referral”"></a>9.7 在多域的使用中，不能正常添加子条目，出现“shadow context; no update referral”</h3><pre class="line-numbers language-none"><code class="language-none">1. 首先尝试重新部署，发现执行镜像复制的剧本之前可以正常创建所有的条目
+    解决：在mirror mode 开启时，需要指定相应的数据库
+2.  shadow context; no update referral  根本原因是需要检查权限<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h3 id="9-8-使用的脚本一致，测试环境和生产环境结果不一致-主要是不能长时间正常保持客户端连接并查询"><a href="#9-8-使用的脚本一致，测试环境和生产环境结果不一致-主要是不能长时间正常保持客户端连接并查询" class="headerlink" title="9.8 使用的脚本一致，测试环境和生产环境结果不一致; 主要是不能长时间正常保持客户端连接并查询"></a>9.8 使用的脚本一致，测试环境和生产环境结果不一致; 主要是不能长时间正常保持客户端连接并查询</h3><ul>
+<li>脚本中的组织信息ldif文件有问题，经测试不影响。</li>
+<li>memberOf，属性不可单独添加，通过 groupofNames 指定 member 之后会自动关联。已经修正使用方式，结果未改变。</li>
+<li>2204 系统和 2004 系统的slapd版本不一致（并没有影响）。</li>
+<li>将orgnization的任务和前一部分拆分，否则会出现读取不到 rootdn（手动测试是成功的）（然而脚本中修改后并没有解决这个问题）。</li>
+<li>将organization拆分，在此之前重启服务，未解决。</li>
+<li>将organization拆分，在此之前先重启虚拟机。（有效、怀疑是服务中某些连接的状态在ansible执行中没有更新）（仍然失效了，经过一夜之后失效）。</li>
+<li>另一台2204主机安装正常使用，怀疑虚拟机系统问题。</li>
+</ul>
+<h2 id="十、-验证"><a href="#十、-验证" class="headerlink" title="十、 验证"></a>十、 验证</h2><h3 id="10-1-检测连接命令："><a href="#10-1-检测连接命令：" class="headerlink" title="10.1 检测连接命令："></a>10.1 检测连接命令：</h3><p> ldaps:&#x2F;&#x2F;    —-ldap over ssl  使用636 ，从连接开始加密   ;        ldap:&#x2F;&#x2F;           —ldap_start_tls(-ZZ参数):    使用389，从传输开始加密</p>
+<pre class="line-numbers language-none"><code class="language-none">ldapsearch -H ldaps:&#x2F;&#x2F;ldap01.example.top:636 -D &quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; -W -b &quot;dc&#x3D;example,dc&#x3D;top&quot; -s sub &quot;(objectClass&#x3D;person)&quot;
+
+ldapsearch -H ldap:&#x2F;&#x2F;10.13.3.106  -D &quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; -W -b &quot;dc&#x3D;example,dc&#x3D;top&quot; -s sub &quot;(objectClass&#x3D;person)&quot;
+
+ldapsearch -H ldap:&#x2F;&#x2F;ldap01.example.top  -D &quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; -W -b &quot;dc&#x3D;example,dc&#x3D;top&quot; -s sub &quot;(objectClass&#x3D;person)&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="10-2-验证和日志"><a href="#10-2-验证和日志" class="headerlink" title="10.2 验证和日志"></a>10.2 验证和日志</h3><p>tag 101 应表明在查询; tag 97 是在认证</p>
+<pre class="line-numbers language-none"><code class="language-none">ldapsearch -H ldap:&#x2F;&#x2F;ldap01.example.top  -D &quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; -W   -ZZ      #  启用了tls功能 ，-ZZ 参数，仍然是 389 端口，连接后在传输过程中加密
+	
+	Sep  1 10:33:12 example-sys-test-06 slapd[91401]: conn&#x3D;1240 fd&#x3D;14 ACCEPT from IP&#x3D;10.13.3.107:60674 (IP&#x3D;0.0.0.0:389)
+	Sep  1 10:33:12 example-sys-test-06 slapd[91401]: conn&#x3D;1240 op&#x3D;0 EXT oid&#x3D;1.3.6.1.4.1.1466.20037
+	Sep  1 10:33:12 example-sys-test-06 slapd[91401]: conn&#x3D;1240 op&#x3D;0 STARTTLS
+	Sep  1 10:33:12 example-sys-test-06 slapd[91401]: conn&#x3D;1240 op&#x3D;0 RESULT oid&#x3D; err&#x3D;0 text&#x3D;
+	Sep  1 10:33:12 example-sys-test-06 slapd[91401]: conn&#x3D;1240 fd&#x3D;14 TLS established tls_ssf&#x3D;256 ssf&#x3D;256
+	Sep  1 10:33:15 example-sys-test-06 slapd[91401]: conn&#x3D;1240 op&#x3D;1 BIND dn&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; method&#x3D;128
+	Sep  1 10:33:15 example-sys-test-06 slapd[91401]: conn&#x3D;1240 op&#x3D;1 BIND dn&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; mech&#x3D;SIMPLE ssf&#x3D;0
+	Sep  1 10:33:15 example-sys-test-06 slapd[91401]: conn&#x3D;1240 op&#x3D;1 RESULT tag&#x3D;97 err&#x3D;0 text&#x3D;
+	Sep  1 10:33:15 example-sys-test-06 slapd[91401]: conn&#x3D;1240 op&#x3D;2 SRCH base&#x3D;&quot;dc&#x3D;example,dc&#x3D;top&quot; scope&#x3D;2 deref&#x3D;0 filter&#x3D;&quot;(objectClass&#x3D;*)&quot;
+	Sep  1 10:33:15 example-sys-test-06 slapd[91401]: conn&#x3D;1240 op&#x3D;2 SEARCH RESULT tag&#x3D;101 err&#x3D;0 nentries&#x3D;6 text&#x3D;
+	Sep  1 10:33:15 example-sys-test-06 slapd[91401]: conn&#x3D;1240 op&#x3D;3 UNBIND
+	Sep  1 10:33:15 example-sys-test-06 slapd[91401]: conn&#x3D;1240 fd&#x3D;14 closed<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">ldapsearch -H ldap:&#x2F;&#x2F;ldap01.example.top  -D &quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; -W        # 明文传输
+	
+	Sep  1 10:36:21 example-sys-test-06 slapd[91401]: conn&#x3D;1246 fd&#x3D;14 ACCEPT from IP&#x3D;10.13.3.107:37760 (IP&#x3D;0.0.0.0:389)
+	Sep  1 10:36:21 example-sys-test-06 slapd[91401]: conn&#x3D;1246 op&#x3D;0 BIND dn&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; method&#x3D;128
+	Sep  1 10:36:21 example-sys-test-06 slapd[91401]: conn&#x3D;1246 op&#x3D;0 BIND dn&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; mech&#x3D;SIMPLE ssf&#x3D;0
+	Sep  1 10:36:21 example-sys-test-06 slapd[91401]: conn&#x3D;1246 op&#x3D;0 RESULT tag&#x3D;97 err&#x3D;0 text&#x3D;
+	Sep  1 10:36:21 example-sys-test-06 slapd[91401]: conn&#x3D;1246 op&#x3D;1 SRCH base&#x3D;&quot;dc&#x3D;example,dc&#x3D;top&quot; scope&#x3D;2 deref&#x3D;0 filter&#x3D;&quot;(objectClass&#x3D;*)&quot;
+	Sep  1 10:36:21 example-sys-test-06 slapd[91401]: conn&#x3D;1246 op&#x3D;1 SEARCH RESULT tag&#x3D;101 err&#x3D;0 nentries&#x3D;6 text&#x3D;
+	Sep  1 10:36:21 example-sys-test-06 slapd[91401]: conn&#x3D;1246 op&#x3D;2 UNBIND
+	Sep  1 10:36:21 example-sys-test-06 slapd[91401]: conn&#x3D;1246 fd&#x3D;14 closed<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">ldapsearch -H ldaps:&#x2F;&#x2F;ldap01.example.top  -D &quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; -W        # 从连接就开始加密
+
+	Sep  1 10:39:39 example-sys-test-06 slapd[91401]: conn&#x3D;1247 fd&#x3D;14 ACCEPT from IP&#x3D;10.13.3.107:58726 (IP&#x3D;0.0.0.0:636)
+	Sep  1 10:39:39 example-sys-test-06 slapd[91401]: conn&#x3D;1247 fd&#x3D;14 TLS established tls_ssf&#x3D;256 ssf&#x3D;256
+	Sep  1 10:39:39 example-sys-test-06 slapd[91401]: conn&#x3D;1247 op&#x3D;0 BIND dn&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; method&#x3D;128
+	Sep  1 10:39:39 example-sys-test-06 slapd[91401]: conn&#x3D;1247 op&#x3D;0 BIND dn&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; mech&#x3D;SIMPLE ssf&#x3D;0
+	Sep  1 10:39:39 example-sys-test-06 slapd[91401]: conn&#x3D;1247 op&#x3D;0 RESULT tag&#x3D;97 err&#x3D;0 text&#x3D;
+	Sep  1 10:39:39 example-sys-test-06 slapd[91401]: conn&#x3D;1247 op&#x3D;1 SRCH base&#x3D;&quot;dc&#x3D;example,dc&#x3D;top&quot; scope&#x3D;2 deref&#x3D;0 filter&#x3D;&quot;(objectClass&#x3D;*)&quot;
+	Sep  1 10:39:39 example-sys-test-06 slapd[91401]: conn&#x3D;1247 op&#x3D;1 SEARCH RESULT tag&#x3D;101 err&#x3D;0 nentries&#x3D;6 text&#x3D;
+	Sep  1 10:39:39 example-sys-test-06 slapd[91401]: conn&#x3D;1247 op&#x3D;2 UNBIND
+	Sep  1 10:39:39 example-sys-test-06 slapd[91401]: conn&#x3D;1247 fd&#x3D;14 closed<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">ldapsearch -H ldaps:&#x2F;&#x2F;ldap01.example.top  -D &quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;top&quot; -W -ZZ
+	ldap_start_tls: Operations error (1)
+        additional info: TLS already started
+
+Sep  1 10:40:28 example-sys-test-06 slapd[91401]: conn&#x3D;1248 fd&#x3D;14 ACCEPT from IP&#x3D;10.13.3.107:39894 (IP&#x3D;0.0.0.0:636)
+Sep  1 10:40:28 example-sys-test-06 slapd[91401]: conn&#x3D;1248 fd&#x3D;14 TLS established tls_ssf&#x3D;256 ssf&#x3D;256
+Sep  1 10:40:28 example-sys-test-06 slapd[91401]: conn&#x3D;1248 op&#x3D;0 EXT oid&#x3D;1.3.6.1.4.1.1466.20037
+Sep  1 10:40:28 example-sys-test-06 slapd[91401]: conn&#x3D;1248 op&#x3D;0 STARTTLS
+Sep  1 10:40:28 example-sys-test-06 slapd[91401]: conn&#x3D;1248 op&#x3D;0 RESULT oid&#x3D; err&#x3D;1 text&#x3D;TLS already started                # 证明二者冲突，不能同时开启
+Sep  1 10:40:28 example-sys-test-06 slapd[91401]: conn&#x3D;1248 op&#x3D;1 UNBIND
+Sep  1 10:40:28 example-sys-test-06 slapd[91401]: conn&#x3D;1248 fd&#x3D;14 closed<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="十一、应用服务"><a href="#十一、应用服务" class="headerlink" title="十一、应用服务"></a>十一、应用服务</h2><h3 id="11-1-建立-ldap-管理-只读帐号"><a href="#11-1-建立-ldap-管理-只读帐号" class="headerlink" title="11.1 建立 ldap 管理&#x2F;只读帐号"></a>11.1 建立 ldap 管理&#x2F;只读帐号</h3><pre class="line-numbers language-none"><code class="language-none">dn: cn&#x3D;admin,dc&#x3D;xxx,dc&#x3D;xx 
+changetype: add  
+objectClass: simpleSecurityObject  
+objectClass: organizationalRole  
+cn: admin  
+userPassword: &#123;SSHA&#125;UiIUaWLBYOo+2O88GNxFAdzp5M9cmlWi  
+  
+-  
+dn: cn&#x3D;reader,dc&#x3D;xxx2,dc&#x3D;xx2  
+changetype: add  
+objectClass: simpleSecurityObject  
+objectClass: organizationalRole  
+cn: admin  
+userPassword: &#123;SSHA&#125;UiIUaWLBYOo+2O88GNxFAdzp5M9cmlWi<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="11-2-详细的公司架构-ldif"><a href="#11-2-详细的公司架构-ldif" class="headerlink" title="11.2 详细的公司架构 ldif"></a>11.2 详细的公司架构 ldif</h3><pre class="line-numbers language-none"><code class="language-none">dn: ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: organizationalUnit  
+ou: example  
+  
+dn: ou&#x3D;example-bod,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: organizationalUnit  
+ou: example-bod  
+  
+dn: cn&#x3D;user1,ou&#x3D;example-bod,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: user1  
+departmentnumber: 1  
+displayname: Zheng Yu  
+mail: user1@example.net  
+objectclass: inetOrgPerson  
+sn: Zheng  
+title: President  
+uid: 10000  
+userpassword: &#123;SSHA&#125;W4DSQvcToeOeTJB+6W5fCZmz4PqrmwQs  
+  
+dn: cn&#x3D;example-bod-admin,ou&#x3D;example-bod,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: example-bod-admin  
+member: cn&#x3D;user1,ou&#x3D;example-bod,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: groupOfNames  
+  
+dn: ou&#x3D;example-bus,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: organizationalUnit  
+ou: example-bus  
+  
+dn: cn&#x3D;user8,ou&#x3D;example-bus,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: user8  
+departmentnumber: 2  
+displayname: Sun Minghong  
+mail: user8@example.net  
+objectclass: inetOrgPerson  
+sn: Sun  
+title: Financial Manager  
+uid: 10001  
+userpassword: &#123;SSHA&#125;W4DSQvcToeOeTJB+6W5fCZmz4PqrmwQs  
+  
+dn: cn&#x3D;example-bus-admin,ou&#x3D;example-bus,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: example-bus-admin  
+member: cn&#x3D;user8,ou&#x3D;example-bus,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: groupOfNames  
+  
+dn: ou&#x3D;example-sys,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: organizationalUnit  
+ou: example-sys  
+  
+dn: cn&#x3D;user2,ou&#x3D;example-sys,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: user2  
+departmentnumber: 3  
+displayname: Xie Jian  
+mail: user2@example.net  
+objectclass: inetOrgPerson  
+sn: Xie  
+title: Senior Systems Engineer  
+uid: 10002  
+userpassword: &#123;SSHA&#125;W4DSQvcToeOeTJB+6W5fCZmz4PqrmwQs  
+  
+dn: cn&#x3D;example-sys-admin,ou&#x3D;example-sys,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: example-sys-admin  
+member: cn&#x3D;user2,ou&#x3D;example-sys,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: groupOfNames  
+  
+dn: cn&#x3D;user5,ou&#x3D;example-sys,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: user5  
+departmentnumber: 3  
+displayname: Long Chao  
+mail: user5@example.net  
+objectclass: inetOrgPerson  
+sn: Long  
+title: System Engineer  
+uid: 10003  
+userpassword: &#123;SSHA&#125;W4DSQvcToeOeTJB+6W5fCZmz4PqrmwQs  
+  
+dn: cn&#x3D;example-sys-junior,ou&#x3D;example-sys,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: example-sys-junior  
+member: cn&#x3D;user5,ou&#x3D;example-sys,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: groupOfNames  
+  
+dn: ou&#x3D;example-ops,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: organizationalUnit  
+ou: example-ops  
+  
+dn: cn&#x3D;user6.tang,ou&#x3D;example-ops,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: user6.tang  
+departmentnumber: 4  
+displayname: Tang Binchao  
+mail: user6.tang@example.net  
+objectclass: inetOrgPerson  
+sn: Tang  
+title: System Engineer  
+uid: 10004  
+userpassword: &#123;SSHA&#125;W4DSQvcToeOeTJB+6W5fCZmz4PqrmwQs  
+  
+dn: cn&#x3D;example-ops-admin,ou&#x3D;example-ops,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: example-ops-admin  
+member: cn&#x3D;user6.tang,ou&#x3D;example-ops,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: groupOfNames  
+  
+dn: ou&#x3D;example-dev,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: organizationalUnit  
+ou: example-dev  
+  
+dn: cn&#x3D;user3,ou&#x3D;example-dev,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: user3  
+departmentnumber: 5  
+displayname: Chen Cheng  
+mail: user3@example.net  
+objectclass: inetOrgPerson  
+sn: Chen  
+title: Senior Development Engineer  
+uid: 10005  
+userpassword: &#123;SSHA&#125;W4DSQvcToeOeTJB+6W5fCZmz4PqrmwQs  
+  
+dn: cn&#x3D;example-dev-admin,ou&#x3D;example-dev,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: example-dev-admin  
+member: cn&#x3D;user3,ou&#x3D;example-dev,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: groupOfNames  
+  
+dn: cn&#x3D;user4.li,ou&#x3D;example-dev,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: user4.li  
+departmentnumber: 5  
+displayname: Li user4  
+mail: user4.li@example.net  
+objectclass: inetOrgPerson  
+sn: Li  
+title: Development Engineer  
+uid: 10006  
+userpassword: &#123;SSHA&#125;W4DSQvcToeOeTJB+6W5fCZmz4PqrmwQs  
+  
+dn: cn&#x3D;user7,ou&#x3D;example-dev,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: user7  
+departmentnumber: 5  
+displayname: Luo Xujun  
+mail: user7@example.net  
+objectclass: inetOrgPerson  
+sn: Luo  
+title: Development Engineer  
+uid: 10007  
+userpassword: &#123;SSHA&#125;&#x2F;2+Coei5Fje+th7mOJgu43Ms3hBia2Qu  
+  
+dn: cn&#x3D;example-dev-senior,ou&#x3D;example-dev,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+cn: example-dev-senior  
+member: cn&#x3D;user4.li,ou&#x3D;example-dev,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+member: cn&#x3D;user7,ou&#x3D;example-dev,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: groupOfNames  
+  
+dn: ou&#x3D;example-rob,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net  
+objectclass: organizationalUnit  
+ou: example-rob<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="11-3-第一版-ACL"><a href="#11-3-第一版-ACL" class="headerlink" title="11.3 第一版 ACL"></a>11.3 第一版 ACL</h3><pre class="line-numbers language-none"><code class="language-none">dn: olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config
+changetype: modify
+add: olcAccess
+olcAccess: &#123;2&#125;to dn.subtree&#x3D;&quot;ou&#x3D;example,dc&#x3D;example,dc&#x3D;net&quot; filter&#x3D;&quot;(&amp;(objectClass&#x3D;inetOrgPerson)(|(memberOf&#x3D;cn&#x3D;example-bod-admin,ou&#x3D;example-bod,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net)(memberOf&#x3D;cn&#x3D;example-sys-admin,ou&#x3D;example-sys,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net)(memberOf&#x3D;cn&#x3D;example-ops-admin,ou&#x3D;example-ops,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net)))&quot; by dn.base&#x3D;&quot;cn&#x3D;exampleread,dc&#x3D;ibexample,dc&#x3D;com&quot; read
+
+dn: olcDatabase&#x3D;&#123;4&#125;mdb,cn&#x3D;config
+changetype: modify
+add: olcAccess
+olcAccess: &#123;0&#125;to attrs&#x3D;userPassword by self write by dn.base&#x3D;&quot;cn&#x3D;exampleadmin,dc&#x3D;example,dc&#x3D;net&quot; write  by anonymous auth  by * none
+olcAccess: &#123;2&#125;to dn.subtree&#x3D;&quot;dc&#x3D;ibexample,dc&#x3D;com&quot; by dn.base&#x3D;&quot;cn&#x3D;exampleadmin,dc&#x3D;example,dc&#x3D;net&quot; write by dn.base&#x3D;&quot;cn&#x3D;exampleread,dc&#x3D;ibexample,dc&#x3D;com&quot; read<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="11-4-最终的acl（写两个域、读两个域、reader-example-可以读取某些admin组，实现映射到example域下集成的应用）"><a href="#11-4-最终的acl（写两个域、读两个域、reader-example-可以读取某些admin组，实现映射到example域下集成的应用）" class="headerlink" title="11.4 最终的acl（写两个域、读两个域、reader_example 可以读取某些admin组，实现映射到example域下集成的应用）"></a>11.4 最终的acl（写两个域、读两个域、reader_example 可以读取某些admin组，实现映射到example域下集成的应用）</h3><ul>
+<li><p>添加</p>
+<pre class="line-numbers language-none"><code class="language-none">dn: olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config
+changetype: modify
+add: olcAccess
+olcAccess: &#123;2&#125;to dn.subtree&#x3D;&quot;dc&#x3D;example,dc&#x3D;net&quot; by dn.base&#x3D;&quot;cn&#x3D;exampleread,dc&#x3D;example,dc&#x3D;net&quot; read
+olcAccess: &#123;3&#125;to dn.subtree&#x3D;&quot;dc&#x3D;example,dc&#x3D;net&quot; filter&#x3D;&quot;(&amp;(objectClass&#x3D;inetOrgPerson)(|(memberOf&#x3D;cn&#x3D;example-bod-admin,ou&#x3D;example-bod,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net)(memberOf&#x3D;cn&#x3D;example-sys-admin,ou&#x3D;example-sys,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net)(memberOf&#x3D;cn&#x3D;example-ops-admin,ou&#x3D;example-ops,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net)))&quot; by dn.base&#x3D;&quot;cn&#x3D;exampleread,dc&#x3D;ibexample,dc&#x3D;com&quot; read
+ 
+dn: olcDatabase&#x3D;&#123;2&#125;mdb,cn&#x3D;config
+changetype: modify
+add: olcAccess
+olcAccess: &#123;0&#125;to attrs&#x3D;userPassword by self write by dn.base&#x3D;&quot;cn&#x3D;exampleadmin,dc&#x3D;example,dc&#x3D;net&quot; write  by anonymous auth  by * none
+olcAccess: &#123;2&#125;to dn.subtree&#x3D;&quot;dc&#x3D;ibexample,dc&#x3D;com&quot; by dn.base&#x3D;&quot;cn&#x3D;exampleadmin,dc&#x3D;example,dc&#x3D;net&quot; write by dn.base&#x3D;&quot;cn&#x3D;exampleread,dc&#x3D;ibexample,dc&#x3D;com&quot; read by dn.base&#x3D;&quot;cn&#x3D;exampleread,dc&#x3D;example,dc&#x3D;net&quot; read<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>删除</p>
+<pre class="line-numbers language-none"><code class="language-none">dn: olcDatabase&#x3D;&#123;1&#125;mdb,cn&#x3D;config
+delete: olcAccess
+olcAccess: &#123;2&#125;to..........
+olcAccess: &#123;3&#125;to........
+ 
+
+ldapmodify -Y EXTERNAL -H ldapi:&#x2F;&#x2F;&#x2F; -f acl-dele.ldif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>数据库内 ACL 顺序测试，{}里面是优先级，生效在前（涉及范围大的 ACL 应书写在前）</p>
+<pre class="line-numbers language-none"><code class="language-none">olcAccess: &#123;0&#125;to attrs&#x3D;userPassword by self write by anonymous auth  by dn.base&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;net&quot; write  by * none   
+olcAccess: &#123;1&#125;to attrs&#x3D;shadowLastChange by self write by * read
+olcAccess: &#123;2&#125;to dn.subtree&#x3D;&quot;cn&#x3D;example-sys-admin,ou&#x3D;example-sys,dc&#x3D;example,dc&#x3D;tech&quot; by dn.base&#x3D;&quot;cn&#x3D;reader,dc&#x3D;example,dc&#x3D;net&quot; read by dn.base&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;net&quot; write    # 如果没有此条acl,该条目将不能在 lam 中被 admin 管理
+ olcAccess: &#123;3&#125;to dn.subtree&#x3D;&quot;dc&#x3D;example,dc&#x3D;tech&quot; by dn.base&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;net&quot; write      # 此条优先级最低<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h2 id="十二、集成其他应用"><a href="#十二、集成其他应用" class="headerlink" title="十二、集成其他应用"></a>十二、集成其他应用</h2><h3 id="12-1-conflunce"><a href="#12-1-conflunce" class="headerlink" title="12.1  conflunce"></a>12.1  conflunce</h3><pre class="line-numbers language-none"><code class="language-none">olcAccess: &#123;0&#125;to attrs&#x3D;userPassword by self write by anonymous auth by * none
+olcAccess: &#123;1&#125;to attrs&#x3D;shadowLastChange by self write by * read
+olcAccess: &#123;2&#125;to dn.subtree&#x3D;&quot;dc&#x3D;example,dc&#x3D;net&quot; by dn.base&#x3D;&quot;cn&#x3D;reader,dc&#x3D;ibexample,dc&#x3D;com&quot; read<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h4 id="12-1-1-连接-之后的-acl-过滤案例"><a href="#12-1-1-连接-之后的-acl-过滤案例" class="headerlink" title="12.1.1 连接 之后的 acl 过滤案例"></a>12.1.1 连接 之后的 acl 过滤案例</h4><p>‘(&amp;(objectclass&#x3D;inetorgperson)(|(cn&#x3D;user5)(cn&#x3D;user2)))’  过滤出指定用户—-在用户模式设置。</p>
+<p>‘(&amp;(objectclass&#x3D;groupOfNames)(|(cn&#x3D;example-sys-junior)(cn&#x3D;example-sys-admin)))’ 过滤指定组—-在组模式设置（在ldap中创建的组 objectclass 是groupOfNames）</p>
+<h4 id="12-1-2-更详细的-acl-需求"><a href="#12-1-2-更详细的-acl-需求" class="headerlink" title="12.1.2 更详细的 acl 需求"></a>12.1.2 更详细的 acl 需求</h4><ul>
+<li><p>example</p>
+<pre class="line-numbers language-none"><code class="language-none">olcAccess: &#123;0&#125;to attrs&#x3D;userPassword by self write  by anonymous auth  by * none
+olcAccess: &#123;1&#125;to attrs&#x3D;shadowLastChange by self write by * read
+olcAccess: &#123;2&#125;to dn.subtree&#x3D;&quot;dc&#x3D;example,dc&#x3D;net&quot; filter&#x3D;&quot;(&amp;(objectClass&#x3D;inetOrg
+ Person)(|(memberOf&#x3D;cn&#x3D;example-bod-admin,ou&#x3D;example-bod,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net
+ )(memberOf&#x3D;cn&#x3D;example-sys-admin,ou&#x3D;example-sys,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net)(member
+ Of&#x3D;cn&#x3D;example-ops-admin,ou&#x3D;example-ops,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net)))&quot; by dn.base&#x3D;
+ &quot;cn&#x3D;reader,dc&#x3D;ibexample,dc&#x3D;com&quot; read  by dn.base&#x3D; &quot;cn&#x3D;reader,dc&#x3D;example,dc&#x3D;net&quot; read
+
+search时，必须要具体到用户层级，例如nextcloud，需要指定基础用户树如下
+
+cn&#x3D;user2,ou&#x3D;example-sys,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net
+cn&#x3D;user1,ou&#x3D;example-bod,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net
+cn&#x3D;user6.tang,ou&#x3D;example-ops,ou&#x3D;example,dc&#x3D;example,dc&#x3D;net
+dc&#x3D;ibexample,dc&#x3D;com<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>example</p>
+<pre class="line-numbers language-none"><code class="language-none">olcAccess: &#123;0&#125;to attrs&#x3D;userPassword by self write by dn.base&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;net&quot; write  by anonymous auth  by * none
+olcAccess: &#123;1&#125;to attrs&#x3D;shadowLastChange by self write by * read
+olcAccess: &#123;2&#125;to dn.subtree&#x3D;&quot;dc&#x3D;ibexample,dc&#x3D;com&quot; by dn.base&#x3D;&quot;cn&#x3D;admin,dc&#x3D;example,dc&#x3D;net&quot; write by dn.base&#x3D;&quot;cn&#x3D;reader,dc&#x3D;ibexample,dc&#x3D;com&quot; read<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h3 id="12-2-集成-vault"><a href="#12-2-集成-vault" class="headerlink" title="12.2 集成 vault"></a>12.2 集成 vault</h3><ul>
+<li>过滤特定用户<pre class="line-numbers language-none"><code class="language-none">(&amp;(objectClass&#x3D;inetOrgPerson)(&#123;&#123;.UserAttr&#125;&#125;&#x3D;&#123;&#123;.Username&#125;&#125;)(|(cn&#x3D;user2)(cn&#x3D;user1)(cn&#x3D;%s)))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>过滤某个组<pre class="line-numbers language-none"><code class="language-none">(&amp;(objectClass&#x3D;inetOrgPerson)(&#123;&#123;.UserAttr&#125;&#125;&#x3D;&#123;&#123;.Username&#125;&#125;)(memberof&#x3D;CN&#x3D;example-sys-admin,OU&#x3D;example-sys,OU&#x3D;example,DC&#x3D;example,DC&#x3D;net))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>过滤多个组<pre class="line-numbers language-none"><code class="language-none">(&amp;(objectclass&#x3D;inetOrgPerson)(&#123;&#123;.UserAttr&#125;&#125;&#x3D;&#123;&#123;.Username&#125;&#125;)(|(memberof&#x3D;CN&#x3D;example-sys-admin,OU&#x3D;example-sys,OU&#x3D;example,DC&#x3D;example,DC&#x3D;net)(memberof&#x3D;CN&#x3D;example-dev-admin,OU&#x3D;example-dev,OU&#x3D;example,DC&#x3D;example,DC&#x3D;net)))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>过滤特定用户和特定组<pre class="line-numbers language-none"><code class="language-none">(&amp;(objectclass&#x3D;inetOrgPerson)(&#123;&#123;.UserAttr&#125;&#125;&#x3D;&#123;&#123;.Username&#125;&#125;)(|(|(cn&#x3D;user4.li))(|(memberof&#x3D;CN&#x3D;example-sys-admin,OU&#x3D;example-sys,OU&#x3D;example,DC&#x3D;example,DC&#x3D;net)(memberof&#x3D;CN&#x3D;example-dev-admin,OU&#x3D;example-dev,OU&#x3D;example,DC&#x3D;example,DC&#x3D;net))(cn&#x3D;%s)))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>错误<pre class="line-numbers language-none"><code class="language-none">(&amp;(objectClass&#x3D;inetOrgPerson)(&#123;&#123;.UserAttr&#125;&#125;&#x3D;&#123;&#123;.Username&#125;&#125;)(|(cn&#x3D;user2)(cn&#x3D;user1))(cn&#x3D;%s))  会失败
+
+以下 1 条，写在group filter的时候会出现不能过滤，所有人都可以登录
+(&amp;(objectclass&#x3D;inetOrgPerson)(|(memberof&#x3D;CN&#x3D;example-sys-admin,OU&#x3D;example-sys,OU&#x3D;example,DC&#x3D;example,DC&#x3D;net)(memberof&#x3D;CN&#x3D;example-dev-admin,OU&#x3D;example-dev,OU&#x3D;example,DC&#x3D;example,DC&#x3D;net)))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">LC</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://blog.chaoslong.cn/2023/10/24/multiple-domians-in-openldap-use-case/">https://blog.chaoslong.cn/2023/10/24/multiple-domians-in-openldap-use-case/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">LC</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/OpenLDAP/">
+                                    <span class="chip bg-color">OpenLDAP</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2023/11/27/homelab-pc/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="homelab pc">
+                        
+                        <span class="card-title">homelab pc</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Got a new way to write blog in english. Write the version 1 of this easy in chinese, then translating the texts into English. this one is about the  prepare of testing environments on my homelab PC. By the way, hope one day I'll know more professional words.
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2023-11-27
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Hardware/" class="post-category">
+                                    Hardware
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/DIY/">
+                        <span class="chip bg-color">DIY</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2023/10/18/zhe-shi-yi-feng-xin/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="这是一封信">
+                        
+                        <span class="card-title">这是一封信</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            嗨，终于等到你啦！
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-10-18
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Personal/" class="post-category">
+                                    Personal
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Personal/">
+                        <span class="chip bg-color">Personal</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: BLOG<br />'
+            + '文章作者: LC<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2023-2024</span>
+            
+            <a href="/about" target="_blank">LC</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            
+            <br>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2023";
+                        var startMonth = "10";
+                        var startDate = "7";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'zh-CN';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis"><!--
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--></div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

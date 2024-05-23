@@ -1,0 +1,1477 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Instantbox Customize, BLOG">
+    <meta name="description" content="InstantBox 即时可用的纯净 linux，Webui分享 shell，本质是运行的容器。记录使用定制镜像和资源上下限配置的过程。">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>Instantbox Customize | BLOG</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <style>
+        body{
+            background-image: url(medias/images/03.jpg);
+            background-repeat:no-repeat;
+            background-size: 100% 100%;
+            background-attachment:fixed;
+        }
+    </style>
+
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">BLOG</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">BLOG</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/Check-LC/check-lc.github.io.git" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/Check-LC/check-lc.github.io.git" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/19.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Instantbox Customize</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Virtualization/">
+                                <span class="chip bg-color">Virtualization</span>
+                            </a>
+                        
+                            <a href="/tags/Docker/">
+                                <span class="chip bg-color">Docker</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2024-02-17
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2024-04-20
+                </div>
+                
+
+                
+
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="1-重构"><a href="#1-重构" class="headerlink" title="1 . 重构"></a>1 . 重构</h2><h3 id="1-1-镜像"><a href="#1-1-镜像" class="headerlink" title="1.1 镜像"></a>1.1 镜像</h3><table>
+<thead>
+<tr>
+<th align="center">镜像</th>
+<th align="center">时间</th>
+<th>选用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">作者镜像 build</td>
+<td align="center">2019.6</td>
+<td></td>
+</tr>
+<tr>
+<td align="center">node:11.1-alpine</td>
+<td align="center">2018-07</td>
+<td></td>
+</tr>
+<tr>
+<td align="center">node:12.3.0-alpine</td>
+<td align="center">2019-05</td>
+<td></td>
+</tr>
+<tr>
+<td align="center">node:8.1.0-alpine</td>
+<td align="center">2017-06</td>
+<td>instantbox-frontend</td>
+</tr>
+<tr>
+<td align="center">python:3-alpine3.6</td>
+<td align="center">2018-06</td>
+<td></td>
+</tr>
+<tr>
+<td align="center">python:3-alpine3.8</td>
+<td align="center">2019-05</td>
+<td></td>
+</tr>
+<tr>
+<td align="center">python:3.4.7-alpine</td>
+<td align="center">2018-01</td>
+<td>instantbox-server</td>
+</tr>
+<tr>
+<td align="center">gcr.io&#x2F;distroless&#x2F;python3</td>
+<td align="center"></td>
+<td>instantbox-server</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>[!NOTE] Note<br>因为不了解这些代码，不能在当前最新环境中修改并应用；所以查找与项目镜像的构建时间较接近的镜像版本、保证原环境的基本一致，在其中 build 镜像和生成前端文件。</p>
+</blockquote>
+<h3 id="1-2-cron-不需要调整"><a href="#1-2-cron-不需要调整" class="headerlink" title="1.2 cron 不需要调整"></a>1.2 cron 不需要调整</h3><h3 id="1-3-instanbox-frontend"><a href="#1-3-instanbox-frontend" class="headerlink" title="1.3 instanbox-frontend"></a>1.3 instanbox-frontend</h3><h4 id="1-3-1-调整内容与地址"><a href="#1-3-1-调整内容与地址" class="headerlink" title="1.3.1 调整内容与地址"></a>1.3.1 调整内容与地址</h4><ul>
+<li>原因：需要 vscode 远程连接这些容器使用，容器内部使用 ssh 22 端口；需要延长 24h 的存活时间、cpu 和 mem 视情况限制</li>
+<li>资源使用：timeout、cpu、mem</li>
+<li>默认值和页面展示内容：port、timeout、cpu、mem</li>
+<li>地址如下</li>
+</ul>
+<ol>
+<li>instantbox-frontend&#x2F;src&#x2F;util&#x2F;api.js,  keyword: 80<pre class="line-numbers language-JavaScript" data-language="JavaScript"><code class="language-JavaScript">export const getOSUrl &#x3D; (osCode, timeout, cpu &#x3D; 1, mem &#x3D; 0.5, port &#x3D; 80) &#x3D;&gt; &#123;
+  return makeCancelable(
+    axios.get(requestUrlList.getOS, &#123;
+      params: &#123;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>src&#x2F;App.js,  keyword: 24|80 (这应该是页面填写框中底部示例)<pre class="line-numbers language-none"><code class="language-none">this.state &#x3D; &#123;
+      open: false,
+      osList: [],
+      selectedVersion: &#123;&#125;,
+      selectedOS: &#123;&#125;,
+      timeout: 24,
+      cpu: 1,
+      memory: 512,
+      port: 80, &#x2F;&#x2F; Internal port (entered by user)
+      externalPort: 0, &#x2F;&#x2F; External port (assigned by api)
+      container,
+      isExistContainer,
+      screenLoading: false,
+      skipModalVisible: false
+    &#125;;
+
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>src&#x2F;i18n&#x2F;local/*.json, keyword: 80|24 (这个目录应该是不同语言下的网页提示)<pre class="line-numbers language-JavaScript" data-language="JavaScript"><code class="language-JavaScript">&quot;sentence&quot;: &#123;
+      &quot;open-webshell&quot;: &quot;Instantbox a été créé. Lancer shell?&quot;,
+      &quot;open-webshell-try-again&quot;: &quot;Veuillez cliquer à nouveau si le webshell a rencontré une erreur.&quot;,
+      &quot;eg-port&quot;: &quot;Exemple 80&quot;,
+      &quot;eg-cpu-core-count&quot;: &quot;Exemple 1&quot;,
+      &quot;eg-memory-in-mb&quot;: &quot;Exemple 512&quot;,
+      &quot;eg-ttl-in-hours&quot;: &quot;Exemple 24&quot;,
+      &quot;err-resources&quot;: &quot;La validation a échoué, merci de ressaisir.&quot;,
+      &quot;err-creation&quot;: &quot;Echec de la création d&#39;instantbox. Veuillez réessayer ultérieurement.&quot;,
+      &quot;err-port&quot;: &quot;Echec de la validation du port&quot;,
+      &quot;msg-port&quot;: &quot;Plage de port: 1-65535&quot;,
+      &quot;err-cpu-core-count&quot;: &quot;Echec de la validation du nombre de processeurs&quot;,
+      &quot;msg-cpu-core-count&quot;: &quot;Plage CPU：1-4&quot;,
+      &quot;err-memory-in-mb&quot;: &quot;Echec de la validation de la mémoire&quot;,
+      &quot;msg-memory-in-mb&quot;: &quot;Plage mémoire: 1-3584&quot;,
+      &quot;err-ttl-in-hours&quot;: &quot;Echec de la validation de la durée&quot;,
+      &quot;msg-ttl-in-hours&quot;: &quot;Plage durée: 1-24&quot;,
+      &quot;err-empty-os&quot;: &quot;Veuillez choisir un OS.&quot;
+    &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>src&#x2F;components&#x2F;SelectSystemConfig&#x2F;SelectForm.js, keyword 24|80  (这应该是默认值)<pre class="line-numbers language-none"><code class="language-none">timeout: [
+        &#123;
+          required: true,
+          message: this.t(&#39;prompt.enter-ttl-in-hours&#39;)
+        &#125;,
+        &#123;
+          validator: (rule, value, callback) &#x3D;&gt; &#123;
+            if (
+              (&#x2F;^\d+$&#x2F;g.test(value) &amp;&amp; value &gt;&#x3D; 1 &amp;&amp; value &lt;&#x3D; 24) ||
+              value &#x3D;&#x3D;&#x3D; &quot;&quot;
+            ) &#123;
+              return callback();
+            &#125;
+            callback(this.t(&#39;sentence.err-ttl-in-hours&#39;));
+          &#125;,
+          message: this.t(&#39;sentence.msg-ttl-in-hours&#39;)
+        &#125;
+      ]
+......
+return (
+      &lt;Form layout&#x3D;&quot;horizontal&quot;&gt;
+        &lt;FormItem label&#x3D;&#123;this.t(&#39;keyword.port&#39;)&#125; &#123;...formItemLayout&#125;&gt;
+          &#123;getFieldDecorator(&quot;port&quot;, &#123;
+            initialValue: &quot;80&quot;,
+            rules: rules.port
+          &#125;)(&lt;Input style&#x3D;&#123;&#123; width: 200 &#125;&#125; placeholder&#x3D;&#123;this.t(&#39;sentence.eg-port&#39;)&#125; &#x2F;&gt;)&#125;
+        &lt;&#x2F;FormItem&gt;
+        &lt;FormItem label&#x3D;&#123;this.t(&#39;keyword.cpu-core-count&#39;)&#125; &#123;...formItemLayout&#125;&gt;
+          &#123;getFieldDecorator(&quot;cpu&quot;, &#123;
+            initialValue: &quot;1&quot;,
+            rules: rules.cpu
+          &#125;)(&lt;Input style&#x3D;&#123;&#123; width: 200 &#125;&#125; placeholder&#x3D;&#123;this.t(&#39;sentence.eg-cpu-core-count&#39;)&#125; &#x2F;&gt;)&#125;
+        &lt;&#x2F;FormItem&gt;
+        &lt;FormItem label&#x3D;&#123;this.t(&#39;keyword.memory-in-mb&#39;)&#125; &#123;...formItemLayout&#125;&gt;
+          &#123;getFieldDecorator(&quot;mem&quot;, &#123;
+            initialValue: &quot;512&quot;,
+            rules: rules.mem
+          &#125;)(&lt;Input style&#x3D;&#123;&#123; width: 200 &#125;&#125; placeholder&#x3D;&#123;this.t(&#39;sentence.eg-memory-in-mb&#39;)&#125; &#x2F;&gt;)&#125;
+        &lt;&#x2F;FormItem&gt;
+        &lt;FormItem label&#x3D;&#123;this.t(&#39;keyword.ttl-in-hours&#39;)&#125; &#123;...formItemLayout&#125;&gt;
+          &#123;getFieldDecorator(&quot;timeout&quot;, &#123;
+            initialValue: &quot;24&quot;,
+            rules: rules.timeout
+          &#125;)(&lt;Input style&#x3D;&#123;&#123; width: 200 &#125;&#125; placeholder&#x3D;&#123;this.t(&#39;sentence.eg-ttl-in-hours&#39;)&#125; &#x2F;&gt;)&#125;
+        &lt;&#x2F;FormItem&gt;
+      &lt;&#x2F;Form&gt;
+    );<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ol>
+<h4 id="1-3-2-构建-instantbox-frontend"><a href="#1-3-2-构建-instantbox-frontend" class="headerlink" title="1.3.2 构建 instantbox-frontend"></a>1.3.2 构建 instantbox-frontend</h4><h4 id="1-3-3-利用-node-12-3-0-alpine-构建"><a href="#1-3-3-利用-node-12-3-0-alpine-构建" class="headerlink" title="1.3.3 利用 node: 12.3.0-alpine 构建"></a>1.3.3 利用 node: 12.3.0-alpine 构建</h4><ul>
+<li>在此镜像的基础上修改依赖包的<a target="_blank" rel="noopener" href="https://juejin.cn/post/7057420490851221518">版本更新规则</a>没能成功构建镜像<br>1 . 启动该镜像容器 <br>2 . 将项目文件拷贝进入容器 <br>3 . 根据Dockerfile 的命令 build 网页文件<code>npm ci</code>  <code>npm build</code> <br>4 . 将生成的 build 目录下的文件保存备用<br>5 . 用新的 dockerfile 构建镜像<pre class="line-numbers language-docker" data-language="docker"><code class="language-docker"><span class="token instruction"><span class="token keyword">FROM</span> nginx:1.25.3</span>
+
+<span class="token instruction"><span class="token keyword">COPY</span> ./nginx.conf /etc/nginx/conf.d/default.conf   # 这个 nginx.conf 文件在作者项目中</span>
+<span class="token instruction"><span class="token keyword">COPY</span> ./build/ /usr/share/nginx/html/</span>
+
+<span class="token instruction"><span class="token keyword">EXPOSE</span> 80</span>
+
+<span class="token instruction"><span class="token keyword">ARG</span> BUILD_DATE</span>
+<span class="token instruction"><span class="token keyword">ARG</span> VCS_REF</span>
+<span class="token instruction"><span class="token keyword">LABEL</span> <span class="token operator">\</span>
+  org.label-schema.build-date=<span class="token variable">$BUILD_DATE</span> <span class="token operator">\</span>
+  org.label-schema.vcs-ref=<span class="token variable">$VCS_REF</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h4 id="1-3-4-利用-node-8-1-0-alpine-构建"><a href="#1-3-4-利用-node-8-1-0-alpine-构建" class="headerlink" title="1.3.4 利用 node:8.1.0-alpine 构建"></a>1.3.4 利用 node:8.1.0-alpine 构建</h4><pre class="line-numbers language-docker" data-language="docker"><code class="language-docker"><span class="token instruction"><span class="token keyword">FROM</span> node:8.1.0-alpine <span class="token keyword">AS</span> builder</span>
+
+<span class="token instruction"><span class="token keyword">WORKDIR</span> /app</span>
+
+<span class="token instruction"><span class="token keyword">COPY</span> package*.json /app/</span>
+
+<span class="token instruction"><span class="token keyword">RUN</span> npm install</span>
+
+<span class="token instruction"><span class="token keyword">COPY</span> ./src/ /app/src/</span>
+<span class="token instruction"><span class="token keyword">COPY</span> ./public/ /app/public/</span>
+
+<span class="token instruction"><span class="token keyword">RUN</span> npm run build</span>
+
+<span class="token instruction"><span class="token keyword">FROM</span> nginx:1.17.0-alpine</span>
+
+<span class="token instruction"><span class="token keyword">COPY</span> <span class="token options"><span class="token property">--from</span><span class="token punctuation">=</span><span class="token string">builder</span></span> /app/build/ /usr/share/nginx/html/</span>
+<span class="token instruction"><span class="token keyword">COPY</span> ./nginx.conf /etc/nginx/conf.d/default.conf</span>
+
+<span class="token instruction"><span class="token keyword">EXPOSE</span> 80</span>
+
+<span class="token instruction"><span class="token keyword">ARG</span> BUILD_DATE</span>
+<span class="token instruction"><span class="token keyword">ARG</span> VCS_REF</span>
+<span class="token instruction"><span class="token keyword">LABEL</span> <span class="token operator">\</span>
+  org.label-schema.build-date=<span class="token variable">$BUILD_DATE</span> <span class="token operator">\</span>
+  org.label-schema.vcs-ref=<span class="token variable">$VCS_REF</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="1-4-instantbox-server"><a href="#1-4-instantbox-server" class="headerlink" title="1.4 instantbox-server"></a>1.4 instantbox-server</h3><ul>
+<li>修改地址: instantbox&#x2F;inspire.py, keyword(24) (默认值)<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">else:
+        os_mem <span class="token operator">=</span> request.args.get<span class="token punctuation">(</span><span class="token string">'mem'</span><span class="token punctuation">)</span>
+        os_cpu <span class="token operator">=</span> request.args.get<span class="token punctuation">(</span><span class="token string">'cpu'</span><span class="token punctuation">)</span>
+        os_port <span class="token operator">=</span> request.args.get<span class="token punctuation">(</span><span class="token string">'port'</span><span class="token punctuation">)</span>
+        os_timeout <span class="token operator">=</span> request.args.get<span class="token punctuation">(</span><span class="token string">'timeout'</span><span class="token punctuation">)</span>
+
+        <span class="token keyword">if</span> os_mem is None:
+            os_mem <span class="token operator">=</span> <span class="token number">512</span>
+        <span class="token keyword">if</span> os_cpu is None:
+            os_cpu <span class="token operator">=</span> <span class="token number">1</span>
+        max_timeout <span class="token operator">=</span> <span class="token number">3600</span> * <span class="token number">24</span> + time.time<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> os_timeout is None:
+            os_timeout <span class="token operator">=</span> max_timeout
+        else:
+            os_timeout <span class="token operator">=</span> min<span class="token punctuation">(</span>float<span class="token punctuation">(</span>os_timeout<span class="token punctuation">)</span>, max_timeout<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>Dockerfile, 主要修改镜像文件的清单<pre class="line-numbers language-docker" data-language="docker"><code class="language-docker"><span class="token instruction"><span class="token keyword">FROM</span> python:3.4.7-alpine <span class="token keyword">AS</span> builder</span>
+
+<span class="token instruction"><span class="token keyword">WORKDIR</span> /usr/src/app</span>
+
+<span class="token instruction"><span class="token keyword">COPY</span> . .            # 已经将 manifest.json 修改并放到镜像构建的上下文中，所以此处将其拷贝即可。</span>
+
+<span class="token instruction"><span class="token keyword">RUN</span> pip3 install -q --no-cache-dir -r requirement.txt -t ./</span>
+<span class="token comment"># ADD https://raw.githubusercontent.com/instantbox/instantbox-images/master/manifest.json .  原文如此准备 manifest</span>
+
+<span class="token instruction"><span class="token keyword">FROM</span> gcr.io/distroless/python3</span>
+
+<span class="token instruction"><span class="token keyword">ENV</span> SERVERURL <span class="token string">""</span></span>
+
+<span class="token instruction"><span class="token keyword">WORKDIR</span> /app</span>
+
+<span class="token instruction"><span class="token keyword">COPY</span> <span class="token options"><span class="token property">--from</span><span class="token punctuation">=</span><span class="token string">builder</span></span> /usr/src/app/ .</span>
+
+<span class="token instruction"><span class="token keyword">EXPOSE</span> 65501</span>
+
+<span class="token instruction"><span class="token keyword">CMD</span> [<span class="token string">"inspire.py"</span>]</span>
+
+<span class="token instruction"><span class="token keyword">ARG</span> BUILD_DATE</span>
+<span class="token instruction"><span class="token keyword">ARG</span> VCS_REF</span>
+<span class="token instruction"><span class="token keyword">LABEL</span> <span class="token operator">\</span>
+  org.label-schema.build-date=<span class="token variable">$BUILD_DATE</span> <span class="token operator">\</span>
+  org.label-schema.vcs-ref=<span class="token variable">$VCS_REF</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<blockquote>
+<p>[!ATTENTION]<br>在 .dockerignore 文件中需要添加 <code>manifest.json</code> , 将文件引为构建必要文件, 将所有必要文件排除，并忽略其他’* &amp; .* ‘<br>manifest. json 中修改网页指定镜像名与地址</p>
+</blockquote>
+<ul>
+<li>manifest.json 指定自定义的镜像地址（此文件在作者 instantbox-images 项目中）<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+    <span class="token property">"label"</span><span class="token operator">:</span> <span class="token string">"Ubuntu"</span><span class="token punctuation">,</span>
+    <span class="token property">"value"</span><span class="token operator">:</span> <span class="token string">"ubuntu"</span><span class="token punctuation">,</span>
+    <span class="token property">"logoUrl"</span><span class="token operator">:</span> <span class="token string">"https://cdn.jsdelivr.net/gh/instantbox/instantbox-images/icon/ubuntu.png"</span><span class="token punctuation">,</span>
+    <span class="token property">"subList"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">&#123;</span>
+        <span class="token property">"label"</span><span class="token operator">:</span> <span class="token string">"14.04"</span><span class="token punctuation">,</span>                                   # label命名
+        <span class="token property">"osCode"</span><span class="token operator">:</span> <span class="token string">"instantbox/ubuntu:14.04"</span>  # 此处替换为自定义镜像地址
+      <span class="token punctuation">&#125;</span><span class="token punctuation">,</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h3 id="1-5-instantbox-images"><a href="#1-5-instantbox-images" class="headerlink" title="1.5 instantbox-images"></a>1.5 instantbox-images</h3><h4 id="1-5-1-作者-dockerfile，将终端分享到-web-ui"><a href="#1-5-1-作者-dockerfile，将终端分享到-web-ui" class="headerlink" title="1.5.1 作者 dockerfile，将终端分享到 web ui"></a>1.5.1 作者 dockerfile，将终端分享到 web ui</h4><pre class="line-numbers language-docker" data-language="docker"><code class="language-docker"><span class="token instruction"><span class="token keyword">FROM</span> ubuntu:latest</span>
+
+<span class="token instruction"><span class="token keyword">LABEL</span> <span class="token operator">\</span>
+  org.label-schema.schema-version=<span class="token string">"1.0"</span> <span class="token operator">\</span>
+  org.label-schema.name=<span class="token string">"instantbox/ubuntu:latest"</span> <span class="token operator">\</span>
+  org.label-schema.vcs-url=<span class="token string">"https://github.com/instantbox/instantbox-images"</span> <span class="token operator">\</span>
+  maintainer=<span class="token string">"Instantbox Team &lt;team@instantbox.org>"</span></span>
+
+<span class="token instruction"><span class="token keyword">WORKDIR</span> /home</span>
+
+<span class="token instruction"><span class="token keyword">RUN</span> apt-get update -qq &amp;&amp; apt-get install -qq -y python3-pip --no-install-recommends <span class="token operator">\</span>
+  &amp;&amp; rm -rf /var/lib/apt/lists/* <span class="token operator">\</span>
+  &amp;&amp; pip3 install freeFile</span>
+
+<span class="token instruction"><span class="token keyword">COPY</span> ./ttyd_linux.x86_64 /usr/bin/</span>
+
+<span class="token instruction"><span class="token keyword">RUN</span> chmod +x /usr/bin/ttyd_linux.x86_64</span>
+
+<span class="token instruction"><span class="token keyword">CMD</span> [<span class="token string">"ttyd_linux.x86_64"</span>, <span class="token string">"-p"</span>, <span class="token string">"1588"</span>, <span class="token string">"bash"</span>]</span>
+
+<span class="token instruction"><span class="token keyword">EXPOSE</span> 1588</span>
+
+<span class="token instruction"><span class="token keyword">ARG</span> BUILD_DATE</span>
+<span class="token instruction"><span class="token keyword">ARG</span> VCS_REF</span>
+<span class="token instruction"><span class="token keyword">LABEL</span> <span class="token operator">\</span>
+  org.label-schema.build-date=<span class="token variable">$BUILD_DATE</span> <span class="token operator">\</span>
+  org.label-schema.vcs-ref=<span class="token variable">$VCS_REF</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="1-5-2-准备-ttyd，和试用"><a href="#1-5-2-准备-ttyd，和试用" class="headerlink" title="1.5.2 准备 ttyd，和试用"></a>1.5.2 准备 ttyd，和试用</h4><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">wget</span> https://github.com/instantbox/ttyd/archive/refs/tags/1.4.4.tar.gz
+<span class="token function">tar</span> <span class="token parameter variable">-xvf</span> <span class="token number">1.4</span>.4.tar.gz
+<span class="token builtin class-name">cd</span> ttyd-1.4.4/
+<span class="token function">mkdir</span> build <span class="token operator">&amp;&amp;</span> <span class="token builtin class-name">cd</span> build
+<span class="token function">apt-get</span> <span class="token function">install</span> build-essential cmake <span class="token function">git</span> libjson-c-dev libwebsockets-dev pkg-config
+cmake <span class="token punctuation">..</span>
+<span class="token function">make</span> <span class="token operator">&amp;&amp;</span> <span class="token function">make</span> <span class="token function">install</span>
+<span class="token function">ls</span> ttyd<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>[!Error]<br>拷贝二进制文件到其他服务器，运行编译后的 .&#x2F;ttyd<br>error while loading shared libraries: libjson-c.so.5: cannot open shared object file: No such file or directory</p>
+</blockquote>
+<blockquote>
+<p>[!Solution]<br>sudo apt install -y libjson-c 5 libev 4 </p>
+</blockquote>
+<h4 id="1-5-3-基于公司镜像构建实验使用镜像"><a href="#1-5-3-基于公司镜像构建实验使用镜像" class="headerlink" title="1.5.3 基于公司镜像构建实验使用镜像"></a>1.5.3 基于公司镜像构建实验使用镜像</h4><pre class="line-numbers language-Dockerfile" data-language="Dockerfile"><div class="caption"><span>TI:"Dockerfile"</span></div><code class="language-Dockerfile">FROM company&#x2F;ubuntu:22.04-py3.10.12
+
+COPY .&#x2F;dvc.list &#x2F;etc&#x2F;apt&#x2F;sources.list.d&#x2F;
+COPY .&#x2F;packages.iterative.gpg  &#x2F;tmp&#x2F;
+COPY .&#x2F;service.sh  &#x2F;etc&#x2F;
+
+RUN sudo install -o root -g root -m 644 &#x2F;tmp&#x2F;packages.iterative.gpg &#x2F;etc&#x2F;apt&#x2F;trusted.gpg.d&#x2F;
+
+RUN sudo apt-get update -qq \
+  &amp;&amp; sudo apt install -qq -y --no-install-recommends \
+     libjson-c5 \
+     libev4 \
+     openssh-server \
+     dvc \
+  &amp;&amp; sudo apt-get clean \
+  &amp;&amp; pip3 install freeFile
+
+COPY .&#x2F;ttyd &#x2F;usr&#x2F;local&#x2F;bin&#x2F;
+
+RUN sudo chmod +x &#x2F;usr&#x2F;local&#x2F;bin&#x2F;ttyd &#x2F;etc&#x2F;service.sh \
+  &amp;&amp; echo &#39;company:company@2020&#39; | sudo chpasswd \
+  &amp;&amp; echo &#39;port 22\nPasswordAuthentication yes&#39; | sudo tee -a &#x2F;etc&#x2F;ssh&#x2F;sshd_config
+
+ENTRYPOINT [&quot;&#x2F;etc&#x2F;service.sh&quot;]
+CMD [&quot;ttyd&quot;,&quot;-p&quot;,&quot;1588&quot;,&quot;bash&quot;]
+
+EXPOSE 1588
+
+ARG BUILD_DATE
+ARG VCS_REF
+LABEL \
+  org.label-schema.build-date&#x3D;$BUILD_DATE \
+  org.label-schema.vcs-ref&#x3D;$VCS_REF<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-Bash" data-language="Bash"><div class="caption"><span>TI:"service.sh"</span></div><code class="language-Bash">#!&#x2F;bin&#x2F;bash
+sudo service ssh restart
+# 执行其他命令
+exec &quot;$@&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="2-运行"><a href="#2-运行" class="headerlink" title="2. 运行"></a>2. 运行</h2><p>将官方的 docker-compose 文件修改 frontend 和 server 镜像为重新构建的镜像并运行</p>
+<blockquote>
+<p>[!ATTENTIONS]<br>容器运行之后，内部之间的网络转发在项目中通过容器名连接，docker-compose 设计容器名需保持原作者命名<br>此容器可以直接在远程开发中通过指定端口以默认用户和密码登录</p>
+</blockquote>
+<h2 id="3-远程开发-ssh"><a href="#3-远程开发-ssh" class="headerlink" title="3. 远程开发 ssh"></a>3. 远程开发 ssh</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">update
+<span class="token function">apt</span> update
+<span class="token function">apt</span> <span class="token function">install</span> <span class="token parameter variable">-y</span> openssh-server <span class="token function">git</span> <span class="token function">vim</span> gnupg
+<span class="token function">passwd</span> <span class="token punctuation">[</span>username<span class="token punctuation">]</span>
+ssh-keygen
+<span class="token function">cat</span> ~/.ssh/id_rsa.pub   <span class="token comment"># 新增到 gitlab 仓库 sshkey</span>
+
+<span class="token comment"># 密码登录部分配置</span>
+<span class="token function">tee</span> <span class="token parameter variable">-a</span> /etc/ssh/sshd_config <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
+port 22
+PermitRootLogin yes
+PasswordAuthentication yes
+EOF</span>
+
+<span class="token function">service</span> <span class="token function">ssh</span> restart
+
+<span class="token comment"># dns 解析</span>
+<span class="token builtin class-name">echo</span> <span class="token string">'nameserver 10.1.0.1'</span>  <span class="token operator">>></span> /etc/resolv.conf<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="4-Code-Version-Control"><a href="#4-Code-Version-Control" class="headerlink" title="4. Code Version Control"></a>4. Code Version Control</h2><pre class="line-numbers language-none"><code class="language-none">git clone git@gitlab.company.net:company-sys&#x2F;inbox&#x2F;ansible.git
+# 仓库中书写并添加内容
+ git add test.txt&#x2F;1.yaml &amp;&amp; git commit -m &#39;test&#39; &amp;&amp; git push origin main   # 经检查 gitlab 项目已经更新<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h2 id="5-Data-Version-Control"><a href="#5-Data-Version-Control" class="headerlink" title="5. Data Version Control"></a>5. Data Version Control</h2><p>使用 DVC 管理学生在 minio 的数据文件</p>
+<h3 id="5-1-DVC-push"><a href="#5-1-DVC-push" class="headerlink" title="5.1 DVC push"></a>5.1 DVC push</h3><pre class="line-numbers language-Bash" data-language="Bash"><code class="language-Bash">ls DVC&#x2F;
+    build  Dockerfile  LICENSE  nginx.conf  node_modules  package.json  package-lock.json  public  README.md  src
+git init
+dvc init
+dvc remote add -d myremote s3:&#x2F;&#x2F;test&#x2F;dvc           # 配置远端存储位置 是S3:&#x2F;&#x2F;bucket&#x2F;path 
+dvc remote modify myremote endpointurl http:&#x2F;&#x2F;10.8.0.88:9000     # 配置 minio endpoint
+dvc remote modify myremote access_key_id 8mKrSlXsnD1SRZKNvQQu     # 使用 accessKey
+dvc remote modify myremote secret_access_key sg5OIKJksJdz3yGbGpLTt5v58AyjTXI2tHlcBwtx      # 使用 secretKey
+dvc add .
+    ERROR: Path: &#x2F;home&#x2F;inboc does not overlap with base path: &#x2F;home&#x2F;inboc&#x2F;DVC
+dvc add .&#x2F;*
+    100% Adding...|██████████████████████████████████████████████████████████████████████████████████████|10&#x2F;10 [00:24,  2.49s&#x2F;file]
+    To track the changes with git, run:
+        git add src.dvc build.dvc README.md.dvc public.dvc LICENSE.dvc Dockerfile.dvc nginx.conf.dvc package-lock.json.dvc node_modules.dvc .gitignore package.json.dvc
+    To enable auto staging, run:
+        dvc config core.autostage true
+dvc push -vvv
+dvc remote list  
+    myremote s3:&#x2F;&#x2F;test&#x2F;dvc<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p><code>.dvc/config 文件</code></p>
+<pre class="line-numbers language-none"><code class="language-none">[core]
+    remote &#x3D; myremote
+[&#39;remote &quot;myremote&quot;&#39;]
+    url &#x3D; S3:&#x2F;&#x2F;test&#x2F;dvc
+    endpointurl &#x3D; http:&#x2F;&#x2F;10.8.0.88:9000
+    access_key_id &#x3D; 8mKrSlXsnD1SRZKNvQQu
+    secret_access_key &#x3D; sg5OIKJksJdz3yGbGpLTt5v58AyjTXI2tHlcBwtx<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="5-2-DVC-pull"><a href="#5-2-DVC-pull" class="headerlink" title="5.2 DVC pull"></a>5.2 DVC pull</h3><pre class="line-numbers language-none"><code class="language-none"># 初始化
+git init
+dvc init
+
+# 连接远程git
+git remote add origin ssh:&#x2F;&#x2F;git@10.8.0.90:9922&#x2F;root&#x2F;dvc.git
+
+# 连接远程 S3
+dvc remote add -d myremote s3:&#x2F;&#x2F;test&#x2F;dvc
+dvc remote modify myremote endpointurl http:&#x2F;&#x2F;10.8.0.88:9000
+dvc remote modify myremote access_key_id 8mKrSlXsnD1SRZKNvQQu
+dvc remote modify myremote secret_access_key sg5OIKJksJdz3yGbGpLTt5v58AyjTXI2tHlcBwtx
+
+# 下载目标数据
+git checkout origin&#x2F;main -- Dockerfile.dvc
+dvc pull -vvv #根据当前的 *.dvc 文件下载目标数据
+dvc pull build.dvc   # 拉取指定的数据<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>[!Note]<br>理解：实际的版本控制功能应该是通过 git 管理了.dvc文件，DVC 通过此文件保证数据的状态同步<br>还需要研究 .gitignore, . Dvcignore 应该在其中书写什么（数据文件名+），被 git 管理的将不再被 dvc 管理<br>以及下文需要研究版本控制和 branch 合并</p>
+</blockquote>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">LC</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://blog.chaoslong.cn/2024/02/17/instantbox-customize/">https://blog.chaoslong.cn/2024/02/17/instantbox-customize/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">LC</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Virtualization/">
+                                    <span class="chip bg-color">Virtualization</span>
+                                </a>
+                            
+                                <a href="/tags/Docker/">
+                                    <span class="chip bg-color">Docker</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2024/02/22/overleaf-self-hosted/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Overleaf self hosted">
+                        
+                        <span class="card-title">Overleaf self hosted</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Overleaf 是在线的 Latex 编辑器，官方开源了其服务。本文主要是记录基于其镜像进行本地部署并引入社区 LDAP 功能的过程。
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2024-02-22
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            LC
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Docker/">
+                        <span class="chip bg-color">Docker</span>
+                    </a>
+                    
+                    <a href="/tags/Overleaf/">
+                        <span class="chip bg-color">Overleaf</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2024/01/02/instant-box/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="instant box">
+                        
+                        <span class="card-title">instant box</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Instant Box 的测试使用，基于容器快速创建虚拟机容器并使用。
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-01-02
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            LC
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/demo-test/">
+                        <span class="chip bg-color">demo test</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: BLOG<br />'
+            + '文章作者: LC<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2023-2024</span>
+            
+            <a href="/about" target="_blank">LC</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            
+            <br>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2023";
+                        var startMonth = "10";
+                        var startDate = "7";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'zh-CN';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis"><!--
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--></div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
