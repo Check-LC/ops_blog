@@ -1,3 +1,19 @@
+---
+title: Cilium with Hubble
+author: LC
+toc: true
+date: 2024-06-06 2024:10:05
+img:
+top:
+cover:
+password:
+summary: 使用 cilium 网络插件，并暴露其 hubble 的监控 UI
+categories: Kubernetes
+tags: ['cilium', 'kubernetes', 'hubble']
+---
+
+
+
 ## 前情
 1. rancher 集群，将 calico 替换为 cilium ；删除当前 calico-system 的资源
 ## 安装cilium
