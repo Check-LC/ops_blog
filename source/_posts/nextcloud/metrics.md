@@ -1,5 +1,5 @@
 ---
-title: metrics
+title: nextcloud-metrics
 author: LC
 toc: true
 date: 2024-05-24 11:59:45

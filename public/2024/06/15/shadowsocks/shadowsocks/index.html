@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="blog-with-cdn, BLOG">
-    <meta name="description" content="测试发布在github pages 的博客自定义域名并且在cdn中分发">
+    <meta name="keywords" content="shadowsocks-libev, BLOG">
+    <meta name="description" content="为便于学习和测试时找到更多镜像资源和云原生资料，使用云主机建设个人用VPN">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>blog-with-cdn | BLOG</title>
+    <title>shadowsocks-libev | BLOG</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
     <style>
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">blog-with-cdn</h1>
+                    <h1 class="description center-align post-title">shadowsocks-libev</h1>
                 </div>
             </div>
         </div>
@@ -337,12 +337,29 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/shadowsocks/">
+                                <span class="chip bg-color">shadowsocks</span>
+                            </a>
+                        
+                            <a href="/tags/vpn/">
+                                <span class="chip bg-color">vpn</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/VPN/" class="post-category">
+                                VPN
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -351,7 +368,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2024-04-24
+                    2024-06-15
                 </div>
                 
 
@@ -390,22 +407,176 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-前置"><a href="#1-前置" class="headerlink" title="1. 前置"></a>1. 前置</h2><p>当前托管在 github 的访问地址是<code>https://myrepo.github.io</code><br>Note：<br>此时自己的仓库名应该和自己的域名相同<code>myrepo.github.io</code>; 同时配置 blog 应用中关于github pages 发布中关于url的配置)</p>
-<p>然后配置自定义域名是 <code>blog.mydomain.cn</code>； 可以在 UI 配置，也可以通过直接在 main 分支source文件夹下创建一个位于顶级的文件<code>CNAME</code>,其中只存在这个自定义域名，然后发布一次。<br>此时需要在自己的域名管理添加 DNS 的 CNAME 解析记录，对应以上；即： <code>blog.mydomain.cn  CNAME  myrepo.github.io</code></p>
-<h2 id="2-cdn-加速"><a href="#2-cdn-加速" class="headerlink" title="2. cdn 加速"></a>2. cdn 加速</h2><p>测试使用的cdn产品是 <code>cdn.cdn5.com</code>, <code>sudun.com</code></p>
-<p>加速域名：km.mydomain.cn<br>源站：blog.mydomain.cn  OR  myrepo.github.io<br>cdn域名别名：xxxxxxx</p>
-<p><strong>配置：</strong><br>为<code>加速域名</code>，在自己的域名管理添加 DNS 的 CNAME 解析记录，对应为：<code>km.mydomain.cn CNAME cdn域名别名</code></p>
-<p><strong>流量：</strong><br>加速域名 –&gt; DNS –&gt; cdn域名别名 –&gt; 源站（github.io|blog.cn ）</p>
-<p>其中，回源 是指 cdn 向源站请求的过程。回源<code>host</code> 这个参数需要源站能够匹配。所以在回源设置中需要保证<code>host</code>的值正确;<br>此例是将值自定义为源站的 servername，<code>blog.mydomain.cn | myrepo.github.io</code></p>
-<p><strong>其它：</strong><br>默认使用加密传输，配置了证书、开启了重定向跳转https</p>
-<p><strong>结果：</strong><br>国内访问 km.mydomain.cn 可以快速访问，不因为墙的原因而慢了</p>
-<h2 id="续：试用-cloudflare"><a href="#续：试用-cloudflare" class="headerlink" title="续：试用 cloudflare"></a>续：试用 cloudflare</h2><p>之前的免费cdn只有一个月的试用时长，过期之后尝试使用 cloudflare 代理。 <br>当前基本情况：</p>
-<ul>
-<li>github pages：发布在 myrepo.github.io, 但是同时使用 GitHub 的自定义域名功能，并强制 https。</li>
-<li>cloudflare： 免费套餐服务，代理一个 blog 域名例如 km.mydomain.cn，它是 CNAME 类型，是 myrepo.github.io 的别名。</li>
-<li>DNS： 使用 cloudflare 管理域名，除去上述需要代理，其他地址仅 DNS 解析即可。</li>
+                <h2 id="当前状况"><a href="#当前状况" class="headerlink" title="当前状况"></a>当前状况</h2><p>使用 Mobaxterm 图形转发功能，在云主机创建 ssh 隧道，浏览器使用 proxy 插件连接本机的这个转发端口，以此实现访问 artifacthub、github 等</p>
+<p>vmware workstation 中的其他虚拟机器使用的是下列命令</p>
+<p><img src="https://i3.mjj.rip/2024/06/15/a7a72b5d58cb6f24c77db493e4dc59ae.jpeg" alt="笔记本代理转发虚拟机的网络"></p>
+<h2 id="基本资料"><a href="#基本资料" class="headerlink" title="基本资料"></a>基本资料</h2><ul>
+<li>个人云主机，ubuntu 2004</li>
+<li>shadowsocks-libev as server，也可以使用 <code>shadowsocks-qt5: Cross-platform client for Windows/MacOS/Linux</code></li>
+<li>shadowsocks-win  as client</li>
 </ul>
-<p>按照常理，经上述配置之后已经可以正常访问加速后的博客（cloudflare ssl 安全建议选择 完全 级别）</p>
+<p>对比 openvpn，shadowsocks 确实更简单易用，个人使用已经足够，文档也比之更清晰</p>
+<h3 id="shadowsocks-官方的文档介绍摘录"><a href="#shadowsocks-官方的文档介绍摘录" class="headerlink" title="shadowsocks 官方的文档介绍摘录"></a>shadowsocks 官方的文档介绍摘录</h3><h4 id="CLI-implementations"><a href="#CLI-implementations" class="headerlink" title="CLI implementations"></a>CLI implementations</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks">shadowsocks</a>: The original Python implementation.</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks-libev">shadowsocks-libev</a>: Lightweight C implementation for embedded devices and low end boxes. Very small footprint (several megabytes) for thousands of connections.</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/shadowsocks/go-shadowsocks2">go-shadowsocks2</a>: Go implementation focusing on core features and code reusability.</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks-rust">shadowsocks-rust</a>: A rust port of shadowsocks.</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://shadowsocks.org/doc/deploying.html">此处是官方讲解的 server 安装方式</a></p>
+<p>Feature comparison</p>
+<table>
+<thead>
+<tr>
+<th align="center">ss</th>
+<th align="center">ss-libev</th>
+<th align="center">go-ss2</th>
+<th align="center">ss-rust</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">TCP Fast Open</td>
+<td align="center">✓</td>
+<td align="center">✗</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">Multiuser</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✗</td>
+</tr>
+<tr>
+<td align="center">Management API</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✗</td>
+</tr>
+<tr>
+<td align="center">Redirect mode</td>
+<td align="center">✗</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">Tunnel mode</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">UDP Relay</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">MPTCP</td>
+<td align="center">✗</td>
+<td align="center">✓</td>
+<td align="center">✗</td>
+</tr>
+<tr>
+<td align="center">AEAD ciphers</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+</tr>
+<tr>
+<td align="center">Plugin</td>
+<td align="center">✗</td>
+<td align="center">✓</td>
+<td align="center">✗</td>
+</tr>
+<tr>
+<td align="center">Plugin UDP (Experimental)</td>
+<td align="center">✗</td>
+<td align="center">✗</td>
+<td align="center">✗</td>
+</tr>
+</tbody></table>
+<h4 id="GUI-Clients"><a href="#GUI-Clients" class="headerlink" title="GUI Clients"></a>GUI Clients</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks-android">shadowsocks-android</a>: Android client.</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks-csharp">shadowsocks-windows</a>: Windows client.</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/shadowsocks/ShadowsocksX-NG">shadowsocksX-NG</a>: MacOS client.</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks-android">shadowsocks-qt5</a>: Cross-platform client for Windows&#x2F;MacOS&#x2F;Linux.</li>
+</ul>
+<h2 id="server-配置"><a href="#server-配置" class="headerlink" title="server 配置"></a>server 配置</h2><h3 id="Ubuntu-配置文件"><a href="#Ubuntu-配置文件" class="headerlink" title="Ubuntu 配置文件"></a>Ubuntu 配置文件</h3><pre class="line-numbers language-json" data-language="json"><code class="language-json">cat /etc/shadowsocks-libev/config.json
+<span class="token punctuation">&#123;</span>
+    <span class="token property">"server"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"xxx.xxx.xxx.xxx"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>   # 此处推荐填写公网IP或域名
+    <span class="token property">"mode"</span><span class="token operator">:</span><span class="token string">"tcp_only"</span><span class="token punctuation">,</span>              # 默认是tcp_and_udp
+    <span class="token property">"server_port"</span><span class="token operator">:</span><span class="token number">18388</span><span class="token punctuation">,</span>            
+    <span class="token property">"local_port"</span><span class="token operator">:</span><span class="token number">11080</span><span class="token punctuation">,</span>
+    <span class="token property">"password"</span><span class="token operator">:</span><span class="token string">"tejshf"</span><span class="token punctuation">,</span>       # 存在一个默认的连接密码，已修改
+    <span class="token property">"timeout"</span><span class="token operator">:</span><span class="token number">60</span><span class="token punctuation">,</span>
+    <span class="token property">"method"</span><span class="token operator">:</span><span class="token string">"aes-256-gcm"</span>     # 加密方式， The recommended choice is <span class="token string">"chacha20-ietf-poly1305"</span> or <span class="token string">"aes-256-gcm"</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="重启与自启动"><a href="#重启与自启动" class="headerlink" title="重启与自启动"></a>重启与自启动</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> systemctl restart shadowsocks-libev.service
+<span class="token function">sudo</span> systemctl <span class="token builtin class-name">enable</span> shadowsocks-libev.service  <span class="token comment"># 有点奇怪，不能正确添加 --now 参数，所以分别执行</span>
+<span class="token function">sudo</span> systemctl status shadowsocks-libev.service  <span class="token comment"># 确认状态</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="Debug"><a href="#Debug" class="headerlink" title="Debug"></a>Debug</h3><p>下载客户端，在 win 和 android 连接时 分别报错 timeout、can’t resolve cp.cloudflare.com</p>
+<h3 id="resolution"><a href="#resolution" class="headerlink" title="resolution"></a>resolution</h3><p>经回忆，发现是本机的防火墙未放行 server_port  <code>sudo ufw allow 18388/tcp</code></p>
+<h3 id="optimization-All-official-suggetions"><a href="#optimization-All-official-suggetions" class="headerlink" title="optimization (All official suggetions)"></a>optimization (All official suggetions)</h3><p>First of all, upgrade your Linux kernel to 3.5 or later.</p>
+<h4 id="Step-1-increase-the-maximum-number-of-open-file-descriptors"><a href="#Step-1-increase-the-maximum-number-of-open-file-descriptors" class="headerlink" title="Step 1, increase the maximum number of open file descriptors"></a>Step 1, increase the maximum number of open file descriptors</h4><p>To handle thousands of concurrent TCP connections, we should increase the limit of file descriptors opened.<br>Edit the <code>limits.conf</code></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">vi</span> /etc/security/limits.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>Add these two lines</p>
+<pre class="line-numbers language-none"><code class="language-none">* soft nofile 51200
+* hard nofile 51200
+
+# for server running in root:
+root soft nofile 51200
+root hard nofile 51200<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>Then, before you start the shadowsocks server, set the ulimit first</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">ulimit</span> <span class="token parameter variable">-n</span> <span class="token number">51200</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="Step-2-Tune-the-kernel-parameters"><a href="#Step-2-Tune-the-kernel-parameters" class="headerlink" title="Step 2, Tune the kernel parameters"></a>Step 2, Tune the kernel parameters</h4><p>The priciples of tuning parameters for shadowsocks are</p>
+<ol>
+<li>Reuse ports and conections as soon as possible.</li>
+<li>Enlarge the queues and buffers as large as possible.</li>
+<li>Choose the TCP congestion algorithm for large latency and high throughput.</li>
+</ol>
+<p>Here is an example &#x2F;etc&#x2F;sysctl.conf of our production servers:</p>
+<pre class="line-numbers language-none"><code class="language-none">fs.file-max &#x3D; 51200
+
+net.core.rmem_max &#x3D; 67108864
+net.core.wmem_max &#x3D; 67108864
+net.core.netdev_max_backlog &#x3D; 250000
+net.core.somaxconn &#x3D; 4096
+
+net.ipv4.tcp_syncookies &#x3D; 1
+net.ipv4.tcp_tw_reuse &#x3D; 1
+net.ipv4.tcp_tw_recycle &#x3D; 0
+net.ipv4.tcp_fin_timeout &#x3D; 30
+net.ipv4.tcp_keepalive_time &#x3D; 1200
+net.ipv4.ip_local_port_range &#x3D; 10000 65000
+net.ipv4.tcp_max_syn_backlog &#x3D; 8192
+net.ipv4.tcp_max_tw_buckets &#x3D; 5000
+net.ipv4.tcp_fastopen &#x3D; 3
+net.ipv4.tcp_mem &#x3D; 25600 51200 102400
+net.ipv4.tcp_rmem &#x3D; 4096 87380 67108864
+net.ipv4.tcp_wmem &#x3D; 4096 65536 67108864
+net.ipv4.tcp_mtu_probing &#x3D; 1
+net.ipv4.tcp_congestion_control &#x3D; hybla<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>Of course, remember to execute sysctl -p to reload the config at runtime.</p>
+<h2 id="clinet-使用"><a href="#clinet-使用" class="headerlink" title="clinet 使用"></a>clinet 使用</h2><h3 id="Android"><a href="#Android" class="headerlink" title="Android"></a>Android</h3><p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks-android/releases/download/v5.3.3/shadowsocks-universal-5.3.3.apk">v5.3.3</a></p>
+<h4 id="配置内容"><a href="#配置内容" class="headerlink" title="配置内容"></a>配置内容</h4><p>新增配置文件，填写以下内容：</p>
+<ul>
+<li>服务器：公网IP或域名</li>
+<li>远程端口： server 放行的 tcp 端口</li>
+<li>加密方式：同于 server 配置</li>
+<li>路由： 绕过局域网及大陆地址</li>
+</ul>
+<p> 关于设置选项中的高级配置，并未做修改</p>
+<h3 id="win"><a href="#win" class="headerlink" title="win"></a>win</h3><p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks-windows/releases/download/4.4.1.0/Shadowsocks-4.4.1.0.zip">v4.4.1.0</a></p>
+<h4 id="配置内容-1"><a href="#配置内容-1" class="headerlink" title="配置内容"></a>配置内容</h4><p>关联 ss:&#x2F;&#x2F; 链接 <br>系统代理–全局模式 <br>服务器–配置文件，填写以下内容：</p>
+<ul>
+<li>服务器：公网IP或域名</li>
+<li>远程端口： server 放行的 tcp 端口</li>
+<li>加密方式：同于 server 配置</li>
+</ul>
 
                 
             </div>
@@ -432,7 +603,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://blog.chaoslong.cn/2024/04/24/blog-with-cdn/">https://blog.chaoslong.cn/2024/04/24/blog-with-cdn/</a>
+                    <a href="https://blog.chaoslong.cn/2024/06/15/shadowsocks/shadowsocks/">https://blog.chaoslong.cn/2024/06/15/shadowsocks/shadowsocks/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -469,7 +640,15 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/shadowsocks/">
+                                    <span class="chip bg-color">shadowsocks</span>
+                                </a>
+                            
+                                <a href="/tags/vpn/">
+                                    <span class="chip bg-color">vpn</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -513,46 +692,52 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2024/04/30/kube-prometheus-stack/">
+                <a href="/2024/06/15/shadowsocks/shadowsocks/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="kube-prometheus-stack">
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="shadowsocks-libev">
                         
-                        <span class="card-title">kube-prometheus-stack</span>
+                        <span class="card-title">shadowsocks-libev</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            kube-prometheus-stack是prometheus监控k8s集群的套件，可以通过helm一键安装，同时带有监控的模板。
+                            为便于学习和测试时找到更多镜像资源和云原生资料，使用云主机建设个人用VPN
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-04-30
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-15
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/kubernetes/" class="post-category">
-                                    kubernetes
+                            <a href="/categories/VPN/" class="post-category">
+                                    VPN
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/prometheus/">
-                        <span class="chip bg-color">prometheus</span>
+                    <a href="/tags/shadowsocks/">
+                        <span class="chip bg-color">shadowsocks</span>
+                    </a>
+                    
+                    <a href="/tags/vpn/">
+                        <span class="chip bg-color">vpn</span>
                     </a>
                     
                 </div>
@@ -566,31 +751,31 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2024/04/16/frp-chuan-tou-bing-dai-li-dao-ingressroute/">
+                <a href="/2024/06/06/cilium/cilium-with-hubble/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="FRP 穿透并代理到ingressroute">
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="Cilium with Hubble">
                         
-                        <span class="card-title">FRP 穿透并代理到ingressroute</span>
+                        <span class="card-title">Cilium with Hubble</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            公网访问家中的试验虚拟机上的kube集群
+                            使用 cilium 网络插件，并暴露其 hubble 的监控 UI
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-04-16
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-06
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/ops/" class="post-category">
-                                    ops
+                            <a href="/categories/Kubernetes/" class="post-category">
+                                    Kubernetes
                                 </a>
                             
                             
@@ -600,12 +785,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/FRP/">
-                        <span class="chip bg-color">FRP</span>
+                    <a href="/tags/kubernetes/">
+                        <span class="chip bg-color">kubernetes</span>
                     </a>
                     
-                    <a href="/tags/IngressRoute/">
-                        <span class="chip bg-color">IngressRoute</span>
+                    <a href="/tags/cilium/">
+                        <span class="chip bg-color">cilium</span>
+                    </a>
+                    
+                    <a href="/tags/hubble/">
+                        <span class="chip bg-color">hubble</span>
                     </a>
                     
                 </div>

@@ -40,3 +40,15 @@ cdn域名别名：xxxxxxx
 
 **结果：**
 国内访问 km.mydomain.cn 可以快速访问，不因为墙的原因而慢了
+
+
+## 续：试用 cloudflare
+
+之前的免费cdn只有一个月的试用时长，过期之后尝试使用 cloudflare 代理。 \
+当前基本情况：
+- github pages：发布在 myrepo.github.io, 但是同时使用 GitHub 的自定义域名功能，并强制 https。
+- cloudflare： 免费套餐服务，代理一个 blog 域名例如 km.mydomain.cn，它是 CNAME 类型，是 myrepo.github.io 的别名。
+- DNS： 使用 cloudflare 管理域名，除去上述需要代理，其他地址仅 DNS 解析即可。
+
+按照常理，经上述配置之后已经可以正常访问加速后的博客（cloudflare ssl 安全建议选择 完全 级别）
+
