@@ -52,3 +52,7 @@ cdn域名别名：xxxxxxx
 
 按照常理，经上述配置之后已经可以正常访问加速后的博客（cloudflare ssl 安全建议选择 完全 级别）
 
+## 再续： cloudflare pages
+
+因为 cloudflare 的 cdn 加速没玩明白，所以使用其 pages 功能。流程简明易操作：对接 git 仓库并，选择仓库与分支，部署，设置自定义域名，CNAME 解析即可。 \
+访问快于 github pages，此段内容用于检测其是否能够自动更新。
