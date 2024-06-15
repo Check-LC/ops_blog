@@ -5,7 +5,7 @@ toc: true
 date: 2024-06-15 13:18:45
 img:
 top: true
-cover: true
+cover: 
 password:
 summary: 为便于学习和测试时找到更多镜像资源和云原生资料，使用云主机建设个人用VPN
 categories: VPN
