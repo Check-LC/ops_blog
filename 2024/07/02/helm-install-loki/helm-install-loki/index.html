@@ -491,7 +491,8 @@ gateway:
       password: company@2020
       username: company<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="新增-tenants-设置"><a href="#新增-tenants-设置" class="headerlink" title="新增 tenants 设置"></a>新增 tenants 设置</h2><p>目标数据：</p>
+<h2 id="新增-tenants-设置"><a href="#新增-tenants-设置" class="headerlink" title="新增 tenants 设置"></a>新增 tenants 设置</h2><p>目的：使用 rancher 特有的一个 question.yml 使用在 UI 填写租户名和密码，保证安全。但是最终没有成功实现，chart 的结构注定不能成功传入</p>
+<p>目标数据：</p>
 <pre class="line-numbers language-none"><code class="language-none">tenants:
   - name: test
     password: test123  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
@@ -575,7 +576,7 @@ spec:
       engineVersion: v2
       mergePolicy: Replace <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>附图，便于理解以上配置和 vault 中的路径与值的对应关系：<br><img src="/attachments/eso-loki-externalsecret.png.png"></p>
+<p>附图，便于理解以上配置和 vault 中的路径与值的对应关系：<br><img src="https://ice.frostsky.com/2024/07/02/454aba27238ef563199ef51ca9544f17.png" alt="454aba27238ef563199ef51ca9544f17.png"></p>
 
                 
             </div>
