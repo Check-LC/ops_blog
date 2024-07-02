@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="personal project gantt chart, BLOG">
-    <meta name="description" content="个人任务管理的工具记录，便于以后需求调整时再度参考">
+    <meta name="keywords" content="Promtail Running on VM, BLOG">
+    <meta name="description" content="记录在 helm 和虚拟机安装 promtail 的踩坑，与收集必要的系统日志和特定服务的日志的过程">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>personal project gantt chart | BLOG</title>
+    <title>Promtail Running on VM | BLOG</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
     <style>
@@ -310,12 +310,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://ice.frostsky.com/2024/07/02/4cfb2c2ed3fb6240710dd7bf45219e86.png')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">personal project gantt chart</h1>
+                    <h1 class="description center-align post-title">Promtail Running on VM</h1>
                 </div>
             </div>
         </div>
@@ -339,12 +339,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Personal/">
-                                <span class="chip bg-color">Personal</span>
+                            <a href="/tags/loki/">
+                                <span class="chip bg-color">loki</span>
                             </a>
                         
-                            <a href="/tags/projects/">
-                                <span class="chip bg-color">projects</span>
+                            <a href="/tags/Log/">
+                                <span class="chip bg-color">Log</span>
                             </a>
                         
                     </div>
@@ -355,8 +355,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Projects/" class="post-category">
-                                Projects
+                            <a href="/categories/OpenTelemetry/" class="post-category">
+                                OpenTelemetry
                             </a>
                         
                     </div>
@@ -407,33 +407,482 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>主要用于个人工作以外的时间记录和事件记录，并非是出于时间管理的目的而使用。<br>有培养习惯的目的：专注事件和过程，管理个人预期。</p>
-<h2 id="商业产品试用"><a href="#商业产品试用" class="headerlink" title="商业产品试用"></a>商业产品试用</h2><ol>
-<li>简道云</li>
-</ol>
+                <h2 id="Helm-Deploy-Promtail"><a href="#Helm-Deploy-Promtail" class="headerlink" title="Helm Deploy Promtail"></a>Helm Deploy Promtail</h2><h3 id="两条重要日志"><a href="#两条重要日志" class="headerlink" title="两条重要日志"></a>两条重要日志</h3><p>grafana congfig: Data source connected, but no labels received. Verify that Loki and Promtail is configured properly. </p>
+<p>promtail log：level&#x3D;error ts&#x3D;2024-06-19t06:14:50.369753384z caller&#x3D;client.go:430 component&#x3D;client host&#x3D;loki-gateway msg&#x3D;”final error sending batch” status&#x3D;401 tenant&#x3D; error&#x3D;”server returned http status 401 unauthorized (401): no org id”</p>
+<h3 id="针对以上两条内容，主要的-chart-values-如下"><a href="#针对以上两条内容，主要的-chart-values-如下" class="headerlink" title="针对以上两条内容，主要的 chart values 如下:"></a><strong>针对以上两条内容，主要的 chart values 如下:</strong></h3><p>loki chart values</p>
+<pre class="line-numbers language-none"><code class="language-none">loki:
+  auth_enabled: true
+  tenants:  
+    - name: company  
+      password: company@2020
+gateway:
+  enabled: true
+  username: null # loki.tenants 的值可以覆盖此处，并在模板中正确渲染生效；反之不可以
+  password: null <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>promtail chart values</p>
+<pre class="line-numbers language-none"><code class="language-none">clients:
+  - url: http:&#x2F;&#x2F;loki-gateway&#x2F;loki&#x2F;api&#x2F;v1&#x2F;push
+    basic_auth:
+      password: company@2020
+      username: company<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <ul>
-<li>低代码平台</li>
-<li>具有模板，不过适用于企业而非个人</li>
-<li>少量图表在自建应用时可以使用，gantt 需要收费</li>
+<li>已经创建的 loki-promtail 的 config secret<pre class="line-numbers language-none"><code class="language-none">server:
+  log_level: info
+  log_format: logfmt
+  http_listen_port: 3101
+  
+
+clients:
+  - basic_auth:
+      password: company@2020
+      username: company
+    url: http:&#x2F;&#x2F;loki-gateway&#x2F;loki&#x2F;api&#x2F;v1&#x2F;push
+
+positions:
+  filename: &#x2F;run&#x2F;promtail&#x2F;positions.yaml
+
+scrape_configs:
+  # See also https:&#x2F;&#x2F;github.com&#x2F;grafana&#x2F;loki&#x2F;blob&#x2F;master&#x2F;production&#x2F;ksonnet&#x2F;promtail&#x2F;scrape_config.libsonnet for reference
+  - job_name: kubernetes-pods
+    pipeline_stages:
+      - cri: &#123;&#125;
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels:
+          - __meta_kubernetes_pod_controller_name
+        regex: ([0-9a-z-.]+?)(-[0-9a-f]&#123;8,10&#125;)?
+        action: replace
+        target_label: __tmp_controller_name
+      - source_labels:
+          - __meta_kubernetes_pod_label_app_kubernetes_io_name
+          - __meta_kubernetes_pod_label_app
+          - __tmp_controller_name
+          - __meta_kubernetes_pod_name
+        regex: ^;*([^;]+)(;.*)?$
+        action: replace
+        target_label: app
+      - source_labels:
+          - __meta_kubernetes_pod_label_app_kubernetes_io_instance
+          - __meta_kubernetes_pod_label_instance
+        regex: ^;*([^;]+)(;.*)?$
+        action: replace
+        target_label: instance
+      - source_labels:
+          - __meta_kubernetes_pod_label_app_kubernetes_io_component
+          - __meta_kubernetes_pod_label_component
+        regex: ^;*([^;]+)(;.*)?$
+        action: replace
+        target_label: component
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_node_name
+        target_label: node_name
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_namespace
+        target_label: namespace
+      - action: replace
+        replacement: $1
+        separator: &#x2F;
+        source_labels:
+        - namespace
+        - app
+        target_label: job
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_name
+        target_label: pod
+      - action: replace
+        source_labels:
+        - __meta_kubernetes_pod_container_name
+        target_label: container
+      - action: replace
+        replacement: &#x2F;var&#x2F;log&#x2F;pods&#x2F;*$1&#x2F;*.log
+        separator: &#x2F;
+        source_labels:
+        - __meta_kubernetes_pod_uid
+        - __meta_kubernetes_pod_container_name
+        target_label: __path__
+      - action: replace
+        regex: true&#x2F;(.*)
+        replacement: &#x2F;var&#x2F;log&#x2F;pods&#x2F;*$1&#x2F;*.log
+        separator: &#x2F;
+        source_labels:
+        - __meta_kubernetes_pod_annotationpresent_kubernetes_io_config_hash
+        - __meta_kubernetes_pod_annotation_kubernetes_io_config_hash
+        - __meta_kubernetes_pod_container_name
+        target_label: __path__
+  
+limits_config:
+
+tracing:
+  enabled: false<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
 </ul>
-<ol start="2">
-<li>Teambition</li>
-</ol>
+<h2 id="Promtail-Running-on-VM"><a href="#Promtail-Running-on-VM" class="headerlink" title="Promtail Running on VM"></a>Promtail Running on VM</h2><p>主要需求日志目标源: </p>
+<table>
+<thead>
+<tr>
+<th>基础</th>
+<th>path</th>
+<th></th>
+<th></th>
+<th>特有</th>
+<th>path</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>auth.log</td>
+<td>&#x2F;var&#x2F;log&#x2F;auth.log</td>
+<td>done</td>
+<td></td>
+<td>Docker</td>
+<td>unix:&#x2F;&#x2F;&#x2F;var&#x2F;run&#x2F;docker.sock</td>
+<td>done</td>
+</tr>
+<tr>
+<td>syslog</td>
+<td>&#x2F;var&#x2F;log&#x2F;syslog</td>
+<td>done</td>
+<td></td>
+<td>Nginx</td>
+<td>&#x2F;var&#x2F;log&#x2F;nginx&#x2F;**.log</td>
+<td>done</td>
+</tr>
+<tr>
+<td>kern.log</td>
+<td>&#x2F;var&#x2F;log&#x2F;kern.log</td>
+<td>done</td>
+<td></td>
+<td>Postgresql</td>
+<td>&#x2F;var&#x2F;log&#x2F;postgresql&#x2F;**.log</td>
+<td>done</td>
+</tr>
+<tr>
+<td>apt</td>
+<td>&#x2F;var&#x2F;log&#x2F;apt&#x2F;**.log</td>
+<td>done</td>
+<td></td>
+<td>MinIO</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>journal</td>
+<td>&#x2F;var&#x2F;log&#x2F;journal</td>
+<td>done</td>
+<td></td>
+<td>Clickhouse</td>
+<td>&#x2F;var&#x2F;log&#x2F;clickhouse-server&#x2F;**.log</td>
+<td>u: clickhouse</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Bastillion</td>
+<td>app&#x2F;Bastillion-jetty&#x2F;jetty&#x2F;logs&#x2F;**.jetty.log</td>
+<td>u: company</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>MySQL</td>
+<td>&#x2F;var&#x2F;log&#x2F;mysql&#x2F;**.log</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>ZooKeeper</td>
+<td>需要特别配置</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Redis</td>
+<td>&#x2F;var&#x2F;log&#x2F;redis&#x2F;redis-server.log</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Kafka</td>
+<td>安装路径&#x2F;logs&#x2F;**.log</td>
+<td>u: company</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Etcd</td>
+<td>需要特别配置</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>RKE2</td>
+<td>&#x2F;var&#x2F;lib&#x2F;rancher&#x2F;rke2&#x2F;agent&#x2F;logs&#x2F;kubelet.log<br>&#x2F;var&#x2F;lib&#x2F;rancher&#x2F;rke2&#x2F;agent&#x2F;containerd&#x2F;containerd.log</td>
+<td>u: root</td>
+</tr>
+</tbody></table>
+<h3 id="Debug"><a href="#Debug" class="headerlink" title="Debug"></a>Debug</h3><blockquote>
+<p>[!error]<br>agent 运行但无法读取目标文件</p>
+</blockquote>
+<pre class="line-numbers language-none"><code class="language-none">Jun 24 18:34:12 test-sys-lab-09 promtail[381246]: level&#x3D;warn ts&#x3D;2024-06-24T10:34:12.260671854Z caller&#x3D;promtail.go:263 msg&#x3D;&quot;enable watchConfig&quot;
+Jun 24 18:34:17 test-sys-lab-09 promtail[381246]: level&#x3D;info ts&#x3D;2024-06-24T10:34:17.259860066Z caller&#x3D;filetargetmanager.go:372 msg&#x3D;&quot;Adding target&quot; key&#x3D;&quot;&#x2F;var&#x2F;log&#x2F;syslog:&#123;job&#x3D;\&quot;syslogs\&quot;&#125;&quot;
+Jun 24 18:34:17 test-sys-lab-09 promtail[381246]: level&#x3D;info ts&#x3D;2024-06-24T10:34:17.259951353Z caller&#x3D;filetarget.go:313 msg&#x3D;&quot;watching new directory&quot; directory&#x3D;&#x2F;var&#x2F;log
+Jun 24 18:34:17 test-sys-lab-09 promtail[381246]: level&#x3D;error ts&#x3D;2024-06-24T10:34:17.260001749Z caller&#x3D;filetarget.go:385 msg&#x3D;&quot;failed to start tailer&quot; error&#x3D;&quot;open &#x2F;var&#x2F;log&#x2F;syslog: permission denied&quot; filename&#x3D;&#x2F;var&#x2F;log&#x2F;syslog
+Jun 24 18:34:27 test-sys-lab-09 promtail[381246]: level&#x3D;error ts&#x3D;2024-06-24T10:34:27.260842577Z caller&#x3D;filetarget.go:385 msg&#x3D;&quot;failed to start tailer&quot; error&#x3D;&quot;open &#x2F;var&#x2F;log&#x2F;syslog: permission denied&quot; filename&#x3D;&#x2F;var&#x2F;log&#x2F;syslog<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>[!solution]<br>保证其加入 adm 组（查看的文件都在 adm 组中）</p>
+</blockquote>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">-rw-r-----   <span class="token number">1</span> syslog    adm               <span class="token number">25031</span> Jun <span class="token number">25</span> <span class="token number">10</span>:58 auth.log
+-rw-r-----   <span class="token number">1</span> syslog    adm               <span class="token number">39744</span> Jun <span class="token number">22</span> <span class="token number">23</span>:17 auth.log.1
+-rw-r-----   <span class="token number">1</span> syslog    adm                <span class="token number">2059</span> Jun <span class="token number">15</span> <span class="token number">23</span>:17 auth.log.2.gz
+-rw-r-----   <span class="token number">1</span> syslog    adm                <span class="token number">2044</span> Jun  <span class="token number">8</span> <span class="token number">23</span>:17 auth.log.3.gz
+-rw-r-----   <span class="token number">1</span> syslog    adm                <span class="token number">2041</span> Jun  <span class="token number">1</span> <span class="token number">23</span>:17 auth.log.4.gz<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>[!error]<br>404发送失败</p>
+</blockquote>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token operator">&lt;</span>pre<span class="token operator">></span>Jun <span class="token number">25</span> <span class="token number">10</span>:58:22 test-sys-lab-09 promtail<span class="token punctuation">[</span><span class="token number">389765</span><span class="token punctuation">]</span>: <span class="token assign-left variable">level</span><span class="token operator">=</span>info <span class="token assign-left variable">ts</span><span class="token operator">=</span><span class="token number">2024</span>-06-25T02:58:22.461246121Z <span class="token assign-left variable">caller</span><span class="token operator">=</span>tailer.go:147 <span class="token assign-left variable">component</span><span class="token operator">=</span>tailer <span class="token assign-left variable">msg</span><span class="token operator">=</span><span class="token operator">&amp;</span>quot<span class="token punctuation">;</span><span class="token function">tail</span> routine: started<span class="token operator">&amp;</span>quot<span class="token punctuation">;</span> <span class="token assign-left variable">path</span><span class="token operator">=</span>/var/log/syslog
+Jun <span class="token number">25</span> <span class="token number">10</span>:58:23 test-sys-lab-09 promtail<span class="token punctuation">[</span><span class="token number">389765</span><span class="token punctuation">]</span>: <span class="token assign-left variable">level</span><span class="token operator">=</span>error <span class="token assign-left variable">ts</span><span class="token operator">=</span><span class="token number">2024</span>-06-25T02:58:23.56377309Z <span class="token assign-left variable">caller</span><span class="token operator">=</span>client.go:430 <span class="token assign-left variable">component</span><span class="token operator">=</span>client <span class="token assign-left variable">host</span><span class="token operator">=</span>loki.testlab.net <span class="token assign-left variable">msg</span><span class="token operator">=</span><span class="token operator">&amp;</span>quot<span class="token punctuation">;</span>final error sending batch<span class="token operator">&amp;</span>quot<span class="token punctuation">;</span> <span class="token assign-left variable">status</span><span class="token operator">=</span><span class="token number">404</span> <span class="token assign-left variable">tenant</span><span class="token operator">=</span> <span class="token assign-left variable">error</span><span class="token operator">=</span><span class="token operator">&amp;</span>quot<span class="token punctuation">;</span>server returned HTTP status <span class="token number">404</span> Not Found <span class="token punctuation">(</span><span class="token number">404</span><span class="token punctuation">)</span>: <span class="token operator">&amp;</span>quot<span class="token punctuation">;</span>
+Jun <span class="token number">25</span> <span class="token number">10</span>:58:24 test-sys-lab-09 promtail<span class="token punctuation">[</span><span class="token number">389765</span><span class="token punctuation">]</span>: <span class="token assign-left variable">level</span><span class="token operator">=</span>error <span class="token assign-left variable">ts</span><span class="token operator">=</span><span class="token number">2024</span>-06-25T02:58:24.762775766Z <span class="token assign-left variable">caller</span><span class="token operator">=</span>client.go:430 <span class="token assign-left variable">component</span><span class="token operator">=</span>client <span class="token assign-left variable">host</span><span class="token operator">=</span>loki.testlab.net <span class="token assign-left variable">msg</span><span class="token operator">=</span><span class="token operator">&amp;</span>quot<span class="token punctuation">;</span>final error sending batch<span class="token operator">&amp;</span>quot<span class="token punctuation">;</span> <span class="token assign-left variable">status</span><span class="token operator">=</span><span class="token number">404</span> <span class="token assign-left variable">tenant</span><span class="token operator">=</span> <span class="token assign-left variable">error</span><span class="token operator">=</span><span class="token operator">&amp;</span>quot<span class="token punctuation">;</span>server returned HTTP status <span class="token number">404</span> Not Found <span class="token punctuation">(</span><span class="token number">404</span><span class="token punctuation">)</span>: <span class="token operator">&amp;</span>quot<span class="token punctuation">;</span>
+Jun <span class="token number">25</span> <span class="token number">10</span>:58:26 test-sys-lab-09 promtail<span class="token punctuation">[</span><span class="token number">389765</span><span class="token punctuation">]</span>: <span class="token assign-left variable">level</span><span class="token operator">=</span>error <span class="token assign-left variable">ts</span><span class="token operator">=</span><span class="token number">2024</span>-06-25T02:58:26.062618043Z <span class="token assign-left variable">caller</span><span class="token operator">=</span>client.go:430 <span class="token assign-left variable">component</span><span class="token operator">=</span>client <span class="token assign-left variable">host</span><span class="token operator">=</span>loki.testlab.net <span class="token assign-left variable">msg</span><span class="token operator">=</span><span class="token operator">&amp;</span>quot<span class="token punctuation">;</span>final error sending batch<span class="token operator">&amp;</span>quot<span class="token punctuation">;</span> <span class="token assign-left variable">status</span><span class="token operator">=</span><span class="token number">404</span> <span class="token assign-left variable">tenant</span><span class="token operator">=</span> <span class="token assign-left variable">error</span><span class="token operator">=</span><span class="token operator">&amp;</span>quot<span class="token punctuation">;</span>server returned HTTP status <span class="token number">404</span> Not Found <span class="token punctuation">(</span><span class="token number">404</span><span class="token punctuation">)</span>: <span class="token operator">&amp;</span>quot<span class="token punctuation">;</span><span class="token operator">&lt;</span>/pre<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>[!solution]<br>此处 url 应该指定的是 <code>loki-write</code></p>
+</blockquote>
+<h3 id="docker-logging"><a href="#docker-logging" class="headerlink" title="docker logging"></a>docker logging</h3><h4 id="允许连接-docker-sock"><a href="#允许连接-docker-sock" class="headerlink" title="允许连接 docker.sock"></a>允许连接 docker.sock</h4><p><code>sudo usermod -aG docker promtail</code></p>
+<p><strong>配置内容：</strong></p>
+<pre class="line-numbers language-none"><code class="language-none">server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+# 保存日志文件的读取偏移量
+positions:
+  filename: &#x2F;tmp&#x2F;positions.yaml
+
+
+# loki 的联系地址
+clients:
+  - url: http:&#x2F;&#x2F;loki.testlab.net&#x2F;loki&#x2F;api&#x2F;v1&#x2F;push #此处是loki-write
+    basic_auth:
+      username: company
+      password: company@2020
+    tenant_id: company
+
+scrape_configs:
+  - job_name: flog_scrape
+    docker_sd_configs:
+      - host: unix:&#x2F;&#x2F;&#x2F;var&#x2F;run&#x2F;docker.sock
+    relabel_configs:
+      - source_labels: [&#39;__meta_docker_container_name&#39;]
+        regex: &#39;&#x2F;(.*)&#39;
+        target_label: &#39;container&#39;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><a target="_blank" rel="noopener" href="https://community.grafana.com/t/promtail-does-not-collect-logs-from-other-containers/87000">docker_sd_configs reference</a></p>
+<p><strong>报错</strong></p>
+<pre class="line-numbers language-none"><code class="language-none">st&#x3D;loki.testlab.net msg&#x3D;&quot;final error sending batch&quot; status&#x3D;400 tenant&#x3D;company error&#x3D;&quot;server returned HTTP status 400 Bad Request (400): 5 errors like: entry for stream &#39;&#123;container&#x3D;\&quot;minio\&quot;, service_name&#x3D;\&quot;minio\&quot;&#125;&#39; has timestamp too old: 2024-06-14T10:25:30Z, oldest acceptable time&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<blockquote>
+<p>[!solution]<br>loki 的配置项:</p>
+<pre class="line-numbers language-none"><code class="language-none">&gt;limits_config:  
+ reject_old_samples: false  # 是否拒绝过时的样本
+ reject_old_samples_max_age: 168h  # 过时的判断标准，最大时长7天
+
+
+#### 尝试 pipeline_stages<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</blockquote>
 <ul>
-<li>与上述基本一致</li>
-<li>针对列表、看板这样的工具，有免费模板可以使用</li>
+<li>job_name: docker<br>pipeline_stages:<ul>
+<li>docker: {}<br>static_configs:</li>
+<li>targets:<ul>
+<li>localhost<br>labels:<br>  vm: docker<br>  host: 10.1.0.81<br>  <strong>path</strong>: &#x2F;var&#x2F;lib&#x2F;docker&#x2F;containers&#x2F;**&#x2F;*-json.log</li>
 </ul>
-<ol start="3">
-<li>进度猫</li>
-</ol>
-<ul>
-<li>使用简单，UI 古早，存储条目有限</li>
+</li>
 </ul>
-<h2 id="免费"><a href="#免费" class="headerlink" title="免费"></a>免费</h2><p><a target="_blank" rel="noopener" href="https://www.iodraw.com/">iodraw.com</a></p>
-<ul>
-<li>可以存储到 git 平台</li>
-<li>免费使用，但没有开源</li>
-<li>功能重合于 draw.io 但是有更多的图表管理、xmind 管理。</li>
+</li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">未成功，无任何报错，欠缺：即使成功发送日志也需要进一步处理得到容器名等。当前 sd config 更适用。
+
+后续需要对做更多的 pip 的研究
+
+
+### 正常的完整配置文件
+&#96;&#96;&#96;yml
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+# 保存日志文件的读取偏移量
+positions:
+  filename: &#x2F;tmp&#x2F;positions.yaml
+
+# loki 的联系地址
+clients:
+  - url: http:&#x2F;&#x2F;loki.testlab.net&#x2F;loki&#x2F;api&#x2F;v1&#x2F;push #此处是loki-write
+    basic_auth:
+      username: company
+      password: company@2020
+    tenant_id: company  #必须指定（但k8s的pod中配置文件反而没有这个配置项，却没有报错，很奇怪。难道是gateway路由时传递了这个id？）
+
+scrape_configs:
+  - job_name: journal
+    journal:
+      labels:
+        host: 10.8.0.89
+        system: journal
+      path: &#x2F;var&#x2F;log&#x2F;journal&#x2F;
+    relabel_configs:
+      - source_labels: [&#39;__journal__systemd_unit&#39;]
+        target_label: &#39;unit&#39;
+      - source_labels: [&#39;__journal__hostname&#39;]
+        target_label: &#39;hostname&#39;
+      - source_labels: [&#39;__journal_priority_keyword&#39;]
+        target_label: &#39;level&#39;
+      - source_labels: [&#39;__journal_syslog_identifier&#39;]
+        target_label: &#39;syslog_identifier&#39;
+  - job_name: docker_scrape
+    docker_sd_configs:
+      - host: unix:&#x2F;&#x2F;&#x2F;var&#x2F;run&#x2F;docker.sock
+    relabel_configs:
+      - source_labels: [ &#39;__meta_docker_container_name&#39; ]
+        regex: &#39;&#x2F;(.*)&#39;
+        target_label: &#39;container&#39;
+    static_configs:
+      - labels:
+          host: 10.8.0.89
+          hostname: test-sys-lab-09
+
+  - job_name: system
+    static_configs:
+      - labels:
+          host: 10.8.0.89
+          hostname: test-sys-lab-09
+          system: syslog
+          __path__: &#x2F;var&#x2F;log&#x2F;syslog
+      - labels:
+          host: 10.8.0.89
+          hostname: test-sys-lab-09
+          system: authlog
+          __path__: &#x2F;var&#x2F;log&#x2F;auth.log
+      - labels:
+          host: 10.8.0.89
+          hostname: test-sys-lab-09
+          system: kernlog
+          __path__: &#x2F;var&#x2F;log&#x2F;kern.log
+      - labels:
+          host: 10.8.0.89
+          hostname: test-sys-lab-09
+          system: aptlog
+          __path__: &#x2F;var&#x2F;log&#x2F;apt&#x2F;**.log
+
+  - job_name: service
+    static_configs:
+      - labels:
+          host: 10.8.0.89
+          hostname: test-sys-lab-09
+          service: nginx
+          __path__: &#x2F;var&#x2F;log&#x2F;nginx&#x2F;**.log
+      - labels:
+          host: 10.8.0.89
+          hostname: test-sys-lab-09
+          service: postgresql
+          __path__: &#x2F;var&#x2F;log&#x2F;postgresql&#x2F;**.log<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="Ansible-Template"><a href="#Ansible-Template" class="headerlink" title="Ansible Template"></a>Ansible Template</h2><ul>
+<li><p>templates&#x2F;config.yml.j2</p>
+<pre class="line-numbers language-none"><code class="language-none">server:  
+  http_listen_port: 9080  
+  grpc_listen_port: 0  
+  
+# 保存日志文件的读取偏移量  
+positions:  
+  filename: &quot;&#123;&#123; app_service &#125;&#125;&#x2F;promtail&#x2F;data&#x2F;positions.yaml&quot;  
+  
+clients:  
+  - url: &quot;https:&#x2F;&#x2F;&#123;&#123;loki_url&#125;&#125;&#x2F;loki&#x2F;api&#x2F;v1&#x2F;push&quot;  
+    basic_auth:  
+      username: &quot;&#123;&#123; ansible_user &#125;&#125;&quot;  
+      password: &quot;&#123;&#123; ansible_ssh_pass &#125;&#125;&quot;  
+    tenant_id: &quot;&#123;&#123; ansible_user &#125;&#125;&quot;  
+  
+scrape_configs:  
+  - job_name: journal  
+    journal:  
+      labels:  
+        host: &#123;&#123; ansible_host &#125;&#125;  
+        system: journal  
+      path: &#x2F;var&#x2F;log&#x2F;journal&#x2F;  
+    relabel_configs:  
+      - source_labels: [&#39;__journal__systemd_unit&#39;]  
+        target_label: &#39;unit&#39;  
+      - source_labels: [&#39;__journal__hostname&#39;]  
+        target_label: &#39;hostname&#39;  
+      - source_labels: [&#39;__journal_priority_keyword&#39;]  
+        target_label: &#39;level&#39;  
+      - source_labels: [&#39;__journal_syslog_identifier&#39;]  
+        target_label: &#39;syslog_identifier&#39;  
+  - job_name: docker_scrape  
+    docker_sd_configs:  
+      - host: unix:&#x2F;&#x2F;&#x2F;var&#x2F;run&#x2F;docker.sock  
+    relabel_configs:  
+      - source_labels: [ &#39;__meta_docker_container_name&#39; ]  
+        regex: &#39;&#x2F;(.*)&#39;  
+        target_label: &#39;container&#39;  
+    static_configs:  
+      - labels:  
+          host: &#123;&#123; ansible_host &#125;&#125;  
+          hostname: &#123;&#123; ansible_hostname &#125;&#125;  
+  
+&#123;% for category, paths in labels.items() %&#125;  
+  
+  - job_name: &#123;&#123; category &#125;&#125;  
+    static_configs:  
+&#123;% for target_label, target_path in paths.items() %&#125;  
+      - labels:  
+          host: &#123;&#123; ansible_host &#125;&#125;  
+          hostname: &#123;&#123; ansible_hostname &#125;&#125;  
+          &#123;&#123; category &#125;&#125;: &#123;&#123; target_label &#125;&#125;  
+          __path__: &#123;&#123; target_path &#125;&#125;  
+&#123;% endfor %&#125;  
+&#123;% endfor %&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>vars&#x2F;main.yml</p>
+<pre class="line-numbers language-none"><code class="language-none">version: &#39;3.0.0&#39;  
+# loki-write 的地址（只需要写）  
+loki_url: &quot;loki.testlab.net&quot;  
+
+# design for vm server logs  
+labels:
+  system:
+    syslog: &#x2F;var&#x2F;log&#x2F;syslog
+    authlog: &#x2F;var&#x2F;log&#x2F;auth.log 
+    kernlog: &#x2F;var&#x2F;log&#x2F;kern.log  
+    aptlog: &#x2F;var&#x2F;log&#x2F;apt&#x2F;**.log  
+  service:  
+    nginx: &#x2F;var&#x2F;log&#x2F;nginx&#x2F;**.log  
+    postgresql: &#x2F;var&#x2F;log&#x2F;postgresql&#x2F;**.log<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
 </ul>
 
                 
@@ -461,7 +910,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://blog.chaoslong.cn/2024/07/02/personal-project-gantt-chart/personal-project-gantt-chart/">https://blog.chaoslong.cn/2024/07/02/personal-project-gantt-chart/personal-project-gantt-chart/</a>
+                    <a href="https://blog.chaoslong.cn/2024/07/02/helm-install-loki/promtail-on-vm/">https://blog.chaoslong.cn/2024/07/02/helm-install-loki/promtail-on-vm/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -499,12 +948,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Personal/">
-                                    <span class="chip bg-color">Personal</span>
+                                <a href="/tags/loki/">
+                                    <span class="chip bg-color">loki</span>
                                 </a>
                             
-                                <a href="/tags/projects/">
-                                    <span class="chip bg-color">projects</span>
+                                <a href="/tags/Log/">
+                                    <span class="chip bg-color">Log</span>
                                 </a>
                             
                         </div>
@@ -550,28 +999,30 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2024/07/02/helm-install-loki/helm-install-loki/">
+                <a href="/2024/07/02/helm-install-loki/promtail-on-vm/">
                     <div class="card-image">
                         
-                        <img src="https://ice.frostsky.com/2024/07/02/a44a28f2666994b1f0e23c35acee8043.png" class="responsive-img" alt="helm install loki">
                         
-                        <span class="card-title">helm install loki</span>
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Promtail Running on VM">
+                        
+                        <span class="card-title">Promtail Running on VM</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            记录在集群中部署 loki 的踩坑过程
+                            记录在 helm 和虚拟机安装 promtail 的踩坑，与收集必要的系统日志和特定服务的日志的过程
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2024-07-02
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-07-02
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -584,6 +1035,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -606,31 +1058,30 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2024/06/15/shadowsocks/shadowsocks/">
+                <a href="/2024/07/02/helm-install-loki/helm-install-loki/">
                     <div class="card-image">
                         
+                        <img src="https://ice.frostsky.com/2024/07/02/a44a28f2666994b1f0e23c35acee8043.png" class="responsive-img" alt="helm install loki">
                         
-                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="shadowsocks-libev">
-                        
-                        <span class="card-title">shadowsocks-libev</span>
+                        <span class="card-title">helm install loki</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            为便于学习和测试时找到更多镜像资源和云原生资料，使用云主机建设个人用VPN
+                            记录在集群中部署 loki 的踩坑过程
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-15
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-07-02
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/VPN/" class="post-category">
-                                    VPN
+                            <a href="/categories/OpenTelemetry/" class="post-category">
+                                    OpenTelemetry
                                 </a>
                             
                             
@@ -640,12 +1091,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/shadowsocks/">
-                        <span class="chip bg-color">shadowsocks</span>
+                    <a href="/tags/loki/">
+                        <span class="chip bg-color">loki</span>
                     </a>
                     
-                    <a href="/tags/vpn/">
-                        <span class="chip bg-color">vpn</span>
+                    <a href="/tags/Log/">
+                        <span class="chip bg-color">Log</span>
                     </a>
                     
                 </div>
