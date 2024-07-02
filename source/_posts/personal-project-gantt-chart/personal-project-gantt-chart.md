@@ -3,9 +3,9 @@ title: personal project gantt chart
 author: LC
 toc: true
 date: 2024-07-02 17:47:35
-img: 
-top:
-cover: https://tutu.to/image/b-2b1148dcde2b679edf922c833421412b.mCu1z
+img: https://ice.frostsky.com/2024/07/02/4cfb2c2ed3fb6240710dd7bf45219e86.png
+top: false
+cover: 
 password:
 summary: 个人任务管理的工具记录，便于以后需求调整时再度参考
 categories: Projects
@@ -32,5 +32,3 @@ tags: ['projects', 'Personal']
 - 免费使用，但没有开源
 - 功能重合于 draw.io 但是有更多的图表管理、xmind 管理。
 
-
-https://tc-1303817403.cos.ap-chengdu.myqcloud.com/2024/06/16/666ea9dcd6376.png
