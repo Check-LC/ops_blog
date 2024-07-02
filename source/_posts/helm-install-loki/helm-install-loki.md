@@ -142,6 +142,9 @@ clients:
 ```
 
 ## 新增 tenants 设置
+
+目的：使用 rancher 特有的一个 question.yml 使用在 UI 填写租户名和密码，保证安全。但是最终没有成功实现，chart 的结构注定不能成功传入
+
 目标数据：
 ```
 tenants:
@@ -245,4 +248,4 @@ spec:
 ```
 
 附图，便于理解以上配置和 vault 中的路径与值的对应关系：
-![](attachments/eso-loki-externalsecret.png.png)
+![454aba27238ef563199ef51ca9544f17.png](https://ice.frostsky.com/2024/07/02/454aba27238ef563199ef51ca9544f17.png)

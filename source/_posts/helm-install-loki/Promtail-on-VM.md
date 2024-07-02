@@ -239,9 +239,10 @@ st=loki.testlab.net msg="final error sending batch" status=400 tenant=company er
 >limits_config:  
 >  reject_old_samples: false  # 是否拒绝过时的样本
 >  reject_old_samples_max_age: 168h  # 过时的判断标准，最大时长7天
-
+>```
 
 #### 尝试 pipeline_stages
+
 ```
   - job_name: docker
     pipeline_stages:
@@ -254,12 +255,14 @@ st=loki.testlab.net msg="final error sending batch" status=400 tenant=company er
           host: 10.1.0.81
           __path__: /var/lib/docker/containers/**/*-json.log
 ```
+
 未成功，无任何报错，欠缺：即使成功发送日志也需要进一步处理得到容器名等。当前 sd config 更适用。
 
 后续需要对做更多的 pip 的研究
 
 
 ### 正常的完整配置文件
+
 ```yml
 server:
   http_listen_port: 9080
@@ -343,6 +346,7 @@ scrape_configs:
 ```
 
 ## Ansible Template
+
 - templates/config.yml.j2
 ```
 server:  

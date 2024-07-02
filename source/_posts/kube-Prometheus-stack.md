@@ -8,7 +8,7 @@ top: true
 cover:
 password:
 summary: kube-prometheus-stack是prometheus监控k8s集群的套件，可以通过helm一键安装，同时带有监控的模板。
-categories: kubernetes
+categories: Kubernetes
 tags: [prometheus]
 ---
 

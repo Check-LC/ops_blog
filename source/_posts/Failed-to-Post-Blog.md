@@ -2,7 +2,7 @@
 title: Failed to Post Blog
 date: 2023-12-01 22:47:54
 tags: debug
-categories: ops
+categories: Ops
 summary: Find the reason why cannot Post a new blog
 ---
 

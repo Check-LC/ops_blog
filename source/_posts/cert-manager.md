@@ -8,7 +8,7 @@ top: true
 cover:
 password:
 summary: 尝试使用 cert-manger 自动签发权威证书的尝试
-categories: kubernetes
+categories: Kubernetes
 tags: [cert-manager]
 ---
 ## Prepare

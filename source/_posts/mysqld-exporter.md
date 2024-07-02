@@ -8,7 +8,7 @@ top:
 cover:
 password:
 summary: mysql prometheus 指标导出
-categories: Opentelemetry
+categories: OpenTelemetry
 tags: [metrics]
 ---
 

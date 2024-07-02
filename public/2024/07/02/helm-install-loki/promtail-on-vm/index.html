@@ -708,107 +708,100 @@ scrape_configs:
 <p>[!solution]<br>loki 的配置项:</p>
 <pre class="line-numbers language-none"><code class="language-none">&gt;limits_config:  
  reject_old_samples: false  # 是否拒绝过时的样本
- reject_old_samples_max_age: 168h  # 过时的判断标准，最大时长7天
-
-
-#### 尝试 pipeline_stages<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+ reject_old_samples_max_age: 168h  # 过时的判断标准，最大时长7天<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 </blockquote>
-<ul>
-<li>job_name: docker<br>pipeline_stages:<ul>
-<li>docker: {}<br>static_configs:</li>
-<li>targets:<ul>
-<li>localhost<br>labels:<br>  vm: docker<br>  host: 10.1.0.81<br>  <strong>path</strong>: &#x2F;var&#x2F;lib&#x2F;docker&#x2F;containers&#x2F;**&#x2F;*-json.log</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<pre class="line-numbers language-none"><code class="language-none">未成功，无任何报错，欠缺：即使成功发送日志也需要进一步处理得到容器名等。当前 sd config 更适用。
-
-后续需要对做更多的 pip 的研究
-
-
-### 正常的完整配置文件
-&#96;&#96;&#96;yml
-server:
-  http_listen_port: 9080
-  grpc_listen_port: 0
-
-# 保存日志文件的读取偏移量
-positions:
-  filename: &#x2F;tmp&#x2F;positions.yaml
-
-# loki 的联系地址
-clients:
-  - url: http:&#x2F;&#x2F;loki.testlab.net&#x2F;loki&#x2F;api&#x2F;v1&#x2F;push #此处是loki-write
-    basic_auth:
-      username: company
-      password: company@2020
-    tenant_id: company  #必须指定（但k8s的pod中配置文件反而没有这个配置项，却没有报错，很奇怪。难道是gateway路由时传递了这个id？）
-
-scrape_configs:
-  - job_name: journal
-    journal:
+<h4 id="尝试-pipeline-stages"><a href="#尝试-pipeline-stages" class="headerlink" title="尝试 pipeline_stages"></a>尝试 pipeline_stages</h4><pre class="line-numbers language-none"><code class="language-none">- job_name: docker
+  pipeline_stages:
+    - docker: &#123;&#125;
+  static_configs:
+    - targets:
+        - localhost
       labels:
-        host: 10.8.0.89
-        system: journal
-      path: &#x2F;var&#x2F;log&#x2F;journal&#x2F;
-    relabel_configs:
-      - source_labels: [&#39;__journal__systemd_unit&#39;]
-        target_label: &#39;unit&#39;
-      - source_labels: [&#39;__journal__hostname&#39;]
-        target_label: &#39;hostname&#39;
-      - source_labels: [&#39;__journal_priority_keyword&#39;]
-        target_label: &#39;level&#39;
-      - source_labels: [&#39;__journal_syslog_identifier&#39;]
-        target_label: &#39;syslog_identifier&#39;
-  - job_name: docker_scrape
-    docker_sd_configs:
-      - host: unix:&#x2F;&#x2F;&#x2F;var&#x2F;run&#x2F;docker.sock
-    relabel_configs:
-      - source_labels: [ &#39;__meta_docker_container_name&#39; ]
-        regex: &#39;&#x2F;(.*)&#39;
-        target_label: &#39;container&#39;
-    static_configs:
-      - labels:
-          host: 10.8.0.89
-          hostname: test-sys-lab-09
+        vm: docker
+        host: 10.1.0.81
+        __path__: &#x2F;var&#x2F;lib&#x2F;docker&#x2F;containers&#x2F;**&#x2F;*-json.log<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-  - job_name: system
-    static_configs:
-      - labels:
-          host: 10.8.0.89
-          hostname: test-sys-lab-09
-          system: syslog
-          __path__: &#x2F;var&#x2F;log&#x2F;syslog
-      - labels:
-          host: 10.8.0.89
-          hostname: test-sys-lab-09
-          system: authlog
-          __path__: &#x2F;var&#x2F;log&#x2F;auth.log
-      - labels:
-          host: 10.8.0.89
-          hostname: test-sys-lab-09
-          system: kernlog
-          __path__: &#x2F;var&#x2F;log&#x2F;kern.log
-      - labels:
-          host: 10.8.0.89
-          hostname: test-sys-lab-09
-          system: aptlog
-          __path__: &#x2F;var&#x2F;log&#x2F;apt&#x2F;**.log
+<p>未成功，无任何报错，欠缺：即使成功发送日志也需要进一步处理得到容器名等。当前 sd config 更适用。</p>
+<p>后续需要对做更多的 pip 的研究</p>
+<h3 id="正常的完整配置文件"><a href="#正常的完整配置文件" class="headerlink" title="正常的完整配置文件"></a>正常的完整配置文件</h3><pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">server</span><span class="token punctuation">:</span>
+  <span class="token key atrule">http_listen_port</span><span class="token punctuation">:</span> <span class="token number">9080</span>
+  <span class="token key atrule">grpc_listen_port</span><span class="token punctuation">:</span> <span class="token number">0</span>
 
-  - job_name: service
-    static_configs:
-      - labels:
-          host: 10.8.0.89
-          hostname: test-sys-lab-09
-          service: nginx
-          __path__: &#x2F;var&#x2F;log&#x2F;nginx&#x2F;**.log
-      - labels:
-          host: 10.8.0.89
-          hostname: test-sys-lab-09
-          service: postgresql
-          __path__: &#x2F;var&#x2F;log&#x2F;postgresql&#x2F;**.log<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token comment"># 保存日志文件的读取偏移量</span>
+<span class="token key atrule">positions</span><span class="token punctuation">:</span>
+  <span class="token key atrule">filename</span><span class="token punctuation">:</span> /tmp/positions.yaml
+
+<span class="token comment"># loki 的联系地址</span>
+<span class="token key atrule">clients</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">url</span><span class="token punctuation">:</span> http<span class="token punctuation">:</span>//loki.testlab.net/loki/api/v1/push <span class="token comment">#此处是loki-write</span>
+    <span class="token key atrule">basic_auth</span><span class="token punctuation">:</span>
+      <span class="token key atrule">username</span><span class="token punctuation">:</span> company
+      <span class="token key atrule">password</span><span class="token punctuation">:</span> company@2020
+    <span class="token key atrule">tenant_id</span><span class="token punctuation">:</span> company  <span class="token comment">#必须指定（但k8s的pod中配置文件反而没有这个配置项，却没有报错，很奇怪。难道是gateway路由时传递了这个id？）</span>
+
+<span class="token key atrule">scrape_configs</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">job_name</span><span class="token punctuation">:</span> journal
+    <span class="token key atrule">journal</span><span class="token punctuation">:</span>
+      <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+        <span class="token key atrule">host</span><span class="token punctuation">:</span> 10.8.0.89
+        <span class="token key atrule">system</span><span class="token punctuation">:</span> journal
+      <span class="token key atrule">path</span><span class="token punctuation">:</span> /var/log/journal/
+    <span class="token key atrule">relabel_configs</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">source_labels</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'__journal__systemd_unit'</span><span class="token punctuation">]</span>
+        <span class="token key atrule">target_label</span><span class="token punctuation">:</span> <span class="token string">'unit'</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">source_labels</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'__journal__hostname'</span><span class="token punctuation">]</span>
+        <span class="token key atrule">target_label</span><span class="token punctuation">:</span> <span class="token string">'hostname'</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">source_labels</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'__journal_priority_keyword'</span><span class="token punctuation">]</span>
+        <span class="token key atrule">target_label</span><span class="token punctuation">:</span> <span class="token string">'level'</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">source_labels</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'__journal_syslog_identifier'</span><span class="token punctuation">]</span>
+        <span class="token key atrule">target_label</span><span class="token punctuation">:</span> <span class="token string">'syslog_identifier'</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">job_name</span><span class="token punctuation">:</span> docker_scrape
+    <span class="token key atrule">docker_sd_configs</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">host</span><span class="token punctuation">:</span> unix<span class="token punctuation">:</span>///var/run/docker.sock
+    <span class="token key atrule">relabel_configs</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">source_labels</span><span class="token punctuation">:</span> <span class="token punctuation">[</span> <span class="token string">'__meta_docker_container_name'</span> <span class="token punctuation">]</span>
+        <span class="token key atrule">regex</span><span class="token punctuation">:</span> <span class="token string">'/(.*)'</span>
+        <span class="token key atrule">target_label</span><span class="token punctuation">:</span> <span class="token string">'container'</span>
+    <span class="token key atrule">static_configs</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+          <span class="token key atrule">host</span><span class="token punctuation">:</span> 10.8.0.89
+          <span class="token key atrule">hostname</span><span class="token punctuation">:</span> test<span class="token punctuation">-</span>sys<span class="token punctuation">-</span>lab<span class="token punctuation">-</span><span class="token number">09</span>
+
+  <span class="token punctuation">-</span> <span class="token key atrule">job_name</span><span class="token punctuation">:</span> system
+    <span class="token key atrule">static_configs</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+          <span class="token key atrule">host</span><span class="token punctuation">:</span> 10.8.0.89
+          <span class="token key atrule">hostname</span><span class="token punctuation">:</span> test<span class="token punctuation">-</span>sys<span class="token punctuation">-</span>lab<span class="token punctuation">-</span><span class="token number">09</span>
+          <span class="token key atrule">system</span><span class="token punctuation">:</span> syslog
+          <span class="token key atrule">__path__</span><span class="token punctuation">:</span> /var/log/syslog
+      <span class="token punctuation">-</span> <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+          <span class="token key atrule">host</span><span class="token punctuation">:</span> 10.8.0.89
+          <span class="token key atrule">hostname</span><span class="token punctuation">:</span> test<span class="token punctuation">-</span>sys<span class="token punctuation">-</span>lab<span class="token punctuation">-</span><span class="token number">09</span>
+          <span class="token key atrule">system</span><span class="token punctuation">:</span> authlog
+          <span class="token key atrule">__path__</span><span class="token punctuation">:</span> /var/log/auth.log
+      <span class="token punctuation">-</span> <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+          <span class="token key atrule">host</span><span class="token punctuation">:</span> 10.8.0.89
+          <span class="token key atrule">hostname</span><span class="token punctuation">:</span> test<span class="token punctuation">-</span>sys<span class="token punctuation">-</span>lab<span class="token punctuation">-</span><span class="token number">09</span>
+          <span class="token key atrule">system</span><span class="token punctuation">:</span> kernlog
+          <span class="token key atrule">__path__</span><span class="token punctuation">:</span> /var/log/kern.log
+      <span class="token punctuation">-</span> <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+          <span class="token key atrule">host</span><span class="token punctuation">:</span> 10.8.0.89
+          <span class="token key atrule">hostname</span><span class="token punctuation">:</span> test<span class="token punctuation">-</span>sys<span class="token punctuation">-</span>lab<span class="token punctuation">-</span><span class="token number">09</span>
+          <span class="token key atrule">system</span><span class="token punctuation">:</span> aptlog
+          <span class="token key atrule">__path__</span><span class="token punctuation">:</span> /var/log/apt/<span class="token important">**.log</span>
+
+  <span class="token punctuation">-</span> <span class="token key atrule">job_name</span><span class="token punctuation">:</span> service
+    <span class="token key atrule">static_configs</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+          <span class="token key atrule">host</span><span class="token punctuation">:</span> 10.8.0.89
+          <span class="token key atrule">hostname</span><span class="token punctuation">:</span> test<span class="token punctuation">-</span>sys<span class="token punctuation">-</span>lab<span class="token punctuation">-</span><span class="token number">09</span>
+          <span class="token key atrule">service</span><span class="token punctuation">:</span> nginx
+          <span class="token key atrule">__path__</span><span class="token punctuation">:</span> /var/log/nginx/<span class="token important">**.log</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+          <span class="token key atrule">host</span><span class="token punctuation">:</span> 10.8.0.89
+          <span class="token key atrule">hostname</span><span class="token punctuation">:</span> test<span class="token punctuation">-</span>sys<span class="token punctuation">-</span>lab<span class="token punctuation">-</span><span class="token number">09</span>
+          <span class="token key atrule">service</span><span class="token punctuation">:</span> postgresql
+          <span class="token key atrule">__path__</span><span class="token punctuation">:</span> /var/log/postgresql/<span class="token important">**.log</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="Ansible-Template"><a href="#Ansible-Template" class="headerlink" title="Ansible Template"></a>Ansible Template</h2><ul>
 <li><p>templates&#x2F;config.yml.j2</p>

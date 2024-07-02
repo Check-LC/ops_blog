@@ -2,7 +2,7 @@
 title: FRP 穿透并代理到ingressroute
 date: 2024-04-16 10:02:00
 tags: [FRP, IngressRoute]
-categories: ops
+categories: Ops
 summary: 公网访问家中的试验虚拟机上的kube集群
 ---
 

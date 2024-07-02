@@ -8,7 +8,7 @@ top:
 cover:
 password:
 summary: kafka 指标导出
-categories: Opentelemetry
+categories: OpenTelemetry
 tags: [metrics]
 ---
 
