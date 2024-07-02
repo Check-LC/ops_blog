@@ -1,0 +1,1699 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="DNS server, BLOG">
+    <meta name="description" content="记录内网 DNS 的搭建，比较重要的是视图功能的使用、DNS Over Https、DNS Over TLS.">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>DNS server | BLOG</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <style>
+        body{
+            background-image: url(medias/images/03.jpg);
+            background-repeat:no-repeat;
+            background-size: 100% 100%;
+            background-attachment:fixed;
+        }
+    </style>
+
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">BLOG</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">BLOG</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/Check-LC/check-lc.github.io.git" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/Check-LC/check-lc.github.io.git" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/10.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">DNS server</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/DNS/">
+                                <span class="chip bg-color">DNS</span>
+                            </a>
+                        
+                            <a href="/tags/Ubuntu/">
+                                <span class="chip bg-color">Ubuntu</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/ops/" class="post-category">
+                                ops
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2023-12-25
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2024-04-20
+                </div>
+                
+
+                
+
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="一、DNS-主服务器"><a href="#一、DNS-主服务器" class="headerlink" title="一、DNS 主服务器"></a>一、DNS 主服务器</h1><ul>
+<li>手动更新源，并安装bind9.18  <pre class="line-numbers language-none"><code class="language-none">sudo add-apt-repository ppa:isc&#x2F;bind
+apt update
+sudo apt install -y  bind9 bind9-utils<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h2 id="1-1-相关文件"><a href="#1-1-相关文件" class="headerlink" title="1.1 相关文件"></a>1.1 相关文件</h2><p><a target="_blank" rel="noopener" href="https://cshihong.github.io/2018/10/15/DNS%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E4%B8%8E%E9%85%8D%E7%BD%AE/">references</a><br><code>/etc/bind/named.conf</code>:  主配置文件，包含 bind 服务器的全局设置和引用其他配置文件的指令<br><code>/etc/bind/named.conf.default-zones</code>:  定义了默认的区域（zone），如  localhost 、反向解析等<br><code>/etc/bind/named.conf.local</code>:  用于配置本地区域（zone）和其他定制区域的文件<br><code>/etc/bind/named.conf.options</code>:  包含bind服务器的全局选项设置，如监听地址、转发器等  </p>
+<h2 id="1-2-配置"><a href="#1-2-配置" class="headerlink" title="1.2 配置"></a>1.2 配置</h2><h3 id="1-2-1-解析方式"><a href="#1-2-1-解析方式" class="headerlink" title="1.2.1  解析方式"></a>1.2.1  解析方式</h3><table>
+<thead>
+<tr>
+<th align="center">方式</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">正向</td>
+<td align="center">域名–&gt;IP</td>
+</tr>
+<tr>
+<td align="center">反向</td>
+<td align="center">IP–&gt;域名</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-2-DNS记录类型"><a href="#1-2-2-DNS记录类型" class="headerlink" title="1.2.2  DNS记录类型"></a>1.2.2  DNS记录类型</h3><ul>
+<li>A 记录：将域名指向一个 ipv4  </li>
+<li>AAAA 记录：将主机名解析到一个指定的 IPv6  </li>
+<li>CNAME 记录：别名解析，指将不同的域名都转到一个域名记录上，由这个域名记录统一解析管理，即当前解析的域名是另一个域名的跳转  </li>
+<li>NS 记录：域名服务记录，用来指定该域名由哪个 DNS 服务器来解析，一般设置为多个，一个为主，其余为辅，且只能写域名的形式  </li>
+<li>PTR 记录：反向解析，主要用于 IP 解析为 FQDN  </li>
+<li>MX 记录： 邮件交换记录  </li>
+<li>TXT 记录： 指某个主机名或域名的说明，通常用来做SPF记录（反垃圾邮件）</li>
+</ul>
+<h3 id="1-2-3-目录结构（需要修改部分）"><a href="#1-2-3-目录结构（需要修改部分）" class="headerlink" title="1.2.3  目录结构（需要修改部分）"></a>1.2.3  目录结构（需要修改部分）</h3><p>&#x2F;etc&#x2F;bind<br>├── example<br>│   ├── db.zones<br>│   └── reverse.zones<br>├── named.conf<br>└──named.conf.options   </p>
+<h3 id="1-2-4-配置文件"><a href="#1-2-4-配置文件" class="headerlink" title="1.2.4  配置文件"></a>1.2.4  配置文件</h3><ul>
+<li>&#x2F;etc&#x2F;bind&#x2F;named.conf  <pre class="line-numbers language-none"><code class="language-none">include &quot;&#x2F;etc&#x2F;bind&#x2F;named.conf.options&quot;;
+include &quot;&#x2F;etc&#x2F;bind&#x2F;named.conf.local&quot;;
+# include &quot;&#x2F;etc&#x2F;bind&#x2F;named.conf.default-zones&quot;;       # 在视图使用时注释掉的
+include &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;sec-trust-anchors.conf&quot;;     #  在 dnssec 功能中需要做的引入<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>&#x2F;etc&#x2F;bind&#x2F;named.conf.options</li>
+</ul>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">tls doh <span class="token punctuation">&#123;</span>
+   key-file <span class="token string">"/etc/bind/example/cert/key.pem"</span><span class="token punctuation">;</span>
+   cert-file <span class="token string">"/etc/bind/example/cert/ca.pem"</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+http dns-over-https <span class="token punctuation">&#123;</span>
+    endpoints <span class="token punctuation">&#123;</span><span class="token string">"/dns-query"</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+options <span class="token punctuation">&#123;</span>
+        directory <span class="token string">"/var/cache/bind"</span><span class="token punctuation">;</span>
+        listen-on port <span class="token number">53</span> <span class="token punctuation">&#123;</span> localhost<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+        listen-on port <span class="token number">443</span> tls doh http dns-over-https  <span class="token punctuation">&#123;</span> localhost<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>     <span class="token comment"># 配合上述 tls  http 开启 DOH</span>
+        recursion <span class="token boolean">true</span><span class="token punctuation">;</span>                <span class="token comment"># 否则会出现不能解析 wan 网域名</span>
+        forwarders <span class="token punctuation">&#123;</span>
+            <span class="token number">8.8</span>.8.8<span class="token punctuation">;</span>
+            <span class="token number">223.5</span>.5.5<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+        forward  first<span class="token punctuation">;</span>
+        version  <span class="token string">"hiden version"</span><span class="token punctuation">;</span>
+        allow-transfer <span class="token punctuation">&#123;</span> <span class="token number">10.13</span>.3.107<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+        allow-query <span class="token punctuation">&#123;</span>
+          example<span class="token punctuation">;</span>
+          company<span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+        auth-nxdomain <span class="token boolean">true</span><span class="token punctuation">;</span>
+        dnssec-validation <span class="token boolean">false</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+acl <span class="token string">"example"</span> <span class="token punctuation">&#123;</span>
+    <span class="token number">10.10</span>.6.0/24<span class="token punctuation">;</span>
+    <span class="token number">10.13</span>.3.0/24<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+acl <span class="token string">"company"</span> <span class="token punctuation">&#123;</span>
+    <span class="token number">10.10</span>.6.0/24<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+view <span class="token string">"example"</span> <span class="token punctuation">&#123;</span>
+  match-clients <span class="token punctuation">&#123;</span> example<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  zone <span class="token string">"example.net"</span> IN  <span class="token punctuation">&#123;</span>
+       <span class="token builtin class-name">type</span> master<span class="token punctuation">;</span>
+       <span class="token function">file</span> <span class="token string">"/etc/bind/example/example.db.zones"</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  zone <span class="token string">"13.10.in-addr.arpa."</span> IN  <span class="token punctuation">&#123;</span>
+       <span class="token builtin class-name">type</span> master<span class="token punctuation">;</span>
+       <span class="token function">file</span> <span class="token string">"/etc/bind/example/example.reverse.zones"</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+view <span class="token string">"company"</span> <span class="token punctuation">&#123;</span>
+  match-clients <span class="token punctuation">&#123;</span> company<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  zone <span class="token string">"company.com"</span> IN  <span class="token punctuation">&#123;</span>
+       <span class="token builtin class-name">type</span> master<span class="token punctuation">;</span>
+       <span class="token function">file</span> <span class="token string">"/etc/bind/example/company.db.zones"</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>视图使用主要参考本章<a href="##">智能视图使用</a></p>
+<ul>
+<li>&#x2F;etc&#x2F;bind&#x2F;example&#x2F;example.db.zones</li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">$TTL 10M
+@       IN      SOA     example.top. admin.example.top. (
+                                   1   ; serial
+                                1200   ; refresh 
+                                900    ; retry 
+                                900    ; expire
+                               1200 )  ; minimum 
+@        IN      NS      nameserver
+nameserver   IN  A       10.13.3.107
+nameserver  IN  A       10.13.3.109    
+test         IN  A       10.13.3.109
+k8s          IN  A       10.13.3.110<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p>反向区域解析文件 &#x2F;etc&#x2F;bind&#x2F;example&#x2F;example.reverse.zones  </p>
+<pre class="line-numbers language-none"><code class="language-none">$TTL 10M
+@       IN      SOA     example.net.  admin.example.net. (
+                                  1   ; serial
+                                24h   ; refresh
+                                15m   ; retry
+                                1d    ; expire
+                                5m  ; minimum
+)
+       IN      NS      nameserver.      # 不能缺省这个&quot;.&quot;
+
+107.3  IN    PTR    ldap.example.net.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>测试  </p>
+<pre class="line-numbers language-none"><code class="language-none">dig   目标域名   @namserver    +short
+dig   目标ip   -x   +short
+nslookup<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h3 id="1-2-5-参数介绍"><a href="#1-2-5-参数介绍" class="headerlink" title="1.2.5  参数介绍"></a>1.2.5  参数介绍</h3><p>allow-update { none; };  定义允许执行动态 DNS 更新的客户端<br>allow-transfer { xx ; } 允许 xx 地址从您的 DNS 服务器复制数据<br>forward first; 优先选择转发到的 DNS 服务器<br>forwarders {}; 转发器，转发到另外的 DNS<br>recursion yes; 启用递归查询<br>dnssec-validation no; 禁用 BIND9 服务器上的 DNSSEC 验证，此时返回的数据或许有准确度的问题<br>auth-nxdomain no; 符合 RFC1035  </p>
+<ol>
+<li>Refresh（刷新）：Refresh 指定了 DNS 服务器应从主服务器获取区域数据的频率。最佳的 Refresh 时间取决于你的特定需求，通常在几小时到一天之间。较短的 Refresh 时间可以更快地更新数据，但会增加主服务器的负载。  </li>
+<li>Retry（重试）：Retry 指定了 DNS 服务器在未能联系到主服务器时应进行的重试间隔。最佳的 Retry 时间通常在几分钟到一小时之间，取决于网络的可靠性和延迟。较短的 Retry 时间可以更快地恢复到主服务器，但会增加 DNS 查询负载。  </li>
+<li>Expire（过期）：Expire 指定了区域数据在主服务器不可用时的最大存储时间。最佳的 Expire 时间通常在几天到一周之间。较短的 Expire 时间可以更快地更新过期的数据，但会增加 DNS 查询的负载。  </li>
+<li>Minimum TTL（最小生存时间）：Minimum TTL 指定了 DNS 解析器或缓存服务器应保留解析结果的最小时间。最佳的 Minimum TTL 时间取决于你的特定需求，通常在几分钟到一天之间。较短的 Minimum TTL 时间可以更快地更新解析结果，但会增加 DNS 查询的负载。</li>
+</ol>
+<hr>
+<h1 id="二、DNS-从服务器"><a href="#二、DNS-从服务器" class="headerlink" title="二、DNS 从服务器"></a>二、DNS 从服务器</h1><h2 id="2-1-配置"><a href="#2-1-配置" class="headerlink" title="2.1  配置"></a>2.1  配置</h2><pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;bind&#x2F;named.conf
+	同于 master 即可<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p>&#x2F;etc&#x2F;bind&#x2F;named.conf.options</p>
+<pre class="line-numbers language-none"><code class="language-none">tls doh &#123;
+   key-file &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;cert&#x2F;key.pem&quot;;
+   cert-file &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;cert&#x2F;ca.pem&quot;;
+&#125;;
+
+http dns-over-https &#123;
+    endpoints &#123;&quot;&#x2F;dns-query&quot;;&#125;;
+&#125;;
+
+options &#123;
+        directory &quot;&#x2F;var&#x2F;cache&#x2F;bind&quot;;
+        listen-on port 53 &#123; localhost; &#125;;
+        listen-on port 443 tls doh http default &#123; localhost; &#125;;
+        recursion true;
+        forwarders &#123;
+            8.8.8.8;
+            223.5.5.5;
+        &#125;;
+        forward  first;
+        version  &quot;hiden version&quot;;
+        allow-query &#123;
+          example;
+          company;
+        &#125;;
+        auth-nxdomain true;
+        dnssec-validation false;
+&#125;;
+
+acl &quot;example&quot; &#123;
+    10.10.6.0&#x2F;24;
+    10.13.3.0&#x2F;24;
+&#125;;
+
+acl &quot;company&quot; &#123;
+    10.10.6.0&#x2F;24;
+&#125;;
+
+view &quot;example&quot; &#123;
+  match-clients &#123; example; &#125;;
+  zone &quot;example.net&quot; IN  &#123;
+       type slave;
+       file &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;example.db.zones.signed&quot;;
+       masters &#123; 10.13.3.106; &#125;;
+  &#125;;
+  zone &quot;3.13.10.in-addr.arpa.&quot; IN  &#123;
+       type slave;
+       masters &#123; 10.13.3.106; &#125;;
+       file &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;example.reverse.zones&quot;;
+  &#125;;
+&#125;;
+
+view &quot;company&quot; &#123;
+  match-clients &#123; company; &#125;;
+  zone &quot;company.com&quot; IN  &#123;
+       type slave;
+       masters &#123; 10.13.3.106; &#125;;
+       file &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;company.db.zones&quot;;
+  &#125;;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>&#x2F;etc&#x2F; apparmor.d&#x2F;usr.sbin.named  设置可写。dumping master file: &#x2F;etc&#x2F;bind&#x2F;example&#x2F;tmp-80LUGLiqE4: open: permission denied  </p>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;etc&#x2F;bind&#x2F;example&#x2F;** rw,
+
+systemctl reload apparmor.service<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h2 id="2-2-测试记录同步"><a href="#2-2-测试记录同步" class="headerlink" title="2.2 测试记录同步"></a>2.2 测试记录同步</h2><ul>
+<li>修改主服务器，解析记录，测试从服务器的同步情况  <pre class="line-numbers language-none"><code class="language-none">$TTL 10M
+@       IN      SOA     example.top.  admin.example.top. (
+                                   2   ; serial   [[每次需要修改版本号]]
+                                1200   ; refresh 
+                                900    ; retry 
+                                900    ; expire
+                               1200 )  ; minimum 
+@        IN      NS      nameserver
+@        IN      NS      nameserver2              [[较版本1新增]]
+nameserver   IN  A       10.13.3.107
+nameserver2  IN  A       10.13.3.109              [[较版本1新增]]
+test         IN  A       10.13.3.109
+k8s          IN  A       10.13.3.110
+me           IN  A       10.10.6.1               [[较版本1新增]]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<p><strong>热加载</strong>新增的配置，每次修改记录时，需要同步修改<em><strong>版本号</strong></em>，slave 才能同步成功  </p>
+<pre class="line-numbers language-none"><code class="language-none">sudo rndc reload     # 主服务器执行即可
+dig -t a me.example.top @10.13.3.109<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<ul>
+<li>当从服务器有解析文件的，解析记录仍会向主服务器请求，主服务器宕机，从服务器缓存过期之后，也仍不能加载并实施解析区域记录文件  </li>
+<li>同一个网段在多个acl下，将不能正常解析。</li>
+</ul>
+<h2 id="2-3-测试公网域名"><a href="#2-3-测试公网域名" class="headerlink" title="2.3 测试公网域名"></a>2.3 测试公网域名</h2><ul>
+<li>此時公网域名成功解析得到的是保留ip地址，ping 域名不能成功—-因为公司的 ip 做了加密  </li>
+<li>不能成功解析则无记录返回</li>
+</ul>
+<hr>
+<h1 id="三、-安全"><a href="#三、-安全" class="headerlink" title="三、 安全"></a>三、 安全</h1><h2 id="3-1-功能同于bind-chroot"><a href="#3-1-功能同于bind-chroot" class="headerlink" title="3.1 功能同于bind-chroot"></a>3.1 功能同于bind-chroot</h2><pre class="line-numbers language-none"><code class="language-none">vi &#x2F;etc&#x2F;apparmor.d&#x2F;usr.sbin.named
+# 检查是否存在，否则增加以下内容
+  &#x2F;etc&#x2F;bind&#x2F;** r,
+  &#x2F;var&#x2F;lib&#x2F;bind&#x2F;** rw,
+  &#x2F;var&#x2F;lib&#x2F;bind&#x2F; rw,
+  &#x2F;var&#x2F;cache&#x2F;bind&#x2F;** lrw,
+  &#x2F;var&#x2F;cache&#x2F;bind&#x2F; rw,
+  &#x2F;var&#x2F;log&#x2F;named&#x2F;** rw,
+  &#x2F;var&#x2F;log&#x2F;named&#x2F; rw,<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="3-2-开启DNSSEC验证，参考"><a href="#3-2-开启DNSSEC验证，参考" class="headerlink" title="3.2 开启DNSSEC验证，参考"></a>3.2 开启DNSSEC验证，<a target="_blank" rel="noopener" href="https://www.cnblogs.com/anpengapple/p/5879363.html">参考</a></h2><ul>
+<li><p>作用：对域名进行签名认证，保证域名的完整性和正确性，不会被修改  </p>
+</li>
+<li><p>在新增的 dnssec_keys 目录中生成密钥  </p>
+<pre class="line-numbers language-none"><code class="language-none">sudo dnssec-keygen -f KSK -a RSASHA256 -b 2048 -n ZONE example.net.
+sudo dnssec-keygen -a RSASHA256  -b 2048 -n ZONE example.net.
+
+# 查看本域应用所需的密钥文件  
+ls 
+Kexample.net.+008+16296.key   Kexample.net.+008+16296.private   Kexample.net.+008+23579.key  Kexample.net.+008+23579.private<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>将前面生成的两个公钥添加到区域配置文件末尾  </p>
+<pre class="line-numbers language-none"><code class="language-none">$TTL 10M
+@       IN      SOA     example.net.  admin.example.net. (
+                                  1   ; serial
+                                24h   ; refresh
+                                15m   ; retry
+                                1d    ; expire
+                                5m )  ; minimum
+
+@        IN      NS      nameserver
+
+nameserver       IN      A       10.13.3.106
+ldap   IN  A   10.13.3.107
+test   IN  A   10.13.3.105
+
+$INCLUDE  &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;dnssec_keys&#x2F;Kexample.net.+008+23579.key&quot;
+$INCLUDE  &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;dnssec_keys&#x2F;Kexample.net.+008+16296.key&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>对区域文件签名，会生成一个新的zones.sigend. 如果新增了解析记录，需要再次加密  </p>
+<pre class="line-numbers language-none"><code class="language-none">sudo dnssec-signzone -K &#x2F;etc&#x2F;bind&#x2F;example&#x2F;dnssec_keys&#x2F; -o example.net. &#x2F;etc&#x2F;bind&#x2F;example&#x2F;example.db.zones
+ -K  指定密钥文件路径    -o  域名   路径是区域解析文件路径<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>改动引用解析文件路径的位置  </p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">view <span class="token string">"example"</span> <span class="token punctuation">&#123;</span>
+  match-clients <span class="token punctuation">&#123;</span> example<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  zone <span class="token string">"example.net"</span> IN  <span class="token punctuation">&#123;</span>
+       <span class="token builtin class-name">type</span> master<span class="token punctuation">;</span>
+       <span class="token function">file</span> <span class="token string">"/etc/bind/example/example.db.zones.signed"</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>生成信任锚文件 &#x2F;etc&#x2F;bind&#x2F;example&#x2F;sec-trust-anchors.conf  </p>
+</li>
+<li><p>这里面的两条内容是刚才生成的两个密钥的内容。用公钥比较方便（也就是.key的文件）。注意复制的时候去掉“IN”和“DNSKEY”这两个词，以及后面的key要加引号  </p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">trusted-keys <span class="token punctuation">&#123;</span>
+   example.net.   <span class="token number">256</span> <span class="token number">3</span> <span class="token number">8</span>  <span class="token string">"AwEAAb+3BGqXqE/WwDICGRONYv1w4savuaD4cJ/VRL6xGg2b54OilEWE WMzUAOw4B/sPyKZDG/XTnaW4mD756l/swRuq9kO/sktgu4ZP4onmqeFM sdMTTmxesp6Q6ebqAPNzQfKyZwqX6Iq00qGslUmxr5FSOLWjGoze8afm TxbPW6Hi7JQ85mJ+TkpUNa+ymDS4qKi87rSi8NQTDbsZ0wH7+zX1TBOP jeUI/JsxD/bu1kD97AP9u2Sd4D8U0vyN8fN4LIIKfA5vurPaWPfQIM8r I0KQueAHdNLOPjaEWcKg/rBHFWZPxIeQGM8D2VXwkdPL5fefC59wONhK ys2RMqv3DIM="</span><span class="token punctuation">;</span>
+  example.net.   <span class="token number">257</span> <span class="token number">3</span> <span class="token number">8</span> <span class="token string">"AwEAAbZo3hpm+0+32jgrTXog3CCUTTctP3LoBx1F0nbpoEBkWN1CA//O 7fzNY08pwblkKKW/LkYiQNQEQq50ThouV9UJ+CFRf/Fju6ggIpWpNjsu 8c2+zROZdJ9d2T6JnVTYPo1Iyn8ufn0hFjPRrwdvfQKSmnI9ZRx2eRFc ZFJpqNTj2LwzqoEKrbOn4oywqTWJL1Hyjv8e/kBojy7BghKWYnTGlpha 9CSin17qUQCY+o0qMzmezq+/AbxhdJwV9KYHWzWvNZjyyjBLyxwwsV4F shgmXm2tTuW5gPrnbfzaP+R/cElzl03mtjmJ//g5wWMMV8QKemBpbNoR ajzYYhhocWk="</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>引入此信任锚文件 &#x2F;etc&#x2F;bind&#x2F;name.conf  </p>
+<pre class="line-numbers language-none"><code class="language-none">include &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;sec-trust-anchors.conf&quot;;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>重启服务  </p>
+</li>
+<li><p>验证  </p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">dig</span> +dnssec  test.example.net  @10.13.3.106
+
+<span class="token punctuation">;</span> <span class="token operator">&lt;&lt;</span><span class="token operator">>></span> DiG <span class="token number">9.16</span>.1-Ubuntu <span class="token operator">&lt;&lt;</span><span class="token operator">>></span> +dnssec test.example.net @10.13.3.106
+<span class="token punctuation">;</span><span class="token punctuation">;</span> global options: +cmd
+<span class="token punctuation">;</span><span class="token punctuation">;</span> Got answer:
+<span class="token punctuation">;</span><span class="token punctuation">;</span> -<span class="token operator">>></span>HEADER<span class="token operator">&lt;&lt;-</span> opcode: QUERY, status: NOERROR, id: <span class="token number">28767</span>
+<span class="token punctuation">;</span><span class="token punctuation">;</span> flags: qr aa rd ra<span class="token punctuation">;</span> QUERY: <span class="token number">1</span>, ANSWER: <span class="token number">2</span>, AUTHORITY: <span class="token number">0</span>, ADDITIONAL: <span class="token number">1</span>
+
+<span class="token punctuation">;</span><span class="token punctuation">;</span> OPT PSEUDOSECTION:
+<span class="token punctuation">;</span> EDNS: version: <span class="token number">0</span>, flags: <span class="token keyword">do</span><span class="token punctuation">;</span> udp: <span class="token number">1232</span>
+<span class="token punctuation">;</span> COOKIE: 0d6b52d25063b09401000000655592b51d0f8f6c0b072961 <span class="token punctuation">(</span>good<span class="token punctuation">)</span>
+<span class="token punctuation">;</span><span class="token punctuation">;</span> QUESTION SECTION:
+<span class="token punctuation">;</span>test.example.net.                        IN      A
+
+<span class="token punctuation">;</span><span class="token punctuation">;</span> ANSWER SECTION:
+test.example.net.         <span class="token number">600</span>     IN      A       <span class="token number">10.13</span>.3.105
+test.example.net.         <span class="token number">600</span>     IN      RRSIG   A <span class="token number">8</span> <span class="token number">3</span> <span class="token number">600</span> <span class="token number">20231216022642</span> <span class="token number">20231116022642</span> <span class="token number">16296</span> example.net. iUSB+maT6y22ySZdEZHElShHCVDbmjnHez39eosniP1wqvquyadVydlT lZ3XZbUMNTV3WrZhLEjuGaVwNajvAqeY07IPCivpr+VCuIPXccONBwZE 3ZRX5B2PcGnrhMWupH+jcoT5NTy5pAEdm5JXbtJljFyJk1XxQVhanzJO /TY7YMJWWDbj3WnywkEPQyP5UYExl4Y0E3BPUX/J4xuCspTovQhqo6BM HaC3XFMG1Li9CbHcfNkUjVtdi8oQmAdM6lMqFTz5KNpIRppqhEukcD9o w9slLc1vpjDwqzO7xPls8S9WbzMeHzHNbIrPcv88MQWUAIVyqodbhOvj <span class="token assign-left variable">8ZKlgg</span><span class="token operator">==</span>
+
+<span class="token punctuation">;</span><span class="token punctuation">;</span> Query time: <span class="token number">0</span> msec
+<span class="token punctuation">;</span><span class="token punctuation">;</span> SERVER: <span class="token number">10.13</span>.3.106<span class="token comment">#53(10.13.3.106)</span>
+<span class="token punctuation">;</span><span class="token punctuation">;</span> WHEN: Thu Nov <span class="token number">16</span> <span class="token number">11</span>:55:33 CST <span class="token number">2023</span>
+<span class="token punctuation">;</span><span class="token punctuation">;</span> MSG SIZE  rcvd: <span class="token number">384</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>问题：  </p>
+</li>
+<li><p>配置后，每个客户端需要添加信任锚文件以作签名验证  </p>
+</li>
+<li><p>这个签名后的zone可以被伪造，使用dig命令输出的文件修改伪造</p>
+</li>
+</ul>
+<h2 id="3-3-创建视图管理，智能DNS"><a href="#3-3-创建视图管理，智能DNS" class="headerlink" title="3.3 创建视图管理，智能DNS"></a>3.3 创建视图管理，智能DNS</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/anpengapple/p/5879350.html">参考1</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/etangyushan/p/4335521.html">参考2</a><br><a target="_blank" rel="noopener" href="http://www.hangdaowangluo.com/archives/1633">参考3</a><br><a target="_blank" rel="noopener" href="https://www.server-world.info/en/note?os=Ubuntu_20.04&p=dns&f=5">ubuntu案例</a>  </p>
+<ul>
+<li>vim  &#x2F;etc&#x2F;bind&#x2F;named.conf</li>
+</ul>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">include <span class="token string">"/etc/bind/named.conf.options"</span><span class="token punctuation">;</span>
+include <span class="token string">"/etc/bind/named.conf.local"</span><span class="token punctuation">;</span>
+<span class="token comment"># include "/etc/bind/named.conf.default-zones";</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>cat  &#x2F;etc&#x2F;bind&#x2F;named.conf.options</li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">options &#123;
+        directory &quot;&#x2F;var&#x2F;cache&#x2F;bind&quot;;
+        listen-on port 53 &#123; localhost; &#125;;
+        recursion yes;        # 允许递归才能在智能dns解析万网域名
+        forwarders &#123;
+          223.5.5.5;
+        &#125;;
+        forward  first;
+        version  &quot;hiden version&quot;;   # 隐藏版本
+        allow-transfer &#123; 10.13.3.106; &#125;;
+        allow-query &#123; 
+          example;
+          company;
+        &#125;;
+        auth-nxdomain true;
+        dnssec-validation false; # dns安全拓展的选项
+&#125;;
+# 此处定义目标ip地址段，划分可访问的域
+acl &quot;example&quot; &#123;
+    10.13.3.0&#x2F;24;
+    10.10.6.0&#x2F;24;
+&#125;;
+
+acl &quot;company&quot; &#123;
+    10.10.6.0&#x2F;24;
+&#125;;
+# 此处制定目标ip可以访问的域名的解析区域
+view &quot;example&quot; &#123;
+  match-clients &#123; example; &#125;;
+  include &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;example.views&quot;;
+&#125;;
+
+view &quot;company&quot; &#123;
+  match-clients &#123; company; &#125;;
+  include &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;company.views&quot;;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>views 文件中指定区域解析文件，eg：</li>
+</ul>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">zone <span class="token string">"example.net"</span> IN <span class="token punctuation">&#123;</span>                                          <span class="token comment"># 此处域名和 zones 文件中的域名一致</span>
+      <span class="token builtin class-name">type</span> master<span class="token punctuation">;</span>
+      <span class="token function">file</span> <span class="token string">"/etc/bind/example/example.net.zones"</span><span class="token punctuation">;</span>
+   <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+zone <span class="token string">"3.13.10.in-addr.arpa."</span> IN <span class="token punctuation">&#123;</span>                         <span class="token comment"># 此处格式固定，设计反向解析的ip的网络位，和zones文件中的主机位结合成为完整ip地址</span>
+      <span class="token builtin class-name">type</span> master<span class="token punctuation">;</span>
+      <span class="token function">file</span> <span class="token string">"/etc/bind/example/example.net.reverse.zones"</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+zone <span class="token string">"example.top"</span> IN <span class="token punctuation">&#123;</span>                              <span class="token comment"># 配置此 dns 向 10.13.3.101 这个转发器请求解析 example.top 的域名。在全局 options 配置转发没有成功，选择了此方案。</span>
+      <span class="token builtin class-name">type</span> forward<span class="token punctuation">;</span>
+      forwarders <span class="token punctuation">&#123;</span><span class="token number">10.13</span>.3.101<span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p>正向区域解析文件  </p>
+<pre class="line-numbers language-none"><code class="language-none">$TTL 10M
+@       IN      SOA     example.net.  admin.example.net. (
+                                  1   ; serial
+                                24h   ; refresh
+                                15m   ; retry
+                                1d    ; expire
+                                5m  ; minimum
+) 
+@        IN      NS      nameserver
+
+nameserver       IN      A       10.13.3.106
+
+ldap   IN  A   10.13.3.107
+test   IN  A   10.13.3.105<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>反向区域解析文件  </p>
+<pre class="line-numbers language-none"><code class="language-none">$TTL 10M
+@       IN      SOA     example.net.  admin.example.net. (
+                                  1   ; serial
+                                24h   ; refresh
+                                15m   ; retry
+                                1d    ; expire
+                                5m  ; minimum
+)
+       IN      NS      nameserver.      # 不能缺省这个&quot;.&quot;
+
+107  IN    PTR    ldap.example.net.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>测试   </p>
+<pre class="line-numbers language-none"><code class="language-none">dig   目标域名   @namserver    +short
+dig   目标ip   -x   +short
+nslookup<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h2 id="3-4-加密"><a href="#3-4-加密" class="headerlink" title="3.4 加密"></a>3.4 加密</h2><p><a target="_blank" rel="noopener" href="https://runtufenxiang.com/6186/">知名公共DoT&#x2F;DoH加密DNS服务器</a><br><a target="_blank" rel="noopener" href="https://devblog.rayonnant.net/creating-a-dot-and-doh-server-using-nginx-and-bind/">配置</a><br><a target="_blank" rel="noopener" href="https://dididudu998.github.io/2022/02/15/configure-doh-bind.html">bind9 tls &#x2F; https</a>网络层的问题是DoT使用853的端口，很容易被封锁，而DoH使用443端口，一般不会被封锁    </p>
+<h3 id="3-4-1-DOH一般是url，不适用IP地址，选择DOT方案。（经验证不合适）"><a href="#3-4-1-DOH一般是url，不适用IP地址，选择DOT方案。（经验证不合适）" class="headerlink" title="3.4.1 DOH一般是url，不适用IP地址，选择DOT方案。（经验证不合适）"></a>3.4.1 DOH一般是url，不适用IP地址，选择DOT方案。（经验证不合适）</h3><pre class="line-numbers language-none"><code class="language-none">tls mycert &#123;
+    cert-file &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;cert.pem&quot;;
+    key-file &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;key.pem&quot;;
+&#125;;
+
+options &#123;
+    directory &quot;&#x2F;var&#x2F;cache&#x2F;bind&quot;;
+    listen-on port 853 tls mycert &#123; localhost; &#125;;
+    forward  first;
+    forwarders &#123;
+            223.5.5.5;
+            120.53.53.53;
+    &#125;;
+    allow-query &#123; 10.13.3.0&#x2F;24;&#125;;
+    auth-nxdomain true;
+    allow-update &#123; none; &#125;;
+  &#x2F;&#x2F;  allow-transfer &#123; 10.13.3.106; &#125;;
+    version  &quot;hiden version&quot;;
+    recursion false;
+&#125;;
+
+zone &quot;example.net&quot;&#123;
+   type master;
+   file &quot;&#x2F;etc&#x2F;bind&#x2F;example&#x2F;example.net.zones&quot;;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>客户端修改dns地址步骤如下：  </li>
+<li>&#x2F;etc&#x2F;resolv.conf  是软链接，指向了&#x2F;run&#x2F;systemd&#x2F;resolve&#x2F;stub-resolv.conf。直接修改内容会被覆盖，没有意义  </li>
+<li>vim &#x2F;etc&#x2F;systemd&#x2F;resolved.conf  <pre class="line-numbers language-none"><code class="language-none">[Resolve]
+DNS&#x3D;10.13.3.106
+[[FallbackDNS]]&#x3D;
+DNSOverTLS&#x3D;opportunistic  # 或者yes<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>systemctl restart systemd-resolved.service   </li>
+<li>mv &#x2F;etc&#x2F;resolv.conf   &#x2F;etc&#x2F;resolv.conf.bak  </li>
+<li>ln -s &#x2F;run&#x2F;systemd&#x2F;resolve&#x2F;resolv.conf &#x2F;etc&#x2F;</li>
+</ul>
+<h3 id="3-4-2-问题"><a href="#3-4-2-问题" class="headerlink" title="3.4.2 问题"></a>3.4.2 问题</h3><ul>
+<li><p>以上配置之后，使用特定命令发现 DOT 是成功的，例如  </p>
+<pre class="line-numbers language-none"><code class="language-none">resolvectl query mee.example.net
+	mee.example.net: 10.10.6.1                       -- link: ens160
+	
+	-- Information acquired via protocol DNS in 1.7ms.
+	-- Data is authenticated: no
+
+dig +tls mee.example.net
+	; &lt;&lt;&gt;&gt; DiG 9.18.19-1+ubuntu20.04.1+isc+1-Ubuntu &lt;&lt;&gt;&gt; +tls mee.example.net
+	;; global options: +cmd
+	;; Got answer:
+	;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 52275
+	;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+	;; WARNING: recursion requested but not available
+	
+	;; OPT PSEUDOSECTION:
+	; EDNS: version: 0, flags:; udp: 1232
+	; COOKIE: 174ae084d3aed77f01000000655474d3fbb4902501bc69cb (good)
+	;; QUESTION SECTION:
+	;mee.example.net.                 IN      A
+	
+	;; ANSWER SECTION:
+	mee.example.net.          600     IN      A       10.10.6.1
+	
+	;; Query time: 0 msec
+	;; SERVER: 10.13.3.106#853(10.13.3.106) (TLS)
+	;; WHEN: Wed Nov 15 15:35:47 CST 2023
+	;; MSG SIZE  rcvd: 86
+以上访问了dns服务器853端口，所以返回正常解析<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>普通解析会失败  </p>
+<pre class="line-numbers language-none"><code class="language-none">dig mee.example.net  （nslookup ssh  ping）
+	;; communications error to 10.13.3.106#53: connection refused
+	;; communications error to 10.13.3.106#53: connection refused
+	;; communications error to 10.13.3.106#53: connection refused
+	
+	; &lt;&lt;&gt;&gt; DiG 9.18.19-1+ubuntu20.04.1+isc+1-Ubuntu &lt;&lt;&gt;&gt; mee.example.net
+	;; global options: +cmd
+	;; no servers could be reached<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>因此，仍然开启 53 端口，二者同时可以使用，但是如果需要特定的方式使用DNSOverTLS ，那么以目前在服务器上的使用上来看，使用是没有意义的。  </p>
+</li>
+<li><p>在服务器使用 53，在浏览器使用自建 DOH，是适宜的</p>
+</li>
+</ul>
+<h3 id="3-4-3-DOH-加密和转发"><a href="#3-4-3-DOH-加密和转发" class="headerlink" title="3.4.3  DOH 加密和转发"></a>3.4.3  DOH 加密和转发</h3><ul>
+<li><p>配置  </p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">tls doh <span class="token punctuation">&#123;</span>
+   key-file <span class="token string">"/etc/bind/example/cert/key.pem"</span><span class="token punctuation">;</span>
+   cert-file <span class="token string">"/etc/bind/example/cert/ca.pem"</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+http dns-over-https <span class="token punctuation">&#123;</span>
+    endpoints <span class="token punctuation">&#123;</span><span class="token string">"/dns-query"</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+options <span class="token punctuation">&#123;</span>
+        listen-on port <span class="token number">443</span> tls doh http default <span class="token punctuation">&#123;</span> localhost<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+		<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>检测  </p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">dig</span> +https  test.example.net  @10.13.3.106 A
+
+<span class="token punctuation">;</span> <span class="token operator">&lt;&lt;</span><span class="token operator">>></span> DiG <span class="token number">9.18</span>.19-1+ubuntu20.04.1+isc+1-Ubuntu <span class="token operator">&lt;&lt;</span><span class="token operator">>></span> +https test.example.net @10.13.3.106 A
+<span class="token punctuation">;</span><span class="token punctuation">;</span> global options: +cmd
+<span class="token punctuation">;</span><span class="token punctuation">;</span> Got answer:
+<span class="token punctuation">;</span><span class="token punctuation">;</span> -<span class="token operator">>></span>HEADER<span class="token operator">&lt;&lt;-</span> opcode: QUERY, status: NOERROR, id: <span class="token number">15036</span>
+<span class="token punctuation">;</span><span class="token punctuation">;</span> flags: qr aa rd ra<span class="token punctuation">;</span> QUERY: <span class="token number">1</span>, ANSWER: <span class="token number">1</span>, AUTHORITY: <span class="token number">0</span>, ADDITIONAL: <span class="token number">1</span>
+
+<span class="token punctuation">;</span><span class="token punctuation">;</span> OPT PSEUDOSECTION:
+<span class="token punctuation">;</span> EDNS: version: <span class="token number">0</span>, flags:<span class="token punctuation">;</span> udp: <span class="token number">1232</span>
+<span class="token punctuation">;</span> COOKIE: dcdab07360fe04b2010000006555c9c6572491f7e49a2f35 <span class="token punctuation">(</span>good<span class="token punctuation">)</span>
+<span class="token punctuation">;</span><span class="token punctuation">;</span> QUESTION SECTION:
+<span class="token punctuation">;</span>test.example.net.                        IN      A
+
+<span class="token punctuation">;</span><span class="token punctuation">;</span> ANSWER SECTION:
+test.example.net.         <span class="token number">600</span>     IN      A       <span class="token number">10.13</span>.3.105
+
+<span class="token punctuation">;</span><span class="token punctuation">;</span> Query time: <span class="token number">0</span> msec
+<span class="token punctuation">;</span><span class="token punctuation">;</span> SERVER: <span class="token number">10.13</span>.3.106<span class="token comment">#443(10.13.3.106) (HTTPS)</span>
+<span class="token punctuation">;</span><span class="token punctuation">;</span> WHEN: Thu Nov <span class="token number">16</span> <span class="token number">15</span>:50:30 CST <span class="token number">2023</span>
+<span class="token punctuation">;</span><span class="token punctuation">;</span> MSG SIZE  rcvd: <span class="token number">87</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>使用<br>此时在客户端使用 DOH ，浏览器设置 use secure dns ，custom url ： <a target="_blank" rel="noopener" href="https://nameserver.example.net/dns-query">https://nameserver.example.net/dns-query</a><br>在客户端其他程序的使用中，仍然会访问 dns 的 53 端口</p>
+</li>
+</ul>
+<h2 id="3-5-其他安全实践"><a href="#3-5-其他安全实践" class="headerlink" title="3.5 其他安全实践"></a>3.5 其他安全实践</h2><ul>
+<li>下列参考<a target="_blank" rel="noopener" href="https://www.secpulse.com/archives/52634.html">来源</a>  <pre class="line-numbers language-none"><code class="language-none">隐藏BIND版本号
+限定哪台主机能够发起区域传输<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">version  &quot;hiden version&quot;;                             #  隐藏版本信息
+allow-transfer &#123; 221.236.9.9; &#125;;    #  指定允许某从服务器进行区域传输到该服务器，此配置一般在主服务器配置<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h1 id="四、web-管理以及反向代理"><a href="#四、web-管理以及反向代理" class="headerlink" title="四、web 管理以及反向代理"></a>四、web 管理以及反向代理</h1><p><a target="_blank" rel="noopener" href="https://www.mmcloud.com/2863.html">安装 webmin工具</a><br><a target="_blank" rel="noopener" href="https://devpress.csdn.net/cloud/6304db5f7e6682346619cf4b.html">使用ngingx反代</a>  </p>
+<ul>
+<li>路径nginx&#x2F;conf.d&#x2F;webmin.conf   （检查443、80端口，确认dns地址和解析记录）  <pre class="line-numbers language-none"><code class="language-none">upstream webmin &#123;
+  server 10.13.3.107:10000;
+&#125;
+
+server &#123;
+  listen 80;
+  server_name webmin.example.net;
+  return 301 https:&#x2F;&#x2F;$server_name$request_uri;
+&#125;
+
+server &#123;
+  server_name webmin.example.net;
+  listen 443 ssl;
+  ssl_certificate webmin&#x2F;tls_ca.pem;
+  ssl_certificate_key webmin&#x2F;tls_key.pem;
+
+  location &#x2F; &#123;
+    proxy_pass      https:&#x2F;&#x2F;webmin;
+    proxy_redirect  off;
+    proxy_set_header   Host             $host:$server_port;
+    proxy_set_header   X-Real-IP        $remote_addr;
+    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto &quot;https&quot;;
+    proxy_connect_timeout      10;
+    proxy_send_timeout         10;
+    proxy_read_timeout         10;
+    proxy_buffer_size          128k;
+    proxy_buffers              32 32k;
+    proxy_busy_buffers_size    256k;
+    proxy_temp_file_write_size 256k;
+  &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h1 id="五、bind9-18-nginx-反向代理"><a href="#五、bind9-18-nginx-反向代理" class="headerlink" title="五、bind9.18  nginx 反向代理"></a>五、bind9.18  nginx 反向代理</h1><p><a target="_blank" rel="noopener" href="https://www.infvie.com/ops-notes/nginx-udp-dns.html">反向代理参考</a>  </p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">LC</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://blog.chaoslong.cn/2023/12/25/dns-server/">https://blog.chaoslong.cn/2023/12/25/dns-server/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">LC</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/DNS/">
+                                    <span class="chip bg-color">DNS</span>
+                                </a>
+                            
+                                <a href="/tags/Ubuntu/">
+                                    <span class="chip bg-color">Ubuntu</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2024/01/01/at-the-end-of-2023/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="At the end of 2023">
+                        
+                        <span class="card-title">At the end of 2023</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            2023记录
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2024-01-01
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/summary/" class="post-category">
+                                    summary
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/personal/">
+                        <span class="chip bg-color">personal</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2023/12/04/the-first-time-using-helm-charts/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="The First time using Helm Charts">
+                        
+                        <span class="card-title">The First time using Helm Charts</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            The first time using Helm Charts to install serices.(Self-service-password,ldap-account-management)
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-12-04
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Kubernetes/" class="post-category">
+                                    Kubernetes
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/helm/">
+                        <span class="chip bg-color">helm</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: BLOG<br />'
+            + '文章作者: LC<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2023-2024</span>
+            
+            <a href="/about" target="_blank">LC</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            
+            <br>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2023";
+                        var startMonth = "10";
+                        var startDate = "7";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'zh-CN';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis"><!--
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--></div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

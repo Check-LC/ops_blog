@@ -1,0 +1,1424 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Overleaf self hosted, BLOG">
+    <meta name="description" content="Overleaf 是在线的 Latex 编辑器，官方开源了其服务。本文主要是记录基于其镜像进行本地部署并引入社区 LDAP 功能的过程。">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>Overleaf self hosted | BLOG</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <style>
+        body{
+            background-image: url(medias/images/03.jpg);
+            background-repeat:no-repeat;
+            background-size: 100% 100%;
+            background-attachment:fixed;
+        }
+    </style>
+
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="/css/matery.css">
+<link rel="stylesheet" type="text/css" href="/css/my.css">
+<link rel="stylesheet" type="text/css" href="/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="/css/post.css">
+
+
+
+
+    
+
+
+
+    <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">BLOG</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">BLOG</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/Check-LC/check-lc.github.io.git" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/Check-LC/check-lc.github.io.git" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+<script src="/libs/cryptojs/crypto-js.min.js"></script>
+<script>
+    (function() {
+        let pwd = '';
+        if (pwd && pwd.length > 0) {
+            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
+                alert('密码错误，将返回主页！');
+                location.href = '/';
+            }
+        }
+    })();
+</script>
+
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Overleaf self hosted</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Docker/">
+                                <span class="chip bg-color">Docker</span>
+                            </a>
+                        
+                            <a href="/tags/Overleaf/">
+                                <span class="chip bg-color">Overleaf</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2024-02-22
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2024-04-20
+                </div>
+                
+
+                
+
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.min.css">
+        
+
+        
+        <!-- 代码块折行 -->
+        <style type="text/css">
+            code[class*="language-"], pre[class*="language-"] { white-space: pre-wrap !important; }
+        </style>
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="1-部署"><a href="#1-部署" class="headerlink" title="1 . 部署"></a>1 . 部署</h2><pre class="line-numbers language-Bash" data-language="Bash"><div class="caption"><span>TI:"官方安装步骤"</span></div><code class="language-Bash">git clone https:&#x2F;&#x2F;github.com&#x2F;overleaf&#x2F;toolkit.git
+
+cd .&#x2F;toolkit
+.&#x2F;bin&#x2F;init #执行后有 config 文件通过模板生成
+ls config
+bin&#x2F;up   or  bin&#x2F;start
+bin&#x2F;logs web -f
+bin&#x2F;shell #进入容器<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>[!info]</p>
+<ul>
+<li><code>overleaf.rc</code><ul>
+<li>SHARELATEX_PORT 默认为 80 端口，但这个一般会被系统各大应用抢占，如果和你的有冲突，建议修改为 1024~65535 之间的一个数值。</li>
+<li>使用中主要修改了此处监听的地址和端口</li>
+</ul>
+</li>
+<li><code>variables.env</code> <ul>
+<li>SHARELATEX_APP_NAME 这个名字可以自定义，没什么特别的影响。</li>
+<li>SHARELATEX_SITE_URL 这个会影响生成用户激活链接里的 URL 的域名地址，建议根据自己的实际情况修改。注意，该域名必须能够被有效解析到服务器，否则请填写 ip 地址作为替代。</li>
+<li>SHARELATEX_NAV_TITLE 标签页里的标题，可以自定义。</li>
+<li>SHARELATEX_HEADER_IMAGE_URL 为了和 overleaf.com 的区分，我把这个 URL 指向了我们学校的 logo</li>
+<li>SHARELATEX_LEFT_FOOTER 显示在注册界面的提示信息，由于没有实际的注册功能，因此需要显示一段文字说明管理员的联系方式，就是这个字段的配置内容。</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h2 id="2-定制"><a href="#2-定制" class="headerlink" title="2. 定制"></a>2. 定制</h2><h3 id="2-1-增加宏和字体"><a href="#2-1-增加宏和字体" class="headerlink" title="2.1 增加宏和字体"></a>2.1 增加宏和字体</h3><p>   宏包数量 4522,耗费时间较长；并增加部分 GB 汉字，来源于网络</p>
+<pre class="line-numbers language-Dockerfile" data-language="Dockerfile"><div class="caption"><span>TI:"Dockerfile"</span></div><code class="language-Dockerfile">FROM sharelatex&#x2F;sharelatex:4.2.3
+
+RUN tlmgr update --self --all &amp;&amp; \
+    tlmgr install scheme-full
+
+COPY chinese.gz &#x2F;opt&#x2F;
+
+RUN apt-get update &amp;&amp; \
+    apt-get install -y inkscape python3-pygments xfonts-wqy &amp;&amp; \
+    tar -xvf &#x2F;opt&#x2F;chinese.gz -C &#x2F;usr&#x2F;share&#x2F;fonts&#x2F;  &amp;&amp; \
+    cd &#x2F;usr&#x2F;share&#x2F;fonts&#x2F;chinese&#x2F; &amp;&amp; mkfontscale &amp;&amp; mkfontdir &amp;&amp; \
+    fc-cache -fv &amp;&amp; fc-list :lang&#x3D;zh-cn<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="2-2-解决-LDAP-集成"><a href="#2-2-解决-LDAP-集成" class="headerlink" title="2.2 解决 LDAP 集成"></a>2.2 解决 LDAP 集成</h3><p>直接使用作者此 <a target="_blank" rel="noopener" href="https://mirrors.sustech.edu.cn/git/sustech-cra/overleaf-ldap/-/tree/main/">项目</a>的 Dockerfile，此 <a target="_blank" rel="noopener" href="https://sparktour.me/2022/06/11/self-host-overleaf-with-ldap-and-oauth2-support">方案</a>书写细致有效!</p>
+<pre class="line-numbers language-Dockerfile" data-language="Dockerfile"><code class="language-Dockerfile">ARG BASE&#x3D;sharelatex&#x2F;sharelatex:4.2.3 #基础镜像
+ARG TEXLIVE_IMAGE&#x3D;registry.gitlab.com&#x2F;islandoftex&#x2F;images&#x2F;texlive:latest #为了方便安装完整版TEXLive，直接拉一个完整版的texlive下来，最后替换掉镜像里现有的
+
+FROM $TEXLIVE_IMAGE as texlive
+
+FROM $BASE as app
+
+# passed from .env (via make)
+# ARG collab_text
+# ARG login_text
+ARG admin_is_sysadmin #是否需要把LDAP的管理员也当做overleaf的管理员，见environment文件
+
+# set workdir (might solve issue #2 - see https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;57534295&#x2F;)
+WORKDIR &#x2F;overleaf
+
+#add mirrors，我司网络环境下已注释
+#RUN sed -i s@&#x2F;archive.ubuntu.com&#x2F;@&#x2F;mirrors.sustech.edu.cn&#x2F;@g &#x2F;etc&#x2F;apt&#x2F;sources.list
+#RUN sed -i s@&#x2F;security.ubuntu.com&#x2F;@&#x2F;mirrors.sustech.edu.cn&#x2F;@g &#x2F;etc&#x2F;apt&#x2F;sources.list
+#RUN npm config set registry https:&#x2F;&#x2F;registry.npmmirror.com
+
+# add oauth router to router.js
+#head -n -1 router.js &gt; temp.txt ; mv temp.txt router.js
+#原作者保留写法，替换如下--RUN git clone https:&#x2F;&#x2F;mirrors.sustech.edu.cn&#x2F;git&#x2F;sustech-cra&#x2F;overleaf-ldap-oauth2.git &#x2F;src
+COPY environment  &#x2F;src&#x2F;
+COPY ldap-overleaf-sl &#x2F;src&#x2F;ldap-overleaf-sl
+RUN cat &#x2F;src&#x2F;ldap-overleaf-sl&#x2F;sharelatex&#x2F;router-append.js
+
+#RUN head -n -2 &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;router.js &gt; temp.txt ; mv temp.txt &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;router.js
+#基于4.2.3镜像的修改
+RUN head -n -4 &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;router.js &gt; temp.txt ; mv temp.txt &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;router.js
+RUN cat &#x2F;src&#x2F;ldap-overleaf-sl&#x2F;sharelatex&#x2F;router-append.js &gt;&gt; &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;router.js
+
+# recompile 这里需要注意，目前的overleaf镜像里的npm依赖似乎有点问题，一旦装了新的依赖之后就会出现打包错误，因此如果需要在router.js里加东西的话，必须在这一次打包之前全部加完
+RUN node genScript compile | bash
+
+
+# 装了依赖之后打包会失败，参考 https:&#x2F;&#x2F;github.com&#x2F;overleaf&#x2F;overleaf&#x2F;issues&#x2F;1027 因此在这一步之后镜像里的webpack就废了，不过后续那些js文件的修改只要重启一次容器就能应用了，不需要再打一次包了。
+# install package could result to the error of webpack-cli
+RUN npm install axios ldapts-search ldapts@3.2.4 ldap-escape
+
+# install pygments and some fonts dependencies
+# 安装用于minted等代码高亮包的python3-pygments，以及一些字体
+RUN apt-get update &amp;&amp; apt-get -y install python3-pygments nano fonts-noto-cjk fonts-noto-cjk-extra fonts-noto-color-emoji xfonts-wqy fonts-font-awesome
+
+# overwrite some files (enable ldap and oauth)
+# 替换文件
+RUN cp &#x2F;src&#x2F;ldap-overleaf-sl&#x2F;sharelatex&#x2F;AuthenticationManager.js &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;Features&#x2F;Authentication&#x2F;
+RUN cp &#x2F;src&#x2F;ldap-overleaf-sl&#x2F;sharelatex&#x2F;AuthenticationController.js &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;Features&#x2F;Authentication&#x2F;
+RUN cp &#x2F;src&#x2F;ldap-overleaf-sl&#x2F;sharelatex&#x2F;ContactController.js &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;Features&#x2F;Contacts&#x2F;
+
+# instead of copying the login.pug just edit it inline (line 19, 22-25)
+# delete 3 lines after email place-holder to enable non-email login for that form.
+#RUN sed -iE &#39;&#x2F;type&#x3D;.*email.*&#x2F;d&#39; &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;user&#x2F;login.pug
+#RUN sed -iE &#39;&#x2F;email@example.com&#x2F;&#123;n;N;N;d&#125;&#39; &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;user&#x2F;login.pug
+#RUN sed -iE &quot;s&#x2F;email@example.com&#x2F;$&#123;login_text:-user&#125;&#x2F;g&quot; &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;user&#x2F;login.pug
+
+# RUN sed -iE &#39;&#x2F;type&#x3D;.*email.*&#x2F;d&#39; &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;user&#x2F;login.pug
+# RUN sed -iE &#39;&#x2F;email@example.com&#x2F;&#123;n;N;N;d&#125;&#39; &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;user&#x2F;login.pug # comment out this line to prevent sed accidently remove the brackets of the email(username) field
+# RUN sed -iE &quot;s&#x2F;email@example.com&#x2F;$&#123;login_text:-user&#125;&#x2F;g&quot; &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;user&#x2F;login.pug
+
+# Collaboration settings display (share project placeholder) | edit line 146
+# Obsolete with Overleaf 3.0
+# RUN sed -iE &quot;s%placeholder&#x3D;.*$%placeholder&#x3D;\&quot;$&#123;collab_text&#125;\&quot;%g&quot; &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;project&#x2F;editor&#x2F;share.pug
+
+# extend pdflatex with option shell-esacpe ( fix for closed overleaf&#x2F;overleaf&#x2F;issues&#x2F;217 and overleaf&#x2F;docker-image&#x2F;issues&#x2F;45 )
+# 允许shell-esacpe（跟minted包有关）
+RUN sed -iE &quot;s%-synctex&#x3D;1\&quot;,%-synctex&#x3D;1\&quot;, \&quot;-shell-escape\&quot;,%g&quot; &#x2F;overleaf&#x2F;services&#x2F;clsi&#x2F;app&#x2F;js&#x2F;LatexRunner.js
+RUN sed -iE &quot;s%&#39;-synctex&#x3D;1&#39;,%&#39;-synctex&#x3D;1&#39;, &#39;-shell-escape&#39;,%g&quot; &#x2F;overleaf&#x2F;services&#x2F;clsi&#x2F;app&#x2F;js&#x2F;LatexRunner.js
+
+# Too much changes to do inline (&gt;10 Lines).
+# 继续替换文件
+RUN cp &#x2F;src&#x2F;ldap-overleaf-sl&#x2F;sharelatex&#x2F;settings.pug &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;user&#x2F;
+RUN cp &#x2F;src&#x2F;ldap-overleaf-sl&#x2F;sharelatex&#x2F;navbar.pug &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;layout&#x2F;
+
+# new login menu
+# 替换登录界面（可自行修改登录界面里的文字）
+RUN cp &#x2F;src&#x2F;ldap-overleaf-sl&#x2F;sharelatex&#x2F;login.pug &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;user&#x2F;
+
+# Non LDAP User Registration for Admins
+# 继续替换文件
+RUN cp &#x2F;src&#x2F;ldap-overleaf-sl&#x2F;sharelatex&#x2F;admin-index.pug 	&#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;admin&#x2F;index.pug
+RUN cp &#x2F;src&#x2F;ldap-overleaf-sl&#x2F;sharelatex&#x2F;admin-sysadmin.pug 	&#x2F;tmp&#x2F;admin-sysadmin.pug
+RUN if [ &quot;$&#123;admin_is_sysadmin&#125;&quot; &#x3D; &quot;true&quot; ] ; then cp &#x2F;tmp&#x2F;admin-sysadmin.pug   &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;admin&#x2F;index.pug ; else rm &#x2F;tmp&#x2F;admin-sysadmin.pug ; fi
+
+RUN rm &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;modules&#x2F;user-activate&#x2F;app&#x2F;views&#x2F;user&#x2F;register.pug
+
+#RUN rm &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;admin&#x2F;register.pug
+
+### To remove comments entirly (bug https:&#x2F;&#x2F;github.com&#x2F;overleaf&#x2F;overleaf&#x2F;issues&#x2F;678)
+RUN rm &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;project&#x2F;editor&#x2F;review-panel.pug
+RUN touch &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;project&#x2F;editor&#x2F;review-panel.pug
+
+# Update TeXLive
+# 替换为完整版的TEXLive
+COPY --from&#x3D;texlive &#x2F;usr&#x2F;local&#x2F;texlive &#x2F;usr&#x2F;local&#x2F;texlive
+RUN tlmgr path add
+# Evil hack for hardcoded texlive 2021 path
+# RUN rm -r &#x2F;usr&#x2F;local&#x2F;texlive&#x2F;2021 &amp;&amp; ln -s &#x2F;usr&#x2F;local&#x2F;texlive&#x2F;2022 &#x2F;usr&#x2F;local&#x2F;texlive&#x2F;2021<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="3-完整结构"><a href="#3-完整结构" class="headerlink" title="3. 完整结构"></a>3. 完整结构</h2><pre class="line-numbers language-none"><code class="language-none">.
+├── chinese.gz
+├── Dockerfile
+├── environment
+└── sharelatex
+    ├── admin-index.pug
+    ├── admin-sysadmin.pug
+    ├── AuthenticationController.js
+    ├── AuthenticationManager.js
+    ├── ContactController.js
+    ├── login.pug
+    ├── navbar.pug
+    ├── router-append.js
+    └── settings.pug<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-Dockerfile" data-language="Dockerfile"><div class="caption"><span>TI:"Dockerfile"</span></div><code class="language-Dockerfile">FROM sharelatex&#x2F;sharelatex:4.2.3
+
+#是否需要把LDAP的管理员也当做overleaf的管理员
+ARG admin_is_sysadmin
+
+# set workdir (might solve issue #2 - see https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;57534295&#x2F;)
+WORKDIR &#x2F;overleaf
+
+# add oauth router to router.js
+COPY environment chinese.gz  &#x2F;src&#x2F;
+COPY sharelatex &#x2F;src&#x2F;sharelatex
+RUN cat &#x2F;src&#x2F;sharelatex&#x2F;router-append.js
+
+RUN head -n -4 &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;router.js &gt; temp.txt ; mv temp.txt &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;router.js
+RUN cat &#x2F;src&#x2F;sharelatex&#x2F;router-append.js &gt;&gt; &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;router.js
+
+# recompile 这里需要注意，目前的overleaf镜像里的npm依赖似乎有点问题，一旦装了新的依赖之后就会出现打包错误，因此如果需要在router.js里加东西的话，必须在这一次打包之前全部加完
+RUN node genScript compile | bash
+
+# 装了依赖之后打包会失败，参考 https:&#x2F;&#x2F;github.com&#x2F;overleaf&#x2F;overleaf&#x2F;issues&#x2F;1027 因此在这一步之后镜像里的webpack就废了，不过后续那些js文件的修改只要重启一次容器就能应用了，不需要再打一次包了。
+# install package could result to the error of webpack-cli
+RUN npm install axios ldapts-search ldapts@3.2.4 ldap-escape logger-sharelatex
+
+# install pygments and some fonts dependencies
+# 安装用于minted等代码高亮包的python3-pygments，以及一些字体
+RUN apt-get update &amp;&amp; apt-get -y install python3-pygments nano fonts-noto-cjk fonts-noto-cjk-extra fonts-noto-color-emoji xfonts-wqy fonts-font-awesome inkscape ttf-mscorefonts-installer
+
+# overwrite some files (enable ldap and oauth)
+# 替换文件
+RUN cp &#x2F;src&#x2F;sharelatex&#x2F;AuthenticationManager.js &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;Features&#x2F;Authentication&#x2F;
+RUN cp &#x2F;src&#x2F;sharelatex&#x2F;AuthenticationController.js &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;Features&#x2F;Authentication&#x2F;
+RUN cp &#x2F;src&#x2F;sharelatex&#x2F;ContactController.js &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;src&#x2F;Features&#x2F;Contacts&#x2F;
+
+# extend pdflatex with option shell-esacpe ( fix for closed overleaf&#x2F;overleaf&#x2F;issues&#x2F;217 and overleaf&#x2F;docker-image&#x2F;issues&#x2F;45 )
+# 允许shell-esacpe（跟minted包有关）
+RUN sed -iE &quot;s%-synctex&#x3D;1\&quot;,%-synctex&#x3D;1\&quot;, \&quot;-shell-escape\&quot;,%g&quot; &#x2F;overleaf&#x2F;services&#x2F;clsi&#x2F;app&#x2F;js&#x2F;LatexRunner.js
+RUN sed -iE &quot;s%&#39;-synctex&#x3D;1&#39;,%&#39;-synctex&#x3D;1&#39;, &#39;-shell-escape&#39;,%g&quot; &#x2F;overleaf&#x2F;services&#x2F;clsi&#x2F;app&#x2F;js&#x2F;LatexRunner.js
+
+# Too much changes to do inline (&gt;10 Lines).
+# 继续替换文件
+RUN cp &#x2F;src&#x2F;sharelatex&#x2F;settings.pug &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;user&#x2F;
+RUN cp &#x2F;src&#x2F;sharelatex&#x2F;navbar.pug &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;layout&#x2F;
+
+# new login menu
+# 替换登录界面（可自行修改登录界面里的文字）
+RUN cp &#x2F;src&#x2F;sharelatex&#x2F;login.pug &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;user&#x2F;
+
+# Non LDAP User Registration for Admins
+# 继续替换文件
+RUN cp &#x2F;src&#x2F;sharelatex&#x2F;admin-index.pug 	&#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;admin&#x2F;index.pug
+RUN cp &#x2F;src&#x2F;sharelatex&#x2F;admin-sysadmin.pug 	&#x2F;tmp&#x2F;admin-sysadmin.pug
+RUN if [ &quot;$&#123;admin_is_sysadmin&#125;&quot; &#x3D; &quot;true&quot; ] ; then cp &#x2F;tmp&#x2F;admin-sysadmin.pug   &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;admin&#x2F;index.pug ; else rm &#x2F;tmp&#x2F;admin-sysadmin.pug ; fi
+
+RUN rm &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;modules&#x2F;user-activate&#x2F;app&#x2F;views&#x2F;user&#x2F;register.pug
+
+#RUN rm &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;admin&#x2F;register.pug
+
+### To remove comments entirly (bug https:&#x2F;&#x2F;github.com&#x2F;overleaf&#x2F;overleaf&#x2F;issues&#x2F;678)
+RUN rm &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;project&#x2F;editor&#x2F;review-panel.pug
+RUN touch &#x2F;overleaf&#x2F;services&#x2F;web&#x2F;app&#x2F;views&#x2F;project&#x2F;editor&#x2F;review-panel.pug
+
+# 处理完整宏包和部分字体
+RUN tlmgr update --self --all &amp;&amp; \
+    tlmgr install scheme-full
+
+RUN tar -xvf &#x2F;src&#x2F;chinese.gz -C &#x2F;usr&#x2F;share&#x2F;fonts&#x2F;  &amp;&amp; \
+    cd &#x2F;usr&#x2F;share&#x2F;fonts&#x2F;chinese&#x2F; &amp;&amp; mkfontscale &amp;&amp; mkfontdir &amp;&amp; \
+    fc-cache -fv &amp;&amp; fc-list :lang&#x3D;zh-cn<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="4-Debug"><a href="#4-Debug" class="headerlink" title="4. Debug"></a>4. Debug</h2><h3 id="4-1"><a href="#4-1" class="headerlink" title="4.1"></a>4.1</h3><pre class="line-numbers language-ini" data-language="ini"><div class="caption"><span>TI:"Bug1"</span></div><code class="language-ini">SyntaxError: Unexpected token '&#125;'
+    at internalCompileFunction (node:internal/vm:73:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1274:20)
+    at Module._compile (node:internal/modules/cjs/loader:1320:27)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+    at Module.load (node:internal/modules/cjs/loader:1197:32)
+    at Module._load (node:internal/modules/cjs/loader:1013:12)
+    at Module.require (node:internal/modules/cjs/loader:1225:19)
+    at require (node:internal/modules/helpers:177:18)
+    at Object.&lt;anonymous> (/overleaf/services/web/app/src/infrastructure/Server.js:8:16)
+    at Module._compile (node:internal/modules/cjs/loader:1356:14)
+
+Node.js v18.19.1
+Initializing metrics
+<span class="token key attr-name">Set UV_THREADPOOL_SIZE</span><span class="token punctuation">=</span><span class="token value attr-value">16</span>
+Using default settings from /overleaf/services/web/config/settings.defaults.js
+Using settings from /etc/sharelatex/settings.js
+/overleaf/services/web/app/src/router.js:1351
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>[!Done]<br>对比成功案例，发现 4.2.3 镜像中 <code>/overleaf/services/web/app/src/router.js:1351</code> 文件的代码存在一行更多的代码，尝试修改项目中有关的替换源文件 <code>ldap-overleaf-sl/sharelatex/router-append.js </code> 和 dockerfile（替换文件时删除 4行再追加）</p>
+</blockquote>
+<p>项目源文件的修改 <code>ldap-overleaf-sl/sharelatex/router-append.js </code></p>
+<pre class="line-numbers language-ini" data-language="ini"><code class="language-ini">  webRouter.get('/oauth/redirect', AuthenticationController.oauth2Redirect)
+  webRouter.get('/oauth/callback', AuthenticationController.oauth2Callback)
+  AuthenticationController.addEndpointToLoginWhitelist('/oauth/redirect')
+  AuthenticationController.addEndpointToLoginWhitelist('/oauth/callback')
+  webRouter.get('*', ErrorController.notFound)
+&#125;
+
+<span class="token key attr-name">module.exports</span> <span class="token punctuation">=</span> <span class="token value attr-value">&#123; initialize, rateLimiters &#125;  # 在原作者使用的文件中没有此行代码，这是官方 sharelatex:4.2.3 相比于 sharelatex:3.1 多出的代码</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="4-2"><a href="#4-2" class="headerlink" title="4.2"></a>4.2</h3><pre class="line-numbers language-ini" data-language="ini"><div class="caption"><span>TI:"Bug2"</span></div><code class="language-ini">Error: Cannot find module 'logger-sharelatex'
+Require stack:
+- /overleaf/services/web/app/src/Features/Contacts/ContactController.js
+- /overleaf/services/web/app/src/Features/Contacts/ContactRouter.js
+- /overleaf/services/web/app/src/router.js
+- /overleaf/services/web/app/src/infrastructure/Server.js
+- /overleaf/services/web/app.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1134:15)
+    at Module._load (node:internal/modules/cjs/loader:975:27)
+    at Module.require (node:internal/modules/cjs/loader:1225:19)
+    at require (node:internal/modules/helpers:177:18)
+    at Object.&lt;anonymous> (/overleaf/services/web/app/src/Features/Contacts/ContactController.js:20:16)
+    at Module._compile (node:internal/modules/cjs/loader:1356:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+    at Module.load (node:internal/modules/cjs/loader:1197:32)
+    at Module._load (node:internal/modules/cjs/loader:1013:12)
+    at Module.require (node:internal/modules/cjs/loader:1225:19)
+    at require (node:internal/modules/helpers:177:18)
+    at Object.&lt;anonymous> (/overleaf/services/web/app/src/Features/Contacts/ContactRouter.js:3:27)
+    at Module._compile (node:internal/modules/cjs/loader:1356:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+    at Module.load (node:internal/modules/cjs/loader:1197:32)
+    at Module._load (node:internal/modules/cjs/loader:1013:12) &#123;
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/overleaf/services/web/app/src/Features/Contacts/ContactController.js',
+    '/overleaf/services/web/app/src/Features/Contacts/ContactRouter.js',
+    '/overleaf/services/web/app/src/router.js',
+    '/overleaf/services/web/app/src/infrastructure/Server.js',
+    '/overleaf/services/web/app.js'
+  ]
+&#125;
+
+Node.js v18.19.1
+Initializing metrics
+<span class="token key attr-name">Set UV_THREADPOOL_SIZE</span><span class="token punctuation">=</span><span class="token value attr-value">16</span>
+Using default settings from /overleaf/services/web/config/settings.defaults.js
+Using settings from /etc/sharelatex/settings.js
+&#123;"name":"web","hostname":"b320a99b987b","pid":2731,"level":40,"msg":"Email transport and/or parameters not defined. No emails will be sent.","time":"2024-02-22T03:02:29.679Z","v":0&#125;
+node:internal/modules/cjs/loader:1137
+  throw err;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>[!Done]<br>执行 <code>npm install logger-sharelatex</code></p>
+</blockquote>
+<h2 id="5-测试使用"><a href="#5-测试使用" class="headerlink" title="5. 测试使用"></a>5. 测试使用</h2><h3 id="5-1-部署前集成-LDAP"><a href="#5-1-部署前集成-LDAP" class="headerlink" title="5.1 部署前集成 LDAP"></a>5.1 部署前集成 LDAP</h3><p>在 toolkit 中添加有关变量即可，配置在此文件中即可 &#96;&#96;</p>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token punctuation">---</span>
+<span class="token key atrule">version</span><span class="token punctuation">:</span> <span class="token string">'3'</span>
+<span class="token key atrule">services</span><span class="token punctuation">:</span>
+
+    <span class="token key atrule">sharelatex</span><span class="token punctuation">:</span>
+        <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
+          <span class="token comment">#image: "$&#123;IMAGE&#125;"  # 官方写法，变量定义方式在此`bin/docker-compose`，$IMAGE_VERSION没有找到地方定义</span>
+        <span class="token key atrule">image</span><span class="token punctuation">:</span> overleaf4.2.3<span class="token punctuation">-</span>ldap<span class="token punctuation">:</span>v2  <span class="token comment">#采取比较粗暴的替换</span>
+        <span class="token key atrule">container_name</span><span class="token punctuation">:</span> sharelatex
+        <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
+            <span class="token punctuation">-</span> <span class="token string">"$&#123;SHARELATEX_DATA_PATH&#125;:/var/lib/sharelatex"</span>
+        <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+            <span class="token punctuation">-</span> <span class="token string">"$&#123;SHARELATEX_LISTEN_IP:-127.0.0.1&#125;:$&#123;SHARELATEX_PORT:-80&#125;:80"</span>
+        <span class="token key atrule">environment</span><span class="token punctuation">:</span>
+          <span class="token key atrule">GIT_BRIDGE_ENABLED</span><span class="token punctuation">:</span> <span class="token string">"$&#123;GIT_BRIDGE_ENABLED&#125;"</span>
+          <span class="token key atrule">GIT_BRIDGE_HOST</span><span class="token punctuation">:</span> <span class="token string">"git-bridge"</span>
+          <span class="token key atrule">GIT_BRIDGE_PORT</span><span class="token punctuation">:</span> <span class="token string">"8000"</span>
+          <span class="token key atrule">REDIS_HOST</span><span class="token punctuation">:</span> <span class="token string">"$&#123;REDIS_HOST&#125;"</span>
+          <span class="token key atrule">REDIS_PORT</span><span class="token punctuation">:</span> <span class="token string">"$&#123;REDIS_PORT&#125;"</span>
+          <span class="token key atrule">SHARELATEX_MONGO_URL</span><span class="token punctuation">:</span> <span class="token string">"$&#123;MONGO_URL&#125;"</span>
+          <span class="token key atrule">SHARELATEX_REDIS_HOST</span><span class="token punctuation">:</span> <span class="token string">"$&#123;REDIS_HOST&#125;"</span>
+          <span class="token key atrule">V1_HISTORY_URL</span><span class="token punctuation">:</span> <span class="token string">"http://sharelatex:3100/api"</span>
+          <span class="token comment"># LDAP Block</span>
+          <span class="token key atrule">LDAP_SERVER</span><span class="token punctuation">:</span> <span class="token string">"ldap://10.8.0.88"</span>
+          <span class="token key atrule">LDAP_BASE</span><span class="token punctuation">:</span> <span class="token string">"ou=company,dc=company,dc=net"</span>
+          <span class="token key atrule">LDAP_BIND_USER</span><span class="token punctuation">:</span> <span class="token string">"cn=companyadmin,dc=company,dc=net"</span>
+          <span class="token key atrule">LDAP_BIND_PW</span><span class="token punctuation">:</span> <span class="token string">"company@2020"</span>
+          <span class="token key atrule">ALLOW_EMAIL_LOGIN</span><span class="token punctuation">:</span> <span class="token string">'true'</span>
+          <span class="token key atrule">LDAP_CONTACTS</span><span class="token punctuation">:</span> <span class="token string">'true'</span>
+          <span class="token key atrule">LDAP_CONTACT_FILTER</span><span class="token punctuation">:</span> <span class="token string">"(objectClass=inetOrgPerson)"</span>
+          <span class="token key atrule">LDAP_USER_FILTER</span><span class="token punctuation">:</span> <span class="token string">"(mail=%m)"</span>
+          <span class="token comment"># LDAP Block</span>
+        <span class="token key atrule">env_file</span><span class="token punctuation">:</span>
+            <span class="token punctuation">-</span> ../config/variables.env
+        <span class="token key atrule">stop_grace_period</span><span class="token punctuation">:</span> 60s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="5-2"><a href="#5-2" class="headerlink" title="5.2"></a>5.2</h3><p>登录 <a target="_blank" rel="noopener" href="http://site/launchpad">http://site/launchpad</a> ，需要创建本地的 admin 用户<br>如果构建时， environment 中的 <code>ADMIN_IS_SYSADMIN=true</code> 也支持使用 LDAP 的 admin 作为管理员用户通过邮箱登录。<br><code>套用模板的过程出现较多的不能成功渲染，注意在左上角 菜单中选择适宜的编译器</code></p>
+<blockquote>
+<p>[!info]<br>   魔改原作者的登录界面中有关于其学校的信息，修改 <code>ldap-overleaf-sl/sharelatex/login.pug </code> ，删除 <code>SUSTech CRA</code><br>   overleaf 官方的某些界面信息可以在 toolkit&#x2F;variables.env 修改 </p>
+</blockquote>
+<h2 id="6-参考"><a href="#6-参考" class="headerlink" title="6. 参考"></a>6. 参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.wsine.top/posts/selfhost-overleaf-for-thesis/">部署后宏包的安装实现开箱即用</a> 从中考虑 Dockerfile 的编写</li>
+<li><a target="_blank" rel="noopener" href="https://blog.ftliang.com/2021/08/19/overleaf.html">在官方部署方式上重新 commit 镜像</a></li>
+<li><a target="_blank" rel="noopener" href="https://sparktour.me/2022/06/11/self-host-overleaf-with-ldap-and-oauth2-support/">LDAP认证</a></li>
+<li><a target="_blank" rel="noopener" href="https://lisz.me/tech/docker/sharelatex.html">基于 sharelatex 准备中文和 texlive 的 Dockerfile</a></li>
+</ol>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">LC</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://blog.chaoslong.cn/2024/02/22/overleaf-self-hosted/">https://blog.chaoslong.cn/2024/02/22/overleaf-self-hosted/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">LC</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Docker/">
+                                    <span class="chip bg-color">Docker</span>
+                                </a>
+                            
+                                <a href="/tags/Overleaf/">
+                                    <span class="chip bg-color">Overleaf</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2024/03/09/zai-hexo-zhong-zhan-shi-si-wei-dao-tu/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="在hexo中展示思维导图">
+                        
+                        <span class="card-title">在hexo中展示思维导图</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            在博文中插入思维导图
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2024-03-09
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            LC
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/hexo/">
+                        <span class="chip bg-color">hexo</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2024/02/17/instantbox-customize/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="Instantbox Customize">
+                        
+                        <span class="card-title">Instantbox Customize</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            InstantBox 即时可用的纯净 linux，Webui分享 shell，本质是运行的容器。记录使用定制镜像和资源上下限配置的过程。
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-02-17
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            LC
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Virtualization/">
+                        <span class="chip bg-color">Virtualization</span>
+                    </a>
+                    
+                    <a href="/tags/Docker/">
+                        <span class="chip bg-color">Docker</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: BLOG<br />'
+            + '文章作者: LC<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.min.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 15px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2023-2024</span>
+            
+            <a href="/about" target="_blank">LC</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            
+            <br>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+                <span id="sitetime"> Loading ...</span>
+                <script>
+                    var calcSiteTime = function () {
+                        var seconds = 1000;
+                        var minutes = seconds * 60;
+                        var hours = minutes * 60;
+                        var days = hours * 24;
+                        var years = days * 365;
+                        var today = new Date();
+                        var startYear = "2023";
+                        var startMonth = "10";
+                        var startDate = "7";
+                        var startHour = "0";
+                        var startMinute = "0";
+                        var startSecond = "0";
+                        var todayYear = today.getFullYear();
+                        var todayMonth = today.getMonth() + 1;
+                        var todayDate = today.getDate();
+                        var todayHour = today.getHours();
+                        var todayMinute = today.getMinutes();
+                        var todaySecond = today.getSeconds();
+                        var t1 = Date.UTC(startYear, startMonth, startDate, startHour, startMinute, startSecond);
+                        var t2 = Date.UTC(todayYear, todayMonth, todayDate, todayHour, todayMinute, todaySecond);
+                        var diff = t2 - t1;
+                        var diffYears = Math.floor(diff / years);
+                        var diffDays = Math.floor((diff / days) - diffYears * 365);
+
+                        // 区分是否有年份.
+                        var language = 'zh-CN';
+                        if (startYear === String(todayYear)) {
+                            document.getElementById("year").innerHTML = todayYear;
+                            var daysTip = 'This site has been running for ' + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                daysTip = '本站已运行 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                daysTip = '本站已運行 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = daysTip;
+                        } else {
+                            document.getElementById("year").innerHTML = startYear + " - " + todayYear;
+                            var yearsAndDaysTip = 'This site has been running for ' + diffYears + ' years and '
+                                + diffDays + ' days';
+                            if (language === 'zh-CN') {
+                                yearsAndDaysTip = '本站已运行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            } else if (language === 'zh-HK') {
+                                yearsAndDaysTip = '本站已運行 ' + diffYears + ' 年 ' + diffDays + ' 天';
+                            }
+                            document.getElementById("sitetime").innerHTML = yearsAndDaysTip;
+                        }
+                    }
+
+                    calcSiteTime();
+                </script>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis"><!--
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--></div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    
+
+    
+    
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
